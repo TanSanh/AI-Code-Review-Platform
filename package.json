@@ -1,0 +1,44 @@
+{
+  "name": "ai-code-review",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-Powered Code Review + Collaboration Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:web": "turbo dev --filter=web",
+    "dev:server": "turbo dev --filter=server",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "test:e2e": "turbo test:e2e",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "db:generate": "turbo db:generate --filter=server",
+    "db:push": "turbo db:push --filter=server",
+    "db:migrate": "turbo db:migrate --filter=server",
+    "db:seed": "turbo db:seed --filter=server",
+    "db:studio": "turbo db:studio --filter=server",
+    "db:reset": "turbo db:reset --filter=server",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.0",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.3.0",
+    "turbo": "^2.3.0",
+    "typescript": "^5.7.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.md": [
+      "prettier --write"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
+
+import configuration from './config/configuration';
+import { PrismaModule } from './common/prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
+import { ReviewModule } from './review/review.module';
+import { IssueModule } from './issue/issue.module';
+import { CommentModule } from './comment/comment.module';
+import { AiReviewModule } from './ai-review/ai-review.module';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { AppController } from './app.controller';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
+      envFilePath: '.env',
+    }),
+
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [],
+      useFactory: () => ({
+        throttlers: [{ ttl: 900000, limit: 100 }],
+      }),
+    }),
+
+    PrismaModule,
+    AuthModule,
+    ReviewModule,
+    IssueModule,
+    CommentModule,
+    AiReviewModule,
+    AnalyticsModule,
+  ],
+  controllers: [AppController],
+})
+export class AppModule {}
