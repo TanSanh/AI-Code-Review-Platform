@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 30 3% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 30 3% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 3% 16%;
+    --primary: 260 34% 23%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 8% 91%;
+    --secondary-foreground: 30 3% 16%;
+    --muted: 30 8% 91%;
+    --muted-foreground: 30 3% 40%;
+    --accent: 260 82% 86%;
+    --accent-foreground: 30 3% 16%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 30 8% 86%;
+    --input: 30 8% 86%;
+    --ring: 260 34% 23%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    border-color: theme('colors.parchment.DEFAULT');
+  }
+
+  body {
+    @apply bg-white text-charcoal antialiased;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-charcoal;
+  }
+}
+
+@layer components {
+  /* Superhuman-style buttons */
+  .btn-cream {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-cream text-charcoal font-button rounded-button transition-all hover:bg-cream/90 hover:shadow-sm active:scale-[0.98];
+  }
+
+  .btn-dark {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-charcoal text-white font-button rounded-button transition-all hover:bg-charcoal/90 hover:shadow-sm active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-4 py-2 text-charcoal font-nav underline-offset-4 hover:underline transition-all;
+  }
+
+  /* Superhuman-style cards */
+  .card-super {
+    @apply bg-white border border-parchment rounded-card p-6 transition-all;
+  }
+
+  .card-super:hover {
+    @apply shadow-lg;
+  }
+
+  /* Hero gradient */
+  .hero-gradient {
+    background: linear-gradient(135deg, #1b1938 0%, #2d2570 50%, #3c328c 100%);
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-white/5 backdrop-blur-sm border border-white/10;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

@@ -1,0 +1,231 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Navbar } from '@/components/layout/navbar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Code2,
+  Plus,
+  FileCode,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  ArrowRight,
+} from 'lucide-react';
+import { api } from '@/lib/api';
+import { formatDate, getScoreColor } from '@/lib/utils';
+
+interface Review {
+  id: string;
+  title: string;
+  language: string;
+  status: string;
+  score: number | null;
+  createdAt: string;
+  _count: {
+    issues: number;
+    comments: number;
+  };
+}
+
+interface Overview {
+  totalReviews: number;
+  completedReviews: number;
+  totalIssues: number;
+  unresolvedIssues: number;
+  averageScore: number;
+}
+
+export default function DashboardPage() {
+  const router = useRouter();
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [overview, setOverview] = useState<Overview | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    api.setToken(token);
+
+    const fetchData = async () => {
+      try {
+        const [reviewsRes, overviewRes] = await Promise.all([
+          api.getReviews({ limit: 10 }) as Promise<{ data: Review[] }>,
+          api.getAnalyticsOverview() as Promise<Overview>,
+        ]);
+        setReviews(reviewsRes.data || []);
+        setOverview(overviewRes);
+      } catch (err) {
+        console.error('Failed to fetch data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <Navbar />
+
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-display-section text-charcoal">Dashboard</h1>
+            <p className="text-body text-charcoal/60 mt-2">
+              Overview of your code reviews and analytics
+            </p>
+          </div>
+          <Link href="/review/new">
+            <Button variant="cream">
+              <Plus className="mr-2 h-4 w-4" />
+              New Review
+            </Button>
+          </Link>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <Card className="card-super">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-lavender/20 rounded-badge">
+                  <FileCode className="h-5 w-5 text-amethyst" />
+                </div>
+                <div>
+                  <p className="text-caption text-charcoal/60">Total Reviews</p>
+                  <p className="text-body-heading font-semibold">{overview?.totalReviews || 0}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="card-super">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-100 rounded-badge">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-caption text-charcoal/60">Completed</p>
+                  <p className="text-body-heading font-semibold">{overview?.completedReviews || 0}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="card-super">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-orange-100 rounded-badge">
+                  <AlertTriangle className="h-5 w-5 text-orange-600" />
+                </div>
+                <div>
+                  <p className="text-caption text-charcoal/60">Issues Found</p>
+                  <p className="text-body-heading font-semibold">{overview?.totalIssues || 0}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="card-super">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-mysteria/10 rounded-badge">
+                  <Code2 className="h-5 w-5 text-mysteria" />
+                </div>
+                <div>
+                  <p className="text-caption text-charcoal/60">Avg. Score</p>
+                  <p className="text-body-heading font-semibold">{overview?.averageScore || 0}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Reviews */}
+        <Card className="card-super">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-body-heading">Recent Reviews</CardTitle>
+            <Link href="/reviews" className="text-sm text-amethyst hover:underline">
+              View all
+            </Link>
+          </CardHeader>
+          <CardContent>
+            {reviews.length === 0 ? (
+              <div className="text-center py-12">
+                <Code2 className="h-12 w-12 text-charcoal/20 mx-auto mb-4" />
+                <p className="text-body text-charcoal/60 mb-4">No reviews yet</p>
+                <Link href="/review/new">
+                  <Button variant="cream">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create your first review
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {reviews.map((review) => (
+                  <Link
+                    key={review.id}
+                    href={`/review/${review.id}`}
+                    className="flex items-center justify-between p-4 rounded-card border border-parchment hover:bg-cream/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 bg-lavender/20 rounded-badge">
+                        <FileCode className="h-5 w-5 text-amethyst" />
+                      </div>
+                      <div>
+                        <p className="text-body font-medium text-charcoal">{review.title}</p>
+                        <p className="text-caption text-charcoal/60">
+                          {review.language} • {review._count.issues} issues • {formatDate(review.createdAt)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      {review.score !== null && (
+                        <span className={`text-body font-semibold ${getScoreColor(review.score)}`}>
+                          {review.score}/100
+                        </span>
+                      )}
+                      <div className={`px-2 py-1 rounded-badge text-micro ${
+                        review.status === 'COMPLETED' ? 'bg-green-100 text-green-700' :
+                        review.status === 'REVIEWING' ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-gray-100 text-gray-700'
+                      }`}>
+                        {review.status}
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-charcoal/40" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </main>
+    </div>
+  );
+}
