@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { formatDate, getScoreColor } from '@/lib/utils';
+import { useAuth } from '@/contexts/auth-context';
 
 interface Issue {
   id: string;
@@ -54,18 +55,13 @@ const severityConfig: Record<string, { icon: React.ElementType; color: string; b
 export default function ReviewDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { loading: authLoading } = useAuth();
   const [review, setReview] = useState<Review | null>(null);
   const [loading, setLoading] = useState(true);
   const [reReviewing, setReReviewing] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
-    api.setToken(token);
+    if (authLoading) return;
 
     const fetchReview = async () => {
       try {
@@ -79,14 +75,13 @@ export default function ReviewDetailPage() {
     };
 
     fetchReview();
-  }, [params.id, router]);
+  }, [params.id, authLoading]);
 
   const handleReReview = async () => {
     if (!review) return;
     setReReviewing(true);
     try {
       await api.reReview(review.id);
-      // Refresh the review
       const updated = await api.getReview(review.id) as Review;
       setReview(updated);
     } catch (err) {
@@ -110,7 +105,6 @@ export default function ReviewDetailPage() {
     if (!review) return;
     try {
       await api.toggleIssue(review.id, issueId);
-      // Update local state
       setReview({
         ...review,
         issues: review.issues.map((issue) =>
@@ -122,7 +116,7 @@ export default function ReviewDetailPage() {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-white">
         <Navbar />

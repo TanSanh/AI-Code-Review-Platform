@@ -8,10 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Code2, Loader2 } from 'lucide-react';
-import { api } from '@/lib/api';
+import { useAuth } from '@/contexts/auth-context';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,10 +25,7 @@ export default function RegisterPage() {
     setError('');
 
     try {
-      const response = await api.register(email, name, password) as { user?: { id: string }; accessToken?: string };
-      if (response.accessToken) {
-        localStorage.setItem('token', response.accessToken);
-      }
+      await register(email, name, password);
       router.push('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed');

@@ -6,20 +6,54 @@ interface RequestOptions {
   headers?: Record<string, string>;
 }
 
+interface ApiResponse<T = unknown> {
+  success: boolean;
+  data: T;
+  error?: {
+    code: string;
+    message: string;
+    timestamp: string;
+    path: string;
+  };
+}
+
 class ApiClient {
   private baseUrl: string;
   private token: string | null = null;
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
+    this.loadToken();
+  }
+
+  private loadToken() {
+    if (typeof window !== 'undefined') {
+      this.token = localStorage.getItem('token');
+    }
   }
 
   setToken(token: string | null) {
     this.token = token;
+    if (typeof window !== 'undefined') {
+      if (token) {
+        localStorage.setItem('token', token);
+      } else {
+        localStorage.removeItem('token');
+      }
+    }
+  }
+
+  getToken(): string | null {
+    return this.token;
   }
 
   private async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     const { method = 'GET', body, headers = {} } = options;
+
+    // Reload token from localStorage on each request (handles page refresh)
+    if (!this.token && typeof window !== 'undefined') {
+      this.token = localStorage.getItem('token');
+    }
 
     const requestHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -36,37 +70,47 @@ class ApiClient {
       body: body ? JSON.stringify(body) : undefined,
     });
 
-    const data = await response.json();
+    // Handle 401 Unauthorized - clear token and redirect to login
+    if (response.status === 401) {
+      this.setToken(null);
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
+      throw new Error('Session expired. Please login again.');
+    }
+
+    const data: ApiResponse<T> = await response.json();
 
     if (!response.ok) {
       throw new Error(data.error?.message || 'Request failed');
     }
 
-    return data;
+    // Unwrap the response - backend wraps in { success: true, data: {...} }
+    return data.data;
   }
 
   // Auth
   async register(email: string, name: string, password: string) {
-    return this.request('/api/v1/auth/register', {
+    return this.request<{ user: { id: string; email: string; name: string }; accessToken: string }>('/api/v1/auth/register', {
       method: 'POST',
       body: { email, name, password },
     });
   }
 
   async login(email: string, password: string) {
-    return this.request('/api/v1/auth/login', {
+    return this.request<{ user: { id: string; email: string; name: string }; accessToken: string }>('/api/v1/auth/login', {
       method: 'POST',
       body: { email, password },
     });
   }
 
   async getProfile() {
-    return this.request('/api/v1/auth/me');
+    return this.request<{ id: string; email: string; name: string; role: string }>('/api/v1/auth/me');
   }
 
   // Reviews
   async createReview(data: { title: string; description?: string; language: string; fileName: string; code: string }) {
-    return this.request('/api/v1/reviews', {
+    return this.request<{ id: string; title: string; status: string }>('/api/v1/reviews', {
       method: 'POST',
       body: data,
     });
@@ -80,39 +124,39 @@ class ApiClient {
     if (params?.language) searchParams.set('language', params.language);
 
     const query = searchParams.toString();
-    return this.request(`/api/v1/reviews${query ? `?${query}` : ''}`);
+    return this.request<{ data: unknown[]; meta: { page: number; limit: number; total: number; totalPages: number } }>(`/api/v1/reviews${query ? `?${query}` : ''}`);
   }
 
   async getReview(id: string) {
-    return this.request(`/api/v1/reviews/${id}`);
+    return this.request<unknown>(`/api/v1/reviews/${id}`);
   }
 
   async deleteReview(id: string) {
-    return this.request(`/api/v1/reviews/${id}`, { method: 'DELETE' });
+    return this.request<unknown>(`/api/v1/reviews/${id}`, { method: 'DELETE' });
   }
 
   async reReview(id: string) {
-    return this.request(`/api/v1/reviews/${id}/review`, { method: 'POST' });
+    return this.request<unknown>(`/api/v1/reviews/${id}/review`, { method: 'POST' });
   }
 
   // Issues
   async getIssues(reviewId: string) {
-    return this.request(`/api/v1/reviews/${reviewId}/issues`);
+    return this.request<unknown[]>(`/api/v1/reviews/${reviewId}/issues`);
   }
 
   async toggleIssue(reviewId: string, issueId: string) {
-    return this.request(`/api/v1/reviews/${reviewId}/issues/${issueId}`, {
+    return this.request<unknown>(`/api/v1/reviews/${reviewId}/issues/${issueId}`, {
       method: 'PATCH',
     });
   }
 
   // Comments
   async getComments(reviewId: string) {
-    return this.request(`/api/v1/reviews/${reviewId}/comments`);
+    return this.request<unknown[]>(`/api/v1/reviews/${reviewId}/comments`);
   }
 
   async createComment(reviewId: string, data: { content: string; lineRef?: number; parentId?: string }) {
-    return this.request(`/api/v1/reviews/${reviewId}/comments`, {
+    return this.request<unknown>(`/api/v1/reviews/${reviewId}/comments`, {
       method: 'POST',
       body: data,
     });
@@ -120,15 +164,15 @@ class ApiClient {
 
   // Analytics
   async getAnalyticsOverview() {
-    return this.request('/api/v1/analytics/overview');
+    return this.request<{ totalReviews: number; completedReviews: number; totalIssues: number; avgScore: number }>('/api/v1/analytics/overview');
   }
 
   async getAnalyticsTrends() {
-    return this.request('/api/v1/analytics/trends');
+    return this.request<unknown[]>('/api/v1/analytics/trends');
   }
 
   async getAnalyticsLanguages() {
-    return this.request('/api/v1/analytics/languages');
+    return this.request<unknown[]>('/api/v1/analytics/languages');
   }
 }
 

@@ -6,7 +6,7 @@ import { Navbar } from '@/components/layout/navbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Loader2, Code2, Upload } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useAuth } from '@/contexts/auth-context';
 
 const languages = [
   { id: 'typescript', name: 'TypeScript' },
@@ -30,6 +31,7 @@ const languages = [
 
 export default function NewReviewPage() {
   const router = useRouter();
+  const { loading: authLoading } = useAuth();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [language, setLanguage] = useState('');
@@ -50,7 +52,7 @@ export default function NewReviewPage() {
         language,
         fileName,
         code,
-      }) as { id: string };
+      });
 
       router.push(`/review/${response.id}`);
     } catch (err) {
@@ -90,6 +92,19 @@ export default function NewReviewPage() {
     };
     reader.readAsText(file);
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">

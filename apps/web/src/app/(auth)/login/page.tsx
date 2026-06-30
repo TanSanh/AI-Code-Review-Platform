@@ -8,10 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Code2, Loader2 } from 'lucide-react';
-import { api } from '@/lib/api';
+import { useAuth } from '@/contexts/auth-context';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -23,9 +24,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await api.login(email, password) as { user?: { id: string } };
-      // Store token (in production, use httpOnly cookies)
-      localStorage.setItem('token', (response as unknown as { accessToken: string }).accessToken);
+      await login(email, password);
       router.push('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/layout/navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,11 +11,11 @@ import {
   FileCode,
   AlertTriangle,
   CheckCircle,
-  Clock,
   ArrowRight,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { formatDate, getScoreColor } from '@/lib/utils';
+import { useAuth } from '@/contexts/auth-context';
 
 interface Review {
   id: string;
@@ -40,19 +39,13 @@ interface Overview {
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
-    api.setToken(token);
+    if (authLoading) return;
 
     const fetchData = async () => {
       try {
@@ -70,9 +63,9 @@ export default function DashboardPage() {
     };
 
     fetchData();
-  }, [router]);
+  }, [authLoading]);
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-white">
         <Navbar />
@@ -95,7 +88,7 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-display-section text-charcoal">Dashboard</h1>
             <p className="text-body text-charcoal/60 mt-2">
-              Overview of your code reviews and analytics
+              Welcome back, {user?.name || 'User'}
             </p>
           </div>
           <Link href="/review/new">
