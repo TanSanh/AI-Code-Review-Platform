@@ -91,14 +91,14 @@ class ApiClient {
 
   // Auth
   async register(email: string, name: string, password: string) {
-    return this.request<{ user: { id: string; email: string; name: string }; accessToken: string }>('/api/v1/auth/register', {
+    return this.request<{ user: { id: string; email: string; name: string; role: string }; accessToken: string }>('/api/v1/auth/register', {
       method: 'POST',
       body: { email, name, password },
     });
   }
 
   async login(email: string, password: string) {
-    return this.request<{ user: { id: string; email: string; name: string }; accessToken: string }>('/api/v1/auth/login', {
+    return this.request<{ user: { id: string; email: string; name: string; role: string }; accessToken: string }>('/api/v1/auth/login', {
       method: 'POST',
       body: { email, password },
     });
@@ -164,7 +164,7 @@ class ApiClient {
 
   // Analytics
   async getAnalyticsOverview() {
-    return this.request<{ totalReviews: number; completedReviews: number; totalIssues: number; avgScore: number }>('/api/v1/analytics/overview');
+    return this.request<unknown>('/api/v1/analytics/overview');
   }
 
   async getAnalyticsTrends() {

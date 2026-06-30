@@ -16,6 +16,8 @@ import {
 import { api } from '@/lib/api';
 import { formatDate, getScoreColor } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth-context';
+import { ScoreTrendChart } from '@/components/charts/score-trend-chart';
+import { LanguageDistributionChart } from '@/components/charts/language-distribution-chart';
 
 interface Review {
   id: string;
@@ -33,15 +35,31 @@ interface Review {
 interface Overview {
   totalReviews: number;
   completedReviews: number;
+  pendingReviews: number;
   totalIssues: number;
+  resolvedIssues: number;
   unresolvedIssues: number;
   averageScore: number;
+  languageDistribution: LanguageData[];
+}
+
+interface TrendData {
+  date: string;
+  avgScore: number;
+  reviewCount: number;
+}
+
+interface LanguageData {
+  language: string;
+  count: number;
 }
 
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [overview, setOverview] = useState<Overview | null>(null);
+  const [trends, setTrends] = useState<TrendData[]>([]);
+  const [languages, setLanguages] = useState<LanguageData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -49,12 +67,16 @@ export default function DashboardPage() {
 
     const fetchData = async () => {
       try {
-        const [reviewsRes, overviewRes] = await Promise.all([
+        const [reviewsRes, overviewRes, trendsRes, languagesRes] = await Promise.all([
           api.getReviews({ limit: 10 }) as Promise<{ data: Review[] }>,
           api.getAnalyticsOverview() as Promise<Overview>,
+          api.getAnalyticsTrends() as Promise<TrendData[]>,
+          api.getAnalyticsLanguages() as Promise<LanguageData[]>,
         ]);
         setReviews(reviewsRes.data || []);
         setOverview(overviewRes);
+        setTrends(trendsRes || []);
+        setLanguages(languagesRes || []);
       } catch (err) {
         console.error('Failed to fetch data:', err);
       } finally {
@@ -154,6 +176,29 @@ export default function DashboardPage() {
                   <p className="text-body-heading font-semibold">{overview?.averageScore || 0}</p>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          {/* Score Trend Chart */}
+          <Card className="card-super">
+            <CardHeader>
+              <CardTitle className="text-body-heading">Score Trend</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScoreTrendChart data={trends} />
+            </CardContent>
+          </Card>
+
+          {/* Language Distribution Chart */}
+          <Card className="card-super">
+            <CardHeader>
+              <CardTitle className="text-body-heading">Language Distribution</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <LanguageDistributionChart data={languages} />
             </CardContent>
           </Card>
         </div>

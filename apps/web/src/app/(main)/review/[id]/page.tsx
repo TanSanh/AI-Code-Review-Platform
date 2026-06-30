@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Navbar } from '@/components/layout/navbar';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,9 @@ import {
 import { api } from '@/lib/api';
 import { formatDate, getScoreColor } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth-context';
+import { useReviewSocket } from '@/hooks/use-socket';
+import { CodeEditor } from '@/components/code-editor/code-editor';
+import { CommentSection } from '@/components/comments/comment-section';
 
 interface Issue {
   id: string;
@@ -59,6 +62,18 @@ export default function ReviewDetailPage() {
   const [review, setReview] = useState<Review | null>(null);
   const [loading, setLoading] = useState(true);
   const [reReviewing, setReReviewing] = useState(false);
+  const [reviewStatus, setReviewStatus] = useState<string>('');
+
+  const handleReviewCompleted = useCallback((updatedReview: unknown) => {
+    const data = updatedReview as Review;
+    setReview(data);
+    setReviewStatus('completed');
+  }, []);
+
+  const { isConnected } = useReviewSocket({
+    reviewId: params.id as string,
+    onReviewCompleted: handleReviewCompleted,
+  });
 
   useEffect(() => {
     if (authLoading) return;
@@ -67,6 +82,7 @@ export default function ReviewDetailPage() {
       try {
         const data = await api.getReview(params.id as string) as Review;
         setReview(data);
+        setReviewStatus(data.status);
       } catch (err) {
         console.error('Failed to fetch review:', err);
       } finally {
@@ -80,12 +96,13 @@ export default function ReviewDetailPage() {
   const handleReReview = async () => {
     if (!review) return;
     setReReviewing(true);
+    setReviewStatus('REVIEWING');
     try {
       await api.reReview(review.id);
-      const updated = await api.getReview(review.id) as Review;
-      setReview(updated);
+      // Review will be updated via WebSocket
     } catch (err) {
       console.error('Failed to re-review:', err);
+      setReviewStatus(review.status);
     } finally {
       setReReviewing(false);
     }
@@ -162,6 +179,13 @@ export default function ReviewDetailPage() {
             <p className="text-body text-charcoal/60 mt-2">
               {review.language} • {review.fileName} • {formatDate(review.createdAt)}
             </p>
+            {/* WebSocket status */}
+            <div className="flex items-center gap-2 mt-2">
+              <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
+              <span className="text-caption text-charcoal/40">
+                {isConnected ? 'Real-time connected' : 'Disconnected'}
+              </span>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <Button
@@ -177,6 +201,16 @@ export default function ReviewDetailPage() {
             </Button>
           </div>
         </div>
+
+        {/* Reviewing Status Banner */}
+        {reviewStatus === 'REVIEWING' && (
+          <div className="mb-6 p-4 bg-lavender/20 border border-lavender rounded-card flex items-center gap-3">
+            <RefreshCw className="h-5 w-5 text-amethyst animate-spin" />
+            <span className="text-body text-charcoal">
+              AI is analyzing your code... The review will update automatically when complete.
+            </span>
+          </div>
+        )}
 
         {/* Score Card */}
         {review.score !== null && (
@@ -202,16 +236,20 @@ export default function ReviewDetailPage() {
         )}
 
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Code Panel */}
+          {/* Code Panel - Monaco Editor */}
           <div>
             <Card className="card-super">
               <CardHeader>
                 <CardTitle className="text-body-heading">Source Code</CardTitle>
               </CardHeader>
               <CardContent>
-                <pre className="p-4 bg-charcoal text-green-400 rounded-card overflow-x-auto text-sm font-mono">
-                  {review.originalCode}
-                </pre>
+                <CodeEditor
+                  code={review.originalCode}
+                  language={review.language}
+                  issues={review.issues}
+                  readOnly={true}
+                  height="500px"
+                />
               </CardContent>
             </Card>
           </div>
@@ -231,7 +269,7 @@ export default function ReviewDetailPage() {
                     <p className="text-body text-charcoal/60">No issues found!</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-4 max-h-[500px] overflow-y-auto">
                     {review.issues.map((issue) => {
                       const config = severityConfig[issue.severity] || severityConfig.INFO;
                       const Icon = config.icon;
@@ -287,7 +325,7 @@ export default function ReviewDetailPage() {
               </CardContent>
             </Card>
 
-            {/* Discussion */}
+            {/* Discussion - Real-time Comments */}
             <Card className="card-super mt-6">
               <CardHeader>
                 <CardTitle className="text-body-heading flex items-center gap-2">
@@ -296,9 +334,7 @@ export default function ReviewDetailPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-body text-charcoal/60 text-center py-4">
-                  Real-time discussion coming soon...
-                </p>
+                <CommentSection reviewId={review.id} />
               </CardContent>
             </Card>
           </div>
