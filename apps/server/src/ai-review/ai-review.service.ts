@@ -38,22 +38,15 @@ export class AiReviewService {
     });
 
     try {
-      // Layer 1: Static Analysis
       const staticIssues = await this.staticAnalyzer.analyze(code, language);
-
-      // Layer 2: Security Scan
       const securityIssues = await this.securityScanner.scan(code, language);
-
-      // Layer 3: LLM Deep Analysis
       const llmResult = await this.llmAnalyzer.analyze(code, language);
 
-      // Merge & Deduplicate
-      const allIssues: ReviewIssue[] = claude-opus-4.8;
+      const allIssues: ReviewIssue[] = staticIssues.concat(securityIssues).concat(llmResult.issues);
 
       const deduplicated = this.deduplicateIssues(allIssues);
       const score = this.calculateScore(deduplicated);
 
-      // Save to database
       await this.prisma.issue.createMany({
         data: deduplicated.map((issue) => ({
           reviewId,
