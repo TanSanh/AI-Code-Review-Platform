@@ -82,118 +82,19 @@
   }
 }
 
-/* ─── Navbar Bubble & Water‑drop Animations ─────────────────────── */
+/* ─── Navbar Glassmorphism ───────────────────────────────────────── */
 
-@keyframes bubble-float {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 0.3;
-  }
-  90% {
-    opacity: 0;
-  }
-  100% {
-    transform: translate(var(--bubble-dx, 10px), var(--bubble-dy, -30px)) scale(1.4);
-  }
+/* Frosted glass noise texture */
+.navbar-glass-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
 }
 
-@keyframes water-shimmer {
-  0% {
-    transform: translateX(-100%) skewX(-15deg);
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.08;
-  }
-  100% {
-    transform: translateX(200%) skewX(-15deg);
-    opacity: 0;
-  }
-}
-
-@keyframes bubble-morph {
-  0%, 100% {
-    border-radius: 50% 40% 60% 50% / 40% 50% 50% 60%;
-    transform: scale(1) rotate(0deg);
-  }
-  25% {
-    border-radius: 40% 60% 50% 50% / 50% 40% 60% 50%;
-    transform: scale(1.05) rotate(5deg);
-  }
-  50% {
-    border-radius: 50% 50% 40% 60% / 60% 50% 40% 50%;
-    transform: scale(0.95) rotate(-3deg);
-  }
-  75% {
-    border-radius: 60% 50% 50% 40% / 50% 60% 50% 40%;
-    transform: scale(1.02) rotate(2deg);
-  }
-}
-
-.navbar-bubble {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(108, 99, 200, 0.25),
-    rgba(108, 99, 200, 0.05)
-  );
-  animation: bubble-float var(--duration, 6s) ease-in-out infinite;
-  will-change: transform, opacity;
-  /* Random direction offsets per bubble */
-  --bubble-dx: calc((var(--x, 50) - 50) * 0.3px);
-  --bubble-dy: calc(-20px - var(--y, 50) * 0.2px);
-}
-
-.navbar-bubble:nth-child(odd) {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(160, 140, 220, 0.2),
-    rgba(160, 140, 220, 0.03)
-  );
-  animation-name: bubble-float;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.navbar-water-drop {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 40%,
-    rgba(108, 99, 200, 0.06) 45%,
-    rgba(160, 140, 220, 0.1) 50%,
-    rgba(108, 99, 200, 0.06) 55%,
-    transparent 60%
-  );
-  animation: water-shimmer 8s ease-in-out infinite;
-  animation-delay: 2s;
-  pointer-events: none;
-}
-
-/* Hover‑activated bubble burst on nav links */
-.nav-link-bubble {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(108, 99, 200, 0.15),
-    transparent 70%
-  );
-  transform: scale(0);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-              opacity 0.4s ease;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.group:hover .nav-link-bubble {
-  transform: scale(1);
-  opacity: 1;
+/* Smooth glassmorphism hover lift */
+.navbar-glass:hover {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  box-shadow:
+    0 8px 40px rgba(88, 80, 168, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
 }
