@@ -17,6 +17,7 @@ import {
 import { api } from '@/lib/api';
 import { formatDate, getScoreColor } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth-context';
+import { useLanguage } from '@/contexts/language-context';
 import { useReviewSocket } from '@/hooks/use-socket';
 import { CodeEditor } from '@/components/code-editor/code-editor';
 import { CommentSection } from '@/components/comments/comment-section';
@@ -58,6 +59,7 @@ export default function ReviewDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { loading: authLoading } = useAuth();
+  const { t } = useLanguage();
   const [review, setReview] = useState<Review | null>(null);
   const [loading, setLoading] = useState(true);
   const [reReviewing, setReReviewing] = useState(false);
@@ -108,7 +110,7 @@ export default function ReviewDetailPage() {
   };
 
   const handleDelete = async () => {
-    if (!review || !confirm('Are you sure you want to delete this review?')) return;
+    if (!review || !confirm(t('reviewDetail.deleteConfirm'))) return;
     try {
       await api.deleteReview(review.id);
       router.push('/dashboard');
@@ -148,7 +150,7 @@ export default function ReviewDetailPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-          <p className="text-body text-charcoal/60">Review not found</p>
+          <p className="text-body text-charcoal/60">{t('reviewDetail.notFound')}</p>
         </div>
       </div>
     );
@@ -164,7 +166,7 @@ export default function ReviewDetailPage() {
         <div className="flex items-center gap-4 mb-8">
           <Button variant="ghost" onClick={() => router.back()}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back
+            {t('reviewDetail.back')}
           </Button>
         </div>
 
@@ -178,7 +180,7 @@ export default function ReviewDetailPage() {
             <div className="flex items-center gap-2 mt-2">
               <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
               <span className="text-caption text-charcoal/40">
-                {isConnected ? 'Real-time connected' : 'Disconnected'}
+                {isConnected ? t('reviewDetail.realtimeConnected') : t('reviewDetail.disconnected')}
               </span>
             </div>
           </div>
@@ -189,7 +191,7 @@ export default function ReviewDetailPage() {
               disabled={reReviewing}
             >
               <RefreshCw className={`mr-2 h-4 w-4 ${reReviewing ? 'animate-spin' : ''}`} />
-              Re-review
+              {t('reviewDetail.reReview')}
             </Button>
             <Button variant="ghost" onClick={handleDelete}>
               <Trash2 className="h-4 w-4 text-red-500" />
@@ -202,7 +204,7 @@ export default function ReviewDetailPage() {
           <div className="mb-6 p-4 bg-lavender/20 border border-lavender rounded-card flex items-center gap-3">
             <RefreshCw className="h-5 w-5 text-amethyst animate-spin" />
             <span className="text-body text-charcoal">
-              AI is analyzing your code... The review will update automatically when complete.
+              {t('reviewDetail.aiAnalyzing')}
             </span>
           </div>
         )}
@@ -213,16 +215,16 @@ export default function ReviewDetailPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-caption text-charcoal/60">Code Quality Score</p>
+                  <p className="text-caption text-charcoal/60">{t('reviewDetail.qualityScore')}</p>
                   <p className={`text-4xl font-bold ${getScoreColor(review.score)}`}>
                     {review.score}
                     <span className="text-lg text-charcoal/40">/100</span>
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-caption text-charcoal/60">Issues</p>
+                  <p className="text-caption text-charcoal/60">{t('reviewDetail.issues')}</p>
                   <p className="text-body-heading font-semibold">
-                    {resolvedCount}/{review.issues.length} resolved
+                    {resolvedCount}/{review.issues.length} {t('reviewDetail.resolved')}
                   </p>
                 </div>
               </div>
@@ -235,7 +237,7 @@ export default function ReviewDetailPage() {
           <div>
             <Card className="card-super">
               <CardHeader>
-                <CardTitle className="text-body-heading">Source Code</CardTitle>
+                <CardTitle className="text-body-heading">{t('reviewDetail.sourceCode')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <CodeEditor
@@ -254,14 +256,14 @@ export default function ReviewDetailPage() {
             <Card className="card-super">
               <CardHeader>
                 <CardTitle className="text-body-heading">
-                  Issues ({unresolvedIssues.length} unresolved)
+                  {t('reviewDetail.issuesUnresolved').replace('{count}', String(unresolvedIssues.length))}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {review.issues.length === 0 ? (
                   <div className="text-center py-8">
                     <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                    <p className="text-body text-charcoal/60">No issues found!</p>
+                    <p className="text-body text-charcoal/60">{t('reviewDetail.noIssues')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4 max-h-[500px] overflow-y-auto">
@@ -286,7 +288,7 @@ export default function ReviewDetailPage() {
                                   {issue.severity}
                                 </span>
                                 <span className="text-micro text-charcoal/40">
-                                  Line {issue.line}
+                                  {t('reviewDetail.line').replace('{line}', String(issue.line))}
                                 </span>
                               </div>
                               <p className="text-body text-charcoal mb-2">{issue.message}</p>
@@ -304,7 +306,7 @@ export default function ReviewDetailPage() {
                                       : 'text-charcoal/40 hover:text-charcoal'
                                   }`}
                                 >
-                                  {issue.isResolved ? '✓ Resolved' : 'Mark as resolved'}
+                                  {issue.isResolved ? t('reviewDetail.resolvedStatus') : t('reviewDetail.markResolved')}
                                 </button>
                                 <span className="text-micro text-charcoal/30">
                                   {issue.aiModel}
@@ -325,7 +327,7 @@ export default function ReviewDetailPage() {
               <CardHeader>
                 <CardTitle className="text-body-heading flex items-center gap-2">
                   <MessageSquare className="h-5 w-5" />
-                  Discussion
+                  {t('reviewDetail.discussion')}
                 </CardTitle>
               </CardHeader>
               <CardContent>

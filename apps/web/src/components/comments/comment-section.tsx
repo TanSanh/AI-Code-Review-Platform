@@ -5,6 +5,7 @@ import { CommentList } from './comment-list';
 import { CommentForm } from './comment-form';
 import { useReviewSocket } from '@/hooks/use-socket';
 import { useAuth } from '@/contexts/auth-context';
+import { useLanguage } from '@/contexts/language-context';
 import { api } from '@/lib/api';
 
 interface CommentAuthor {
@@ -28,6 +29,7 @@ interface CommentSectionProps {
 
 export function CommentSection({ reviewId }: CommentSectionProps) {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
@@ -97,7 +99,7 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
       <div className="flex items-center gap-2 text-caption">
         <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
         <span className="text-charcoal/60">
-          {isConnected ? 'Connected' : 'Disconnected'}
+          {isConnected ? t('comments.connected') : t('comments.disconnected')}
         </span>
       </div>
 
@@ -105,8 +107,8 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
       {typingUsers.size > 0 && (
         <div className="text-caption text-charcoal/60 italic">
           {typingUsers.size === 1
-            ? 'Someone is typing...'
-            : `${typingUsers.size} people are typing...`}
+            ? t('comments.typing')
+            : t('comments.typingCount').replace('{count}', String(typingUsers.size))}
         </div>
       )}
 

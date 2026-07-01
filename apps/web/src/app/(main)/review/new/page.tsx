@@ -17,6 +17,7 @@ import {
 import { Loader2, Code2, Upload } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/auth-context';
+import { useLanguage } from '@/contexts/language-context';
 
 const languages = [
   { id: 'typescript', name: 'TypeScript' },
@@ -32,6 +33,7 @@ const languages = [
 export default function NewReviewPage() {
   const router = useRouter();
   const { loading: authLoading } = useAuth();
+  const { t } = useLanguage();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [language, setLanguage] = useState('');
@@ -56,7 +58,7 @@ export default function NewReviewPage() {
 
       router.push(`/review/${response.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create review');
+      setError(err instanceof Error ? err.message : t('newReview.failedCreate'));
     } finally {
       setLoading(false);
     }
@@ -111,9 +113,9 @@ export default function NewReviewPage() {
       <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-display-section text-charcoal dark:text-gray-50">New Code Review</h1>
+          <h1 className="text-display-section text-charcoal dark:text-gray-50">{t('newReview.title')}</h1>
           <p className="text-body text-charcoal/60 dark:text-gray-400 mt-2">
-            Submit your code for AI-powered analysis
+            {t('newReview.subtitle')}
           </p>
         </div>
 
@@ -128,10 +130,10 @@ export default function NewReviewPage() {
 
               {/* Title */}
               <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
+                <Label htmlFor="title">{t('newReview.titleLabel')}</Label>
                 <Input
                   id="title"
-                  placeholder="e.g., Review authentication controller"
+                  placeholder={t('newReview.titlePlaceholder')}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
@@ -140,10 +142,10 @@ export default function NewReviewPage() {
 
               {/* Description */}
               <div className="space-y-2">
-                <Label htmlFor="description">Description (optional)</Label>
+                <Label htmlFor="description">{t('newReview.descLabel')}</Label>
                 <Input
                   id="description"
-                  placeholder="What should we focus on?"
+                  placeholder={t('newReview.descPlaceholder')}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
@@ -152,10 +154,10 @@ export default function NewReviewPage() {
               {/* Language & File Name */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Language</Label>
+                  <Label>{t('newReview.language')}</Label>
                   <Select value={language} onValueChange={setLanguage}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select language" />
+                      <SelectValue placeholder={t('newReview.selectLanguage')} />
                     </SelectTrigger>
                     <SelectContent>
                       {languages.map((lang) => (
@@ -168,10 +170,10 @@ export default function NewReviewPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="fileName">File Name</Label>
+                  <Label htmlFor="fileName">{t('newReview.fileName')}</Label>
                   <Input
                     id="fileName"
-                    placeholder="e.g., auth.controller.ts"
+                    placeholder={t('newReview.filePlaceholder')}
                     value={fileName}
                     onChange={(e) => setFileName(e.target.value)}
                     required
@@ -181,7 +183,7 @@ export default function NewReviewPage() {
 
               {/* File Upload */}
               <div className="space-y-2">
-                <Label>Upload File (optional)</Label>
+                <Label>{t('newReview.uploadFile')}</Label>
                 <div className="flex items-center gap-4">
                   <label className="flex-1">
                     <input
@@ -192,7 +194,7 @@ export default function NewReviewPage() {
                     />
                     <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-parchment dark:border-[#33355a] rounded-card cursor-pointer hover:border-lavender transition-colors">
                       <Upload className="h-5 w-5 text-charcoal/40 dark:text-gray-500" />
-                      <span className="text-sm text-charcoal/60 dark:text-gray-400">Choose file or drag & drop</span>
+                      <span className="text-sm text-charcoal/60 dark:text-gray-400">{t('newReview.chooseFile')}</span>
                     </div>
                   </label>
                 </div>
@@ -200,10 +202,10 @@ export default function NewReviewPage() {
 
               {/* Code Input */}
               <div className="space-y-2">
-                <Label htmlFor="code">Code</Label>
+                <Label htmlFor="code">{t('newReview.code')}</Label>
                 <textarea
                   id="code"
-                  placeholder="Paste your code here..."
+                  placeholder={t('newReview.codePlaceholder')}
                   className="w-full h-64 p-4 font-mono text-sm bg-charcoal dark:bg-[#0d0e1a] text-green-400 rounded-card border-0 resize-none focus:outline-none focus:ring-2 focus:ring-lavender"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
@@ -214,18 +216,18 @@ export default function NewReviewPage() {
               {/* Submit */}
               <div className="flex justify-end gap-4">
                 <Button type="button" variant="ghost" onClick={() => router.back()}>
-                  Cancel
+                  {t('newReview.cancel')}
                 </Button>
                 <Button type="submit" variant="cream" disabled={loading || !language}>
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Analyzing...
+                      {t('newReview.analyzing')}
                     </>
                   ) : (
                     <>
                       <Code2 className="mr-2 h-4 w-4" />
-                      Start Review
+                      {t('newReview.startReview')}
                     </>
                   )}
                 </Button>

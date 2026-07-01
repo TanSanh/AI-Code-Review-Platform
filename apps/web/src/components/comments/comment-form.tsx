@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/language-context';
 import { Send, Loader2 } from 'lucide-react';
 
 interface CommentFormProps {
@@ -16,11 +17,13 @@ export function CommentForm({
   onSubmit,
   onTypingStart,
   onTypingStop,
-  placeholder = 'Write a comment...',
+  placeholder,
   disabled = false,
 }: CommentFormProps) {
+  const { t } = useLanguage();
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
+  const resolvedPlaceholder = placeholder || t('comments.writeComment');
   const typingTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -76,14 +79,14 @@ export function CommentForm({
         value={content}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         disabled={disabled || loading}
         rows={3}
         className="w-full p-3 text-body bg-white border border-parchment rounded-card resize-none focus:outline-none focus:ring-2 focus:ring-lavender focus:border-transparent disabled:opacity-50"
       />
       <div className="flex items-center justify-between">
         <span className="text-caption text-charcoal/40">
-          Press Ctrl+Enter to send
+          {t('comments.sendHint')}
         </span>
         <Button
           type="submit"
@@ -95,7 +98,7 @@ export function CommentForm({
           ) : (
             <>
               <Send className="h-4 w-4 mr-2" />
-              Send
+              {t('comments.send')}
             </>
           )}
         </Button>

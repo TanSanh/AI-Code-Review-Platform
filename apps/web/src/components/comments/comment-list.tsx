@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { formatDate } from '@/lib/utils';
+import { useLanguage } from '@/contexts/language-context';
 
 interface CommentAuthor {
   id: string;
@@ -24,10 +25,12 @@ interface CommentListProps {
 }
 
 export function CommentList({ comments, currentUserId }: CommentListProps) {
+  const { t } = useLanguage();
+
   if (!comments || comments.length === 0) {
     return (
       <div className="text-center py-8 text-charcoal/40">
-        <p>No comments yet. Start the discussion!</p>
+        <p>{t('comments.noComments')}</p>
       </div>
     );
   }
@@ -55,6 +58,7 @@ function CommentItem({
   currentUserId?: string;
   isReply: boolean;
 }) {
+  const { t } = useLanguage();
   const isOwner = comment.author.id === currentUserId;
 
   return (
@@ -85,7 +89,7 @@ function CommentItem({
             </span>
             {isOwner && (
               <span className="text-micro text-amethyst bg-lavender/20 px-1.5 py-0.5 rounded">
-                You
+                {t('comments.you')}
               </span>
             )}
             <span className="text-caption text-charcoal/40">
@@ -93,7 +97,7 @@ function CommentItem({
             </span>
             {comment.lineRef && (
               <span className="text-micro text-charcoal/40 bg-parchment/50 px-1.5 py-0.5 rounded">
-                Line {comment.lineRef}
+                {t('comments.line').replace('{line}', String(comment.lineRef))}
               </span>
             )}
           </div>

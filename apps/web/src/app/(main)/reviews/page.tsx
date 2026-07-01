@@ -23,6 +23,7 @@ import {
 import { api } from '@/lib/api';
 import { formatDate, getScoreColor } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth-context';
+import { useLanguage } from '@/contexts/language-context';
 
 interface Review {
   id: string;
@@ -49,6 +50,7 @@ interface ReviewsResponse {
 
 export default function ReviewsPage() {
   const { loading: authLoading } = useAuth();
+  const { t } = useLanguage();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -113,15 +115,15 @@ export default function ReviewsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-display-section text-charcoal dark:text-gray-100">All Reviews</h1>
+            <h1 className="text-display-section text-charcoal dark:text-gray-100">{t('reviews.title')}</h1>
             <p className="text-body text-charcoal/60 dark:text-gray-400 mt-2">
-              {total} review{total !== 1 ? 's' : ''} total
+              {t('reviews.total').replace('{count}', String(total))}
             </p>
           </div>
           <Link href="/review/new">
             <Button variant="cream">
               <Plus className="mr-2 h-4 w-4" />
-              New Review
+              {t('reviews.newReview')}
             </Button>
           </Link>
         </div>
@@ -134,7 +136,7 @@ export default function ReviewsPage() {
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-charcoal/40 dark:text-gray-500" />
                 <Input
-                  placeholder="Search reviews..."
+                  placeholder={t('reviews.search')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -145,14 +147,14 @@ export default function ReviewsPage() {
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-full md:w-40">
                   <Filter className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="Status" />
+                  <SelectValue placeholder={t('reviews.status')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="PENDING">Pending</SelectItem>
-                  <SelectItem value="REVIEWING">Reviewing</SelectItem>
-                  <SelectItem value="COMPLETED">Completed</SelectItem>
-                  <SelectItem value="FAILED">Failed</SelectItem>
+                  <SelectItem value="all">{t('reviews.allStatus')}</SelectItem>
+                  <SelectItem value="PENDING">{t('reviews.pending')}</SelectItem>
+                  <SelectItem value="REVIEWING">{t('reviews.reviewing')}</SelectItem>
+                  <SelectItem value="COMPLETED">{t('reviews.completed')}</SelectItem>
+                  <SelectItem value="FAILED">{t('reviews.failed')}</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -160,10 +162,10 @@ export default function ReviewsPage() {
               <Select value={languageFilter} onValueChange={setLanguageFilter}>
                 <SelectTrigger className="w-full md:w-40">
                   <Code2 className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="Language" />
+                  <SelectValue placeholder={t('reviews.language')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Languages</SelectItem>
+                  <SelectItem value="all">{t('reviews.allLanguages')}</SelectItem>
                   <SelectItem value="typescript">TypeScript</SelectItem>
                   <SelectItem value="javascript">JavaScript</SelectItem>
                   <SelectItem value="python">Python</SelectItem>
@@ -188,16 +190,16 @@ export default function ReviewsPage() {
             <CardContent className="py-16">
               <div className="text-center">
                 <Code2 className="h-16 w-16 text-charcoal/20 dark:text-gray-600 mx-auto mb-4" />
-                <h3 className="text-body-heading text-charcoal dark:text-gray-100 mb-2">No reviews found</h3>
+                <h3 className="text-body-heading text-charcoal dark:text-gray-100 mb-2">{t('reviews.noReviews')}</h3>
                 <p className="text-body text-charcoal/60 dark:text-gray-400 mb-6">
                   {searchQuery || statusFilter !== 'all' || languageFilter !== 'all'
-                    ? 'Try adjusting your filters'
-                    : 'Create your first review to get started'}
+                    ? t('reviews.adjustFilters')
+                    : t('reviews.createFirst')}
                 </p>
                 <Link href="/review/new">
                   <Button variant="cream">
                     <Plus className="mr-2 h-4 w-4" />
-                    Create Review
+                    {t('reviews.createReview')}
                   </Button>
                 </Link>
               </div>
@@ -229,7 +231,7 @@ export default function ReviewsPage() {
                               </span>
                               <span className="text-caption text-charcoal/40 dark:text-gray-500">•</span>
                               <span className="text-caption text-charcoal/60 dark:text-gray-400">
-                                {review._count.issues} issues
+                                {review._count.issues} {t('reviews.issues')}
                               </span>
                               <span className="text-caption text-charcoal/40 dark:text-gray-500">•</span>
                               <span className="text-caption text-charcoal/60 dark:text-gray-400">
@@ -242,7 +244,7 @@ export default function ReviewsPage() {
                         <div className="flex items-center gap-4">
                           {review.score !== null && (
                             <div className="text-right">
-                              <p className="text-caption text-charcoal/60 dark:text-gray-400">Score</p>
+                              <p className="text-caption text-charcoal/60 dark:text-gray-400">{t('reviews.score')}</p>
                               <p className={`text-body-heading font-semibold ${getScoreColor(review.score)}`}>
                                 {review.score}/100
                               </p>
@@ -275,17 +277,17 @@ export default function ReviewsPage() {
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page === 1}
                 >
-                  Previous
+                  {t('reviews.previous')}
                 </Button>
                 <span className="text-body text-charcoal px-4">
-                  Page {page} of {totalPages}
+                  {t('reviews.pageOf').replace('{page}', String(page)).replace('{total}', String(totalPages))}
                 </span>
                 <Button
                   variant="outline"
                   onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
                 >
-                  Next
+                  {t('reviews.next')}
                 </Button>
               </div>
             )}

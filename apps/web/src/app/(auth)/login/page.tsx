@@ -9,10 +9,12 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
+import { useLanguage } from '@/contexts/language-context';
 
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -27,7 +29,7 @@ export default function LoginPage() {
       await login(email, password);
       router.push('/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(err instanceof Error ? err.message : t('auth.loginFailed'));
     } finally {
       setLoading(false);
     }
@@ -37,9 +39,9 @@ export default function LoginPage() {
     <div className="min-h-screen bg-white dark:bg-[#1a1b2e] flex items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md dark:bg-[#242640] dark:border-[#33355a]">
         <CardHeader className="text-center">
-          <CardTitle className="text-body-heading dark:text-gray-50">Welcome back</CardTitle>
+          <CardTitle className="text-body-heading dark:text-gray-50">{t('auth.welcomeBack')}</CardTitle>
           <CardDescription>
-            Sign in to your account to continue
+            {t('auth.signInDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -51,7 +53,7 @@ export default function LoginPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('auth.email')}</Label>
               <Input
                 id="email"
                 type="email"
@@ -63,7 +65,7 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('auth.password')}</Label>
               <Input
                 id="password"
                 type="password"
@@ -78,18 +80,18 @@ export default function LoginPage() {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing in...
+                  {t('auth.signingIn')}
                 </>
               ) : (
-                'Sign in'
+                t('auth.signIn')
               )}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm text-charcoal/60 dark:text-gray-400">
-            Don&apos;t have an account?{' '}
+            {t('auth.noAccount')}{' '}
             <Link href="/register" className="text-amethyst hover:underline dark:text-lavender">
-              Sign up
+              {t('auth.signUp')}
             </Link>
           </div>
         </CardContent>

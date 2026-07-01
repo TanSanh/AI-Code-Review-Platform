@@ -15,6 +15,7 @@ import {
 import { api } from '@/lib/api';
 import { formatDate, getScoreColor } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth-context';
+import { useLanguage } from '@/contexts/language-context';
 import { ScoreTrendChart } from '@/components/charts/score-trend-chart';
 import { LanguageDistributionChart } from '@/components/charts/language-distribution-chart';
 
@@ -55,6 +56,7 @@ interface LanguageData {
 
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth();
+  const { t } = useLanguage();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [trends, setTrends] = useState<TrendData[]>([]);
@@ -105,15 +107,15 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-display-section text-charcoal dark:text-gray-100">Dashboard</h1>
+            <h1 className="text-display-section text-charcoal dark:text-gray-100">{t('dashboard.title')}</h1>
             <p className="text-body text-charcoal dark:text-gray-400 mt-2">
-              Welcome back, {user?.name || 'User'}
+              {t('dashboard.welcome')}, {user?.name || 'User'}
             </p>
           </div>
           <Link href="/review/new">
             <Button variant="cream">
               <Plus className="mr-2 h-4 w-4" />
-              New Review
+              {t('dashboard.newReview')}
             </Button>
           </Link>
         </div>
@@ -127,7 +129,7 @@ export default function DashboardPage() {
                   <FileCode className="h-5 w-5 text-amethyst" />
                 </div>
                 <div>
-                  <p className="text-caption text-charcoal dark:text-gray-400">Total Reviews</p>
+                  <p className="text-caption text-charcoal dark:text-gray-400">{t('dashboard.totalReviews')}</p>
                   <p className="text-body-heading font-semibold">{overview?.totalReviews || 0}</p>
                 </div>
               </div>
@@ -141,7 +143,7 @@ export default function DashboardPage() {
                   <CheckCircle className="h-5 w-5 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-caption text-charcoal dark:text-gray-400">Completed</p>
+                  <p className="text-caption text-charcoal dark:text-gray-400">{t('dashboard.completedReviews')}</p>
                   <p className="text-body-heading font-semibold">{overview?.completedReviews || 0}</p>
                 </div>
               </div>
@@ -155,7 +157,7 @@ export default function DashboardPage() {
                   <AlertTriangle className="h-5 w-5 text-orange-600" />
                 </div>
                 <div>
-                  <p className="text-caption text-charcoal dark:text-gray-400">Issues Found</p>
+                  <p className="text-caption text-charcoal dark:text-gray-400">{t('dashboard.issuesFound')}</p>
                   <p className="text-body-heading font-semibold">{overview?.totalIssues || 0}</p>
                 </div>
               </div>
@@ -169,7 +171,7 @@ export default function DashboardPage() {
                   <Code2 className="h-5 w-5 text-mysteria" />
                 </div>
                 <div>
-                  <p className="text-caption text-charcoal dark:text-gray-400">Avg. Score</p>
+                  <p className="text-caption text-charcoal dark:text-gray-400">{t('dashboard.avgScore')}</p>
                   <p className="text-body-heading font-semibold">{overview?.averageScore || 0}</p>
                 </div>
               </div>
@@ -182,7 +184,7 @@ export default function DashboardPage() {
           {/* Score Trend Chart */}
           <Card className="card-super">
             <CardHeader>
-              <CardTitle className="text-body-heading">Score Trend</CardTitle>
+              <CardTitle className="text-body-heading">{t('dashboard.scoreTrend')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ScoreTrendChart data={trends} />
@@ -192,7 +194,7 @@ export default function DashboardPage() {
           {/* Language Distribution Chart */}
           <Card className="card-super">
             <CardHeader>
-              <CardTitle className="text-body-heading">Language Distribution</CardTitle>
+              <CardTitle className="text-body-heading">{t('dashboard.languageDistribution')}</CardTitle>
             </CardHeader>
             <CardContent>
               <LanguageDistributionChart data={languages} />
@@ -203,20 +205,20 @@ export default function DashboardPage() {
         {/* Recent Reviews */}
         <Card className="card-super">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-body-heading">Recent Reviews</CardTitle>
+            <CardTitle className="text-body-heading">{t('dashboard.recentReviews')}</CardTitle>
             <Link href="/reviews" className="text-sm text-amethyst hover:underline">
-              View all
+              {t('dashboard.viewAll')}
             </Link>
           </CardHeader>
           <CardContent>
             {reviews.length === 0 ? (
               <div className="text-center py-12">
                 <Code2 className="h-12 w-12 text-charcoal dark:text-gray-600 mx-auto mb-4" />
-                <p className="text-body text-charcoal dark:text-gray-400 mb-4">No reviews yet</p>
+                <p className="text-body text-charcoal dark:text-gray-400 mb-4">{t('dashboard.noReviews')}</p>
                 <Link href="/review/new">
                   <Button variant="cream">
                     <Plus className="mr-2 h-4 w-4" />
-                    Create your first review
+                    {t('dashboard.createFirst')}
                   </Button>
                 </Link>
               </div>
@@ -235,7 +237,7 @@ export default function DashboardPage() {
                       <div>
                         <p className="text-body font-medium text-charcoal dark:text-gray-100">{review.title}</p>
                         <p className="text-caption text-charcoal dark:text-gray-400">
-                          {review.language} • {review._count.issues} issues • {formatDate(review.createdAt)}
+                          {review.language} • {review._count.issues} {t('reviews.issues')} • {formatDate(review.createdAt)}
                         </p>
                       </div>
                     </div>
