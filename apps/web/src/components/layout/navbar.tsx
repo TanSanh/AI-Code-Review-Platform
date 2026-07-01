@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Code2, Menu, X, LogOut, User } from 'lucide-react';
+import { Code2, Menu, X, LogOut, User, Settings, FileCode } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 
 export function Navbar() {
@@ -22,9 +22,12 @@ export function Navbar() {
         {/* Desktop Navigation */}
         {isAuthenticated ? (
           <>
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
               <Link href="/dashboard" className="text-nav text-charcoal/70 hover:text-charcoal transition-colors">
                 Dashboard
+              </Link>
+              <Link href="/reviews" className="text-nav text-charcoal/70 hover:text-charcoal transition-colors">
+                Reviews
               </Link>
               <Link href="/review/new" className="text-nav text-charcoal/70 hover:text-charcoal transition-colors">
                 New Review
@@ -33,10 +36,15 @@ export function Navbar() {
 
             {/* Authenticated User Menu */}
             <div className="hidden md:flex items-center gap-4">
-              <div className="flex items-center gap-2 text-body text-charcoal">
+              <Link href="/profile" className="flex items-center gap-2 text-body text-charcoal hover:text-amethyst transition-colors">
                 <User className="h-4 w-4" />
                 <span>{user?.name || user?.email}</span>
-              </div>
+              </Link>
+              <Link href="/settings">
+                <Button variant="ghost" size="sm">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </Link>
               <Button variant="ghost" onClick={logout}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
@@ -84,17 +92,27 @@ export function Navbar() {
           <div className="px-4 py-4 space-y-4">
             {isAuthenticated ? (
               <>
-                <Link href="/dashboard" className="block text-nav text-charcoal/70 hover:text-charcoal">
+                <Link href="/dashboard" className="flex items-center gap-2 text-nav text-charcoal/70 hover:text-charcoal">
+                  <FileCode className="h-4 w-4" />
                   Dashboard
                 </Link>
-                <Link href="/review/new" className="block text-nav text-charcoal/70 hover:text-charcoal">
+                <Link href="/reviews" className="flex items-center gap-2 text-nav text-charcoal/70 hover:text-charcoal">
+                  <FileCode className="h-4 w-4" />
+                  All Reviews
+                </Link>
+                <Link href="/review/new" className="flex items-center gap-2 text-nav text-charcoal/70 hover:text-charcoal">
+                  <FileCode className="h-4 w-4" />
                   New Review
                 </Link>
-                <div className="pt-4 border-t border-parchment">
-                  <div className="flex items-center gap-2 text-body text-charcoal mb-4">
+                <div className="pt-4 border-t border-parchment space-y-3">
+                  <Link href="/profile" className="flex items-center gap-2 text-body text-charcoal">
                     <User className="h-4 w-4" />
-                    <span>{user?.name || user?.email}</span>
-                  </div>
+                    {user?.name || user?.email}
+                  </Link>
+                  <Link href="/settings" className="flex items-center gap-2 text-body text-charcoal">
+                    <Settings className="h-4 w-4" />
+                    Settings
+                  </Link>
                   <Button variant="ghost" className="w-full" onClick={logout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Logout
