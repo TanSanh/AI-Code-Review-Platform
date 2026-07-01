@@ -25,6 +25,7 @@ export function Navbar() {
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
+  const pauseHideUntil = useRef(0);
 
   // Track scroll direction + glass intensity
   const handleScroll = useCallback(() => {
@@ -32,9 +33,15 @@ export function Navbar() {
       requestAnimationFrame(() => {
         const currentY = window.scrollY;
         const delta = currentY - lastScrollY.current;
+        const now = Date.now();
 
         if (currentY > 80) {
-          setHidden(delta > 0);
+          // Don't hide if within 5s pause window after nav click
+          if (now < pauseHideUntil.current) {
+            setHidden(false);
+          } else {
+            setHidden(delta > 0);
+          }
         } else {
           setHidden(false);
         }
@@ -60,6 +67,12 @@ export function Navbar() {
     },
     [pathname],
   );
+
+  // Pause navbar auto-hide for 5 seconds after clicking a nav link
+  const pauseHide = useCallback(() => {
+    pauseHideUntil.current = Date.now() + 5000;
+    setHidden(false);
+  }, []);
 
   const isDark = theme === 'dark';
 
@@ -120,9 +133,9 @@ export function Navbar() {
           {isAuthenticated ? (
             <>
               <div className="relative z-10 hidden items-center gap-1 md:flex">
-                <NavPill href="/dashboard" active={isActive('/dashboard')} isDark={isDark}>{t('nav.dashboard')}</NavPill>
-                <NavPill href="/reviews" active={isActive('/reviews')} isDark={isDark}>{t('nav.reviews')}</NavPill>
-                <NavPill href="/review/new" active={isActive('/review/new')} isDark={isDark}>{t('nav.newReview')}</NavPill>
+                <NavPill href="/dashboard" active={isActive('/dashboard')} isDark={isDark} onClick={pauseHide}>{t('nav.dashboard')}</NavPill>
+                <NavPill href="/reviews" active={isActive('/reviews')} isDark={isDark} onClick={pauseHide}>{t('nav.reviews')}</NavPill>
+                <NavPill href="/review/new" active={isActive('/review/new')} isDark={isDark} onClick={pauseHide}>{t('nav.newReview')}</NavPill>
               </div>
 
               <div className="relative z-10 hidden items-center gap-1.5 md:flex">
@@ -147,6 +160,7 @@ export function Navbar() {
 
                 <Link
                   href="/profile"
+                  onClick={pauseHide}
                   className={`flex items-center gap-2 rounded-xl px-3 py-1.5 text-sm backdrop-blur-sm transition-all duration-200 ${
                     isActive('/profile')
                       ? 'bg-mysteria/10 text-charcoal font-medium dark:bg-lavender/15 dark:text-gray-100'
@@ -156,7 +170,7 @@ export function Navbar() {
                   <User className="h-4 w-4" />
                   <span className="max-w-[100px] truncate">{user?.name || user?.email}</span>
                 </Link>
-                <Link href="/settings">
+                <Link href="/settings" onClick={pauseHide}>
                   <button
                     className={`flex h-8 w-8 items-center justify-center rounded-xl backdrop-blur-sm transition-all duration-200 ${
                       isActive('/settings')
@@ -178,9 +192,9 @@ export function Navbar() {
           ) : (
             <>
               <div className="relative z-10 hidden items-center gap-1 md:flex">
-                <NavPill href="/#features" active={false} isDark={isDark}>{t('nav.features')}</NavPill>
-                <NavPill href="/#how-it-works" active={false} isDark={isDark}>{t('nav.howItWorks')}</NavPill>
-                <NavPill href="/#pricing" active={false} isDark={isDark}>{t('nav.pricing')}</NavPill>
+                <NavPill href="/#features" active={false} isDark={isDark} onClick={pauseHide}>{t('nav.features')}</NavPill>
+                <NavPill href="/#how-it-works" active={false} isDark={isDark} onClick={pauseHide}>{t('nav.howItWorks')}</NavPill>
+                <NavPill href="/#pricing" active={false} isDark={isDark} onClick={pauseHide}>{t('nav.pricing')}</NavPill>
               </div>
 
               <div className="relative z-10 hidden items-center gap-1.5 md:flex">
@@ -201,14 +215,9 @@ export function Navbar() {
                   {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                 </button>
 
-                <Link href="/login">
+                <Link href="/login" onClick={pauseHide}>
                   <Button variant="ghost" size="sm" className="rounded-xl backdrop-blur-sm dark:text-gray-100/70 dark:hover:text-cream-50">
                     {t('nav.login')}
-                  </Button>
-                </Link>
-                <Link href="/register">
-                  <Button variant="cream" size="sm" className="rounded-xl backdrop-blur-sm dark:bg-lavender dark:text-white dark:hover:bg-lavender/90">
-                    {t('nav.getStarted')}
                   </Button>
                 </Link>
               </div>
@@ -257,20 +266,20 @@ export function Navbar() {
             <div className="relative z-10 space-y-1">
               {isAuthenticated ? (
                 <>
-                  <MobileNavLink href="/dashboard" icon={<FileCode className="h-4 w-4" />} active={isActive('/dashboard')} isDark={isDark} onClick={() => setMobileMenuOpen(false)}>
+                  <MobileNavLink href="/dashboard" icon={<FileCode className="h-4 w-4" />} active={isActive('/dashboard')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                     {t('nav.dashboard')}
                   </MobileNavLink>
-                  <MobileNavLink href="/reviews" icon={<FileCode className="h-4 w-4" />} active={isActive('/reviews')} isDark={isDark} onClick={() => setMobileMenuOpen(false)}>
+                  <MobileNavLink href="/reviews" icon={<FileCode className="h-4 w-4" />} active={isActive('/reviews')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                     {t('nav.allReviews')}
                   </MobileNavLink>
-                  <MobileNavLink href="/review/new" icon={<FileCode className="h-4 w-4" />} active={isActive('/review/new')} isDark={isDark} onClick={() => setMobileMenuOpen(false)}>
+                  <MobileNavLink href="/review/new" icon={<FileCode className="h-4 w-4" />} active={isActive('/review/new')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                     {t('nav.newReview')}
                   </MobileNavLink>
                   <div className="my-2 border-t border-mysteria/10 dark:border-[#33355a]" />
-                  <MobileNavLink href="/profile" icon={<User className="h-4 w-4" />} active={isActive('/profile')} isDark={isDark} onClick={() => setMobileMenuOpen(false)}>
+                  <MobileNavLink href="/profile" icon={<User className="h-4 w-4" />} active={isActive('/profile')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                     {user?.name || user?.email}
                   </MobileNavLink>
-                  <MobileNavLink href="/settings" icon={<Settings className="h-4 w-4" />} active={isActive('/settings')} isDark={isDark} onClick={() => setMobileMenuOpen(false)}>
+                  <MobileNavLink href="/settings" icon={<Settings className="h-4 w-4" />} active={isActive('/settings')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                     {t('nav.settings')}
                   </MobileNavLink>
                   <button
@@ -283,16 +292,13 @@ export function Navbar() {
                 </>
               ) : (
                 <>
-                  <MobileNavLink href="/#features" isDark={isDark} onClick={() => setMobileMenuOpen(false)}>{t('nav.features')}</MobileNavLink>
-                  <MobileNavLink href="/#how-it-works" isDark={isDark} onClick={() => setMobileMenuOpen(false)}>{t('nav.howItWorks')}</MobileNavLink>
-                  <MobileNavLink href="/#pricing" isDark={isDark} onClick={() => setMobileMenuOpen(false)}>{t('nav.pricing')}</MobileNavLink>
+                  <MobileNavLink href="/#features" isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>{t('nav.features')}</MobileNavLink>
+                  <MobileNavLink href="/#how-it-works" isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>{t('nav.howItWorks')}</MobileNavLink>
+                  <MobileNavLink href="/#pricing" isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>{t('nav.pricing')}</MobileNavLink>
                   <div className="my-2 border-t border-mysteria/10 dark:border-[#33355a]" />
                   <div className="flex gap-2 pt-1">
-                    <Link href="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
+                    <Link href="/login" className="flex-1" onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                       <Button variant="ghost" className="w-full rounded-xl backdrop-blur-sm dark:text-gray-100/70">{t('nav.login')}</Button>
-                    </Link>
-                    <Link href="/register" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="cream" className="w-full rounded-xl backdrop-blur-sm dark:bg-lavender dark:text-white">{t('nav.getStarted')}</Button>
                     </Link>
                   </div>
                 </>
@@ -312,15 +318,18 @@ function NavPill({
   active,
   isDark,
   children,
+  onClick,
 }: {
   href: string;
   active: boolean;
   isDark: boolean;
   children: React.ReactNode;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={`group relative rounded-xl px-3.5 py-2 text-sm font-medium backdrop-blur-sm transition-all duration-200 border ${
         active
           ? isDark
