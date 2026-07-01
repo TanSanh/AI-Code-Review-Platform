@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/contexts/auth-context';
 import { SocketProvider } from '@/contexts/socket-context';
+import { ThemeProvider } from '@/contexts/theme-context';
+import { LanguageProvider } from '@/contexts/language-context';
 import { Navbar } from '@/components/layout/navbar';
 import './globals.css';
 
@@ -22,14 +24,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-white font-sans">
-        <AuthProvider>
-          <SocketProvider>
-            <Navbar />
-            <main className="pt-20">{children}</main>
-          </SocketProvider>
-        </AuthProvider>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (theme === 'dark' || (!theme && prefersDark)) {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-screen bg-white text-charcoal font-sans dark:bg-charcoal-900 dark:text-cream-50">
+        <ThemeProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <SocketProvider>
+                <Navbar />
+                <main className="pt-20">{children}</main>
+              </SocketProvider>
+            </AuthProvider>
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

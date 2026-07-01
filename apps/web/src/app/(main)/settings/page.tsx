@@ -6,34 +6,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Settings,
-  Bell,
-  Lock,
-  Trash2,
-  LogOut,
-  AlertTriangle,
-  Loader2,
-  Eye,
-  EyeOff,
+  Settings, Bell, Lock, Trash2, LogOut, AlertTriangle,
+  Loader2, Eye, EyeOff, Sun, Moon, Globe,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
+import { useTheme } from '@/contexts/theme-context';
+import { useLanguage } from '@/contexts/language-context';
 import { api } from '@/lib/api';
 
-/* ─── Toggle Switch Component ───────────────────────────────────── */
+/* ─── Toggle Switch ──────────────────────────────────────────────── */
 
-function Toggle({
-  enabled,
-  onToggle,
-}: {
-  enabled: boolean;
-  onToggle: () => void;
-}) {
+function Toggle({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) {
   return (
     <button
       type="button"
       onClick={onToggle}
       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-        enabled ? 'bg-mysteria' : 'bg-charcoal/20'
+        enabled ? 'bg-mysteria dark:bg-lavender' : 'bg-charcoal/20 dark:bg-charcoal-600'
       }`}
     >
       <span
@@ -45,10 +34,12 @@ function Toggle({
   );
 }
 
-/* ─── Settings Page ─────────────────────────────────────────────── */
+/* ─── Settings Page ──────────────────────────────────────────────── */
 
 export default function SettingsPage() {
   const { logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
 
   // ── Notification preferences (localStorage) ──
   const [emailNotif, setEmailNotif] = useState(true);
@@ -121,37 +112,98 @@ export default function SettingsPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-charcoal-900">
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-display-section text-charcoal">Settings</h1>
-          <p className="text-body text-charcoal/60 mt-2">
-            Manage your account preferences and security settings
+          <h1 className="text-display-section text-charcoal dark:text-cream-50">{t('settings.title')}</h1>
+          <p className="text-body text-charcoal/60 dark:text-cream-50/60 mt-2">
+            {t('settings.description')}
           </p>
         </div>
 
         {/* Password success message */}
         {pwdSuccess && (
-          <div className="mb-6 p-3 rounded-button bg-green-50 text-green-600 text-sm">
+          <div className="mb-6 p-3 rounded-button bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 text-sm">
             {pwdSuccess}
           </div>
         )}
 
         <div className="grid gap-6">
+          {/* ── Appearance ── */}
+          <Card className="card-super">
+            <CardHeader>
+              <CardTitle className="text-body-heading flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                {t('settings.appearance')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Theme */}
+              <div className="flex items-center justify-between py-3">
+                <div>
+                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.theme')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.themeDesc')}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant={theme === 'light' ? 'cream' : 'ghost'}
+                    size="sm"
+                    onClick={() => theme !== 'light' && toggleTheme()}
+                  >
+                    <Sun className="mr-1.5 h-3.5 w-3.5" />
+                    {t('settings.light')}
+                  </Button>
+                  <Button
+                    variant={theme === 'dark' ? 'cream' : 'ghost'}
+                    size="sm"
+                    onClick={() => theme !== 'dark' && toggleTheme()}
+                  >
+                    <Moon className="mr-1.5 h-3.5 w-3.5" />
+                    {t('settings.dark')}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Language */}
+              <div className="flex items-center justify-between py-3 border-t border-parchment dark:border-charcoal-700">
+                <div>
+                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.language')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.languageDesc')}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant={language === 'en' ? 'cream' : 'ghost'}
+                    size="sm"
+                    onClick={() => setLanguage('en')}
+                  >
+                    🇬🇧 English
+                  </Button>
+                  <Button
+                    variant={language === 'vi' ? 'cream' : 'ghost'}
+                    size="sm"
+                    onClick={() => setLanguage('vi')}
+                  >
+                    🇻🇳 Tiếng Việt
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* ── Notifications ── */}
           <Card className="card-super">
             <CardHeader>
               <CardTitle className="text-body-heading flex items-center gap-2">
                 <Bell className="h-5 w-5" />
-                Notifications
+                {t('settings.notifications')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between py-3">
                 <div>
-                  <p className="text-body font-medium text-charcoal">Email Notifications</p>
-                  <p className="text-caption text-charcoal/60">Receive email updates about your reviews</p>
+                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.emailNotif')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.emailNotifDesc')}</p>
                 </div>
                 <Toggle
                   enabled={emailNotif}
@@ -159,10 +211,10 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-parchment">
+              <div className="flex items-center justify-between py-3 border-t border-parchment dark:border-charcoal-700">
                 <div>
-                  <p className="text-body font-medium text-charcoal">Review Completion</p>
-                  <p className="text-caption text-charcoal/60">Get notified when AI review is complete</p>
+                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.reviewNotif')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.reviewNotifDesc')}</p>
                 </div>
                 <Toggle
                   enabled={reviewNotif}
@@ -177,15 +229,14 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle className="text-body-heading flex items-center gap-2">
                 <Lock className="h-5 w-5" />
-                Security
+                {t('settings.security')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Change Password */}
               <div className="flex items-center justify-between py-3">
                 <div>
-                  <p className="text-body font-medium text-charcoal">Change Password</p>
-                  <p className="text-caption text-charcoal/60">Update your account password</p>
+                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.changePassword')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.changePasswordDesc')}</p>
                 </div>
                 <Button
                   variant="outline"
@@ -196,31 +247,31 @@ export default function SettingsPage() {
                     setPwdSuccess('');
                   }}
                 >
-                  {showPasswordForm ? 'Cancel' : 'Change'}
+                  {showPasswordForm ? t('common.cancel') : t('settings.changePassword')}
                 </Button>
               </div>
 
               {showPasswordForm && (
-                <div className="p-4 bg-charcoal/[0.02] rounded-card border border-parchment space-y-4">
+                <div className="p-4 bg-charcoal/[0.02] dark:bg-charcoal-800 rounded-card border border-parchment dark:border-charcoal-700 space-y-4">
                   {pwdError && (
-                    <div className="p-3 rounded-button bg-red-50 text-red-600 text-sm">
+                    <div className="p-3 rounded-button bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 text-sm">
                       {pwdError}
                     </div>
                   )}
 
                   <div className="space-y-2">
-                    <Label htmlFor="current-pwd">Current Password</Label>
+                    <Label htmlFor="current-pwd">{t('settings.currentPassword')}</Label>
                     <div className="relative">
                       <Input
                         id="current-pwd"
                         type={showCurrentPwd ? 'text' : 'password'}
                         value={currentPwd}
                         onChange={(e) => setCurrentPwd(e.target.value)}
-                        placeholder="Enter current password"
+                        className="dark:bg-charcoal-800 dark:border-charcoal-600 dark:text-cream-50"
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal dark:text-cream-50/40 dark:hover:text-cream-50"
                         onClick={() => setShowCurrentPwd(!showCurrentPwd)}
                       >
                         {showCurrentPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -229,18 +280,18 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="new-pwd">New Password</Label>
+                    <Label htmlFor="new-pwd">{t('settings.newPassword')}</Label>
                     <div className="relative">
                       <Input
                         id="new-pwd"
                         type={showNewPwd ? 'text' : 'password'}
                         value={newPwd}
                         onChange={(e) => setNewPwd(e.target.value)}
-                        placeholder="Enter new password (min 8 characters)"
+                        className="dark:bg-charcoal-800 dark:border-charcoal-600 dark:text-cream-50"
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal dark:text-cream-50/40 dark:hover:text-cream-50"
                         onClick={() => setShowNewPwd(!showNewPwd)}
                       >
                         {showNewPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -249,13 +300,13 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="confirm-pwd">Confirm New Password</Label>
+                    <Label htmlFor="confirm-pwd">{t('settings.confirmPassword')}</Label>
                     <Input
                       id="confirm-pwd"
                       type="password"
                       value={confirmPwd}
                       onChange={(e) => setConfirmPwd(e.target.value)}
-                      placeholder="Confirm new password"
+                      className="dark:bg-charcoal-800 dark:border-charcoal-600 dark:text-cream-50"
                     />
                   </div>
 
@@ -271,7 +322,7 @@ export default function SettingsPage() {
                       ) : (
                         <Lock className="mr-2 h-4 w-4" />
                       )}
-                      Update Password
+                      {t('settings.updatePassword')}
                     </Button>
                   </div>
                 </div>
@@ -280,30 +331,30 @@ export default function SettingsPage() {
           </Card>
 
           {/* ── Danger Zone ── */}
-          <Card className="card-super border-red-200">
+          <Card className="card-super border-red-200 dark:border-red-900/50">
             <CardHeader>
-              <CardTitle className="text-body-heading flex items-center gap-2 text-red-600">
+              <CardTitle className="text-body-heading flex items-center gap-2 text-red-600 dark:text-red-400">
                 <AlertTriangle className="h-5 w-5" />
-                Danger Zone
+                {t('settings.dangerZone')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between py-3">
                 <div>
-                  <p className="text-body font-medium text-charcoal">Sign Out</p>
-                  <p className="text-caption text-charcoal/60">Sign out from your account</p>
+                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.signOut')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.signOutDesc')}</p>
                 </div>
                 <Button variant="ghost" onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
-                  Sign Out
+                  {t('settings.signOut')}
                 </Button>
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-red-100">
+              <div className="flex items-center justify-between py-3 border-t border-red-100 dark:border-red-900/30">
                 <div>
-                  <p className="text-body font-medium text-red-600">Delete Account</p>
-                  <p className="text-caption text-charcoal/60">
-                    Permanently delete your account and all data
+                  <p className="text-body font-medium text-red-600 dark:text-red-400">{t('settings.deleteAccount')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">
+                    {t('settings.deleteAccountDesc')}
                   </p>
                 </div>
                 <Button
@@ -311,17 +362,17 @@ export default function SettingsPage() {
                   onClick={() => setShowDeleteConfirm(true)}
                 >
                   <Trash2 className="mr-2 h-4 w-4 text-red-500" />
-                  Delete
+                  {t('common.delete')}
                 </Button>
               </div>
 
               {showDeleteConfirm && (
-                <div className="p-4 bg-red-50 rounded-card border border-red-200">
-                  <p className="text-body text-red-600 mb-2">
-                    Are you sure? This action cannot be undone.
+                <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-card border border-red-200 dark:border-red-900/40">
+                  <p className="text-body text-red-600 dark:text-red-400 mb-2">
+                    {t('settings.deleteConfirm')}
                   </p>
-                  <p className="text-caption text-red-500/70 mb-4">
-                    All your reviews, comments, and data will be permanently deleted.
+                  <p className="text-caption text-red-500/70 dark:text-red-400/60 mb-4">
+                    {t('settings.deleteWarning')}
                   </p>
                   <div className="flex gap-2">
                     <Button
@@ -329,18 +380,17 @@ export default function SettingsPage() {
                       size="sm"
                       onClick={() => setShowDeleteConfirm(false)}
                     >
-                      Cancel
+                      {t('common.cancel')}
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
                       className="bg-red-600 text-white hover:bg-red-700"
                       onClick={() => {
-                        // TODO: Implement delete account API when backend endpoint is available
                         setShowDeleteConfirm(false);
                       }}
                     >
-                      Yes, Delete Account
+                      {t('settings.yesDelete')}
                     </Button>
                   </div>
                 </div>

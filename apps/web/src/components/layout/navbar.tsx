@@ -4,13 +4,17 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Code2, Menu, X, LogOut, User, Settings, FileCode } from 'lucide-react';
+import { Code2, Menu, X, LogOut, User, Settings, FileCode, Globe, Sun, Moon } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
+import { useTheme } from '@/contexts/theme-context';
+import { useLanguage } from '@/contexts/language-context';
 
 /* ─── Navbar Component ───────────────────────────────────────────── */
 
 export function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -51,11 +55,13 @@ export function Navbar() {
   // Helper: check if a nav link is active
   const isActive = useCallback(
     (href: string) => {
-      if (href.startsWith('/#')) return false; // anchor links never "active"
+      if (href.startsWith('/#')) return false;
       return pathname === href || pathname.startsWith(href + '/');
     },
     [pathname],
   );
+
+  const isDark = theme === 'dark';
 
   return (
     <nav
@@ -67,23 +73,28 @@ export function Navbar() {
       {/* ── Floating centered pill ── */}
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pt-3">
         <div
-          className="navbar-glass relative flex h-14 items-center justify-between rounded-2xl border px-5 transition-all duration-500"
+          className="navbar-glass relative flex h-14 items-center justify-between rounded-2xl border px-5 transition-all duration-500 dark:border-charcoal-700/50 dark:bg-charcoal-800/80"
           style={{
-            borderColor: `rgba(255, 255, 255, ${0.35 - glassIntensity * 0.15})`,
-            backgroundColor: `rgba(255, 255, 255, ${0.3 + glassIntensity * 0.25})`,
-            boxShadow:
-              glassIntensity > 0.1
-                ? `0 8px 32px rgba(88, 80, 168, ${0.06 + glassIntensity * 0.08}), 0 1px 3px rgba(0,0,0,${glassIntensity * 0.04})`
-                : '0 2px 8px rgba(88, 80, 168, 0.03)',
+            borderColor: isDark
+              ? undefined
+              : `rgba(255, 255, 255, ${0.35 - glassIntensity * 0.15})`,
+            backgroundColor: isDark
+              ? undefined
+              : `rgba(255, 255, 255, ${0.3 + glassIntensity * 0.25})`,
+            boxShadow: glassIntensity > 0.1
+              ? `0 8px 32px rgba(0,0,0,${isDark ? 0.3 : 0.06 + glassIntensity * 0.08}), 0 1px 3px rgba(0,0,0,${glassIntensity * 0.04})`
+              : `0 2px 8px rgba(0,0,0,${isDark ? 0.2 : 0.03})`,
           }}
         >
           {/* ── Glass highlight overlay ── */}
-          <div
-            className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl transition-opacity duration-500"
-            style={{ opacity: 0.25 + glassIntensity * 0.35 }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/5 to-transparent" />
-          </div>
+          {!isDark && (
+            <div
+              className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl transition-opacity duration-500"
+              style={{ opacity: 0.25 + glassIntensity * 0.35 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/5 to-transparent" />
+            </div>
+          )}
 
           {/* ── Noise texture ── */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
@@ -91,14 +102,16 @@ export function Navbar() {
           </div>
 
           {/* ── Inner glow line ── */}
-          <div className="pointer-events-none absolute top-0 left-[10%] right-[10%] h-px rounded-full bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+          {!isDark && (
+            <div className="pointer-events-none absolute top-0 left-[10%] right-[10%] h-px rounded-full bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+          )}
 
           {/* ── Logo ── */}
           <Link href="/" className="group relative z-10 flex items-center gap-2.5">
-            <span className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-mysteria/8 transition-colors duration-300 group-hover:bg-mysteria/15">
-              <Code2 className="h-4.5 w-4.5 text-mysteria transition-transform duration-300 group-hover:scale-110" />
+            <span className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-mysteria/8 transition-colors duration-300 group-hover:bg-mysteria/15 dark:bg-lavender/15 dark:group-hover:bg-lavender/25">
+              <Code2 className="h-4.5 w-4.5 text-mysteria dark:text-lavender transition-transform duration-300 group-hover:scale-110" />
             </span>
-            <span className="text-base font-semibold tracking-tight text-charcoal">
+            <span className="text-base font-semibold tracking-tight text-charcoal dark:text-cream-50">
               AI Code Review
             </span>
           </Link>
@@ -107,18 +120,37 @@ export function Navbar() {
           {isAuthenticated ? (
             <>
               <div className="relative z-10 hidden items-center gap-1 md:flex">
-                <NavPill href="/dashboard" active={isActive('/dashboard')}>Dashboard</NavPill>
-                <NavPill href="/reviews" active={isActive('/reviews')}>Reviews</NavPill>
-                <NavPill href="/review/new" active={isActive('/review/new')}>New Review</NavPill>
+                <NavPill href="/dashboard" active={isActive('/dashboard')} isDark={isDark}>{t('nav.dashboard')}</NavPill>
+                <NavPill href="/reviews" active={isActive('/reviews')} isDark={isDark}>{t('nav.reviews')}</NavPill>
+                <NavPill href="/review/new" active={isActive('/review/new')} isDark={isDark}>{t('nav.newReview')}</NavPill>
               </div>
 
-              <div className="relative z-10 hidden items-center gap-2 md:flex">
+              <div className="relative z-10 hidden items-center gap-1.5 md:flex">
+                {/* Language toggle */}
+                <button
+                  onClick={() => setLanguage(language === 'en' ? 'vi' : 'en')}
+                  className="flex h-8 items-center gap-1 rounded-xl px-2 text-xs font-medium text-charcoal/50 backdrop-blur-sm transition-all duration-200 hover:bg-white/40 hover:text-charcoal dark:text-cream-50/50 dark:hover:bg-charcoal-700/50 dark:hover:text-cream-50"
+                  title={language === 'en' ? 'Switch to Vietnamese' : 'Chuyển sang English'}
+                >
+                  <Globe className="h-3.5 w-3.5" />
+                  <span>{language === 'en' ? 'EN' : 'VI'}</span>
+                </button>
+
+                {/* Theme toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className="flex h-8 w-8 items-center justify-center rounded-xl text-charcoal/50 backdrop-blur-sm transition-all duration-200 hover:bg-white/40 hover:text-charcoal dark:text-cream-50/50 dark:hover:bg-charcoal-700/50 dark:hover:text-cream-50"
+                  title={isDark ? 'Switch to light mode' : 'Chế độ sáng'}
+                >
+                  {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </button>
+
                 <Link
                   href="/profile"
                   className={`flex items-center gap-2 rounded-xl px-3 py-1.5 text-sm backdrop-blur-sm transition-all duration-200 ${
                     isActive('/profile')
-                      ? 'bg-mysteria/10 text-charcoal font-medium'
-                      : 'text-charcoal/60 hover:bg-white/40 hover:text-charcoal'
+                      ? 'bg-mysteria/10 text-charcoal font-medium dark:bg-lavender/15 dark:text-cream-50'
+                      : 'text-charcoal/60 hover:bg-white/40 hover:text-charcoal dark:text-cream-50/60 dark:hover:bg-charcoal-700/50 dark:hover:text-cream-50'
                   }`}
                 >
                   <User className="h-4 w-4" />
@@ -128,8 +160,8 @@ export function Navbar() {
                   <button
                     className={`flex h-8 w-8 items-center justify-center rounded-xl backdrop-blur-sm transition-all duration-200 ${
                       isActive('/settings')
-                        ? 'bg-mysteria/10 text-charcoal'
-                        : 'text-charcoal/40 hover:bg-white/40 hover:text-charcoal'
+                        ? 'bg-mysteria/10 text-charcoal dark:bg-lavender/15 dark:text-cream-50'
+                        : 'text-charcoal/40 hover:bg-white/40 hover:text-charcoal dark:text-cream-50/40 dark:hover:bg-charcoal-700/50 dark:hover:text-cream-50'
                     }`}
                   >
                     <Settings className="h-4 w-4" />
@@ -137,7 +169,7 @@ export function Navbar() {
                 </Link>
                 <button
                   onClick={logout}
-                  className="flex h-8 w-8 items-center justify-center rounded-xl text-charcoal/40 backdrop-blur-sm transition-all duration-200 hover:bg-red-50/60 hover:text-red-600"
+                  className="flex h-8 w-8 items-center justify-center rounded-xl text-charcoal/40 backdrop-blur-sm transition-all duration-200 hover:bg-red-50/60 hover:text-red-600 dark:text-cream-50/40 dark:hover:bg-red-900/30 dark:hover:text-red-400"
                 >
                   <LogOut className="h-4 w-4" />
                 </button>
@@ -146,20 +178,37 @@ export function Navbar() {
           ) : (
             <>
               <div className="relative z-10 hidden items-center gap-1 md:flex">
-                <NavPill href="/#features" active={false}>Features</NavPill>
-                <NavPill href="/#how-it-works" active={false}>How it Works</NavPill>
-                <NavPill href="/#pricing" active={false}>Pricing</NavPill>
+                <NavPill href="/#features" active={false} isDark={isDark}>{t('nav.features')}</NavPill>
+                <NavPill href="/#how-it-works" active={false} isDark={isDark}>{t('nav.howItWorks')}</NavPill>
+                <NavPill href="/#pricing" active={false} isDark={isDark}>{t('nav.pricing')}</NavPill>
               </div>
 
-              <div className="relative z-10 hidden items-center gap-2 md:flex">
+              <div className="relative z-10 hidden items-center gap-1.5 md:flex">
+                {/* Language toggle */}
+                <button
+                  onClick={() => setLanguage(language === 'en' ? 'vi' : 'en')}
+                  className="flex h-8 items-center gap-1 rounded-xl px-2 text-xs font-medium text-charcoal/50 backdrop-blur-sm transition-all duration-200 hover:bg-white/40 hover:text-charcoal dark:text-cream-50/50 dark:hover:bg-charcoal-700/50 dark:hover:text-cream-50"
+                >
+                  <Globe className="h-3.5 w-3.5" />
+                  <span>{language === 'en' ? 'EN' : 'VI'}</span>
+                </button>
+
+                {/* Theme toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className="flex h-8 w-8 items-center justify-center rounded-xl text-charcoal/50 backdrop-blur-sm transition-all duration-200 hover:bg-white/40 hover:text-charcoal dark:text-cream-50/50 dark:hover:bg-charcoal-700/50 dark:hover:text-cream-50"
+                >
+                  {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </button>
+
                 <Link href="/login">
-                  <Button variant="ghost" size="sm" className="rounded-xl backdrop-blur-sm">
-                    Log in
+                  <Button variant="ghost" size="sm" className="rounded-xl backdrop-blur-sm dark:text-cream-50/70 dark:hover:text-cream-50">
+                    {t('nav.login')}
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button variant="cream" size="sm" className="rounded-xl backdrop-blur-sm">
-                    Get Started
+                  <Button variant="cream" size="sm" className="rounded-xl backdrop-blur-sm dark:bg-lavender dark:text-white dark:hover:bg-lavender/90">
+                    {t('nav.getStarted')}
                   </Button>
                 </Link>
               </div>
@@ -168,7 +217,7 @@ export function Navbar() {
 
           {/* ── Mobile Menu Button ── */}
           <button
-            className="relative z-10 flex h-8 w-8 items-center justify-center rounded-xl text-charcoal transition-colors duration-200 hover:bg-white/40 md:hidden"
+            className="relative z-10 flex h-8 w-8 items-center justify-center rounded-xl text-charcoal transition-colors duration-200 hover:bg-white/40 dark:text-cream-50 dark:hover:bg-charcoal-700/50 md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -177,55 +226,73 @@ export function Navbar() {
 
         {/* ── Mobile Menu Dropdown ── */}
         {mobileMenuOpen && (
-          <div
-            className="navbar-glass relative z-50 mt-2 overflow-hidden rounded-2xl border border-white/25 p-4 shadow-xl shadow-mysteria/5 md:hidden"
-            style={{
+          <div className="navbar-glass relative z-50 mt-2 overflow-hidden rounded-2xl border border-white/25 p-4 shadow-xl shadow-mysteria/5 dark:border-charcoal-700/50 dark:bg-charcoal-800/95 md:hidden"
+            style={!isDark ? {
               backgroundColor: `rgba(255, 255, 255, ${0.65 + glassIntensity * 0.15})`,
-            }}
+            } : undefined}
           >
-            <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
-              <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/5 to-transparent" />
+            {!isDark && (
+              <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
+                <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/5 to-transparent" />
+              </div>
+            )}
+
+            {/* Mobile toggles */}
+            <div className="relative z-10 mb-3 flex items-center justify-end gap-2">
+              <button
+                onClick={() => setLanguage(language === 'en' ? 'vi' : 'en')}
+                className="flex h-8 items-center gap-1 rounded-xl px-2 text-xs font-medium text-charcoal/50 hover:bg-white/40 dark:text-cream-50/50 dark:hover:bg-charcoal-700/50"
+              >
+                <Globe className="h-3.5 w-3.5" />
+                <span>{language === 'en' ? 'EN' : 'VI'}</span>
+              </button>
+              <button
+                onClick={toggleTheme}
+                className="flex h-8 w-8 items-center justify-center rounded-xl text-charcoal/50 hover:bg-white/40 dark:text-cream-50/50 dark:hover:bg-charcoal-700/50"
+              >
+                {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
             </div>
 
             <div className="relative z-10 space-y-1">
               {isAuthenticated ? (
                 <>
-                  <MobileNavLink href="/dashboard" icon={<FileCode className="h-4 w-4" />} active={isActive('/dashboard')} onClick={() => setMobileMenuOpen(false)}>
-                    Dashboard
+                  <MobileNavLink href="/dashboard" icon={<FileCode className="h-4 w-4" />} active={isActive('/dashboard')} isDark={isDark} onClick={() => setMobileMenuOpen(false)}>
+                    {t('nav.dashboard')}
                   </MobileNavLink>
-                  <MobileNavLink href="/reviews" icon={<FileCode className="h-4 w-4" />} active={isActive('/reviews')} onClick={() => setMobileMenuOpen(false)}>
-                    All Reviews
+                  <MobileNavLink href="/reviews" icon={<FileCode className="h-4 w-4" />} active={isActive('/reviews')} isDark={isDark} onClick={() => setMobileMenuOpen(false)}>
+                    {t('nav.allReviews')}
                   </MobileNavLink>
-                  <MobileNavLink href="/review/new" icon={<FileCode className="h-4 w-4" />} active={isActive('/review/new')} onClick={() => setMobileMenuOpen(false)}>
-                    New Review
+                  <MobileNavLink href="/review/new" icon={<FileCode className="h-4 w-4" />} active={isActive('/review/new')} isDark={isDark} onClick={() => setMobileMenuOpen(false)}>
+                    {t('nav.newReview')}
                   </MobileNavLink>
-                  <div className="my-2 border-t border-mysteria/10" />
-                  <MobileNavLink href="/profile" icon={<User className="h-4 w-4" />} active={isActive('/profile')} onClick={() => setMobileMenuOpen(false)}>
+                  <div className="my-2 border-t border-mysteria/10 dark:border-charcoal-700" />
+                  <MobileNavLink href="/profile" icon={<User className="h-4 w-4" />} active={isActive('/profile')} isDark={isDark} onClick={() => setMobileMenuOpen(false)}>
                     {user?.name || user?.email}
                   </MobileNavLink>
-                  <MobileNavLink href="/settings" icon={<Settings className="h-4 w-4" />} active={isActive('/settings')} onClick={() => setMobileMenuOpen(false)}>
-                    Settings
+                  <MobileNavLink href="/settings" icon={<Settings className="h-4 w-4" />} active={isActive('/settings')} isDark={isDark} onClick={() => setMobileMenuOpen(false)}>
+                    {t('nav.settings')}
                   </MobileNavLink>
                   <button
                     onClick={() => { logout(); setMobileMenuOpen(false); }}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-red-600 transition-colors hover:bg-red-50/60"
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-red-600 transition-colors hover:bg-red-50/60 dark:text-red-400 dark:hover:bg-red-900/30"
                   >
                     <LogOut className="h-4 w-4" />
-                    Logout
+                    {t('nav.logout')}
                   </button>
                 </>
               ) : (
                 <>
-                  <MobileNavLink href="/#features" onClick={() => setMobileMenuOpen(false)}>Features</MobileNavLink>
-                  <MobileNavLink href="/#how-it-works" onClick={() => setMobileMenuOpen(false)}>How it Works</MobileNavLink>
-                  <MobileNavLink href="/#pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</MobileNavLink>
-                  <div className="my-2 border-t border-mysteria/10" />
+                  <MobileNavLink href="/#features" isDark={isDark} onClick={() => setMobileMenuOpen(false)}>{t('nav.features')}</MobileNavLink>
+                  <MobileNavLink href="/#how-it-works" isDark={isDark} onClick={() => setMobileMenuOpen(false)}>{t('nav.howItWorks')}</MobileNavLink>
+                  <MobileNavLink href="/#pricing" isDark={isDark} onClick={() => setMobileMenuOpen(false)}>{t('nav.pricing')}</MobileNavLink>
+                  <div className="my-2 border-t border-mysteria/10 dark:border-charcoal-700" />
                   <div className="flex gap-2 pt-1">
                     <Link href="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="ghost" className="w-full rounded-xl backdrop-blur-sm">Log in</Button>
+                      <Button variant="ghost" className="w-full rounded-xl backdrop-blur-sm dark:text-cream-50/70">{t('nav.login')}</Button>
                     </Link>
                     <Link href="/register" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="cream" className="w-full rounded-xl backdrop-blur-sm">Get Started</Button>
+                      <Button variant="cream" className="w-full rounded-xl backdrop-blur-sm dark:bg-lavender dark:text-white">{t('nav.getStarted')}</Button>
                     </Link>
                   </div>
                 </>
@@ -243,19 +310,25 @@ export function Navbar() {
 function NavPill({
   href,
   active,
+  isDark,
   children,
 }: {
   href: string;
   active: boolean;
+  isDark: boolean;
   children: React.ReactNode;
 }) {
   return (
     <Link
       href={href}
-      className={`group relative rounded-xl px-3.5 py-2 text-sm font-medium backdrop-blur-sm transition-all duration-200 ${
+      className={`group relative rounded-xl px-3.5 py-2 text-sm font-medium backdrop-blur-sm transition-all duration-200 border ${
         active
-          ? 'bg-white/60 text-charcoal shadow-sm shadow-mysteria/5 border border-white/50'
-          : 'text-charcoal/55 hover:text-charcoal hover:bg-white/30 border border-transparent'
+          ? isDark
+            ? 'bg-charcoal-700/60 text-cream-50 shadow-sm border-charcoal-600/50'
+            : 'bg-white/60 text-charcoal shadow-sm shadow-mysteria/5 border-white/50'
+          : isDark
+            ? 'text-cream-50/55 hover:text-cream-50 hover:bg-charcoal-700/40 border-transparent'
+            : 'text-charcoal/55 hover:text-charcoal hover:bg-white/30 border-transparent'
       }`}
     >
       <span className="relative z-10">{children}</span>
@@ -268,22 +341,28 @@ function MobileNavLink({
   children,
   icon,
   active,
+  isDark,
   onClick,
 }: {
   href: string;
   children: React.ReactNode;
   icon?: React.ReactNode;
   active?: boolean;
+  isDark: boolean;
   onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 border ${
         active
-          ? 'bg-mysteria/10 text-charcoal border border-mysteria/15'
-          : 'text-charcoal/65 hover:bg-white/40 hover:text-charcoal border border-transparent'
+          ? isDark
+            ? 'bg-lavender/15 text-cream-50 border-lavender/20'
+            : 'bg-mysteria/10 text-charcoal border-mysteria/15'
+          : isDark
+            ? 'text-cream-50/65 hover:bg-charcoal-700/40 hover:text-cream-50 border-transparent'
+            : 'text-charcoal/65 hover:bg-white/40 hover:text-charcoal border-transparent'
       }`}
     >
       {icon}

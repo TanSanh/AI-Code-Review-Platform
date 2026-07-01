@@ -25,20 +25,42 @@
     --ring: 260 34% 23%;
     --radius: 0.5rem;
   }
+
+  .dark {
+    --background: 240 10% 8%;
+    --foreground: 30 5% 90%;
+    --card: 240 8% 12%;
+    --card-foreground: 30 5% 90%;
+    --popover: 240 8% 12%;
+    --popover-foreground: 30 5% 90%;
+    --primary: 260 60% 70%;
+    --primary-foreground: 240 10% 8%;
+    --secondary: 240 6% 16%;
+    --secondary-foreground: 30 5% 85%;
+    --muted: 240 6% 16%;
+    --muted-foreground: 30 3% 55%;
+    --accent: 260 60% 70%;
+    --accent-foreground: 30 5% 90%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 20%;
+    --input: 240 6% 20%;
+    --ring: 260 60% 70%;
+  }
 }
 
 @layer base {
   * {
-    border-color: theme('colors.parchment.DEFAULT');
+    @apply border-parchment dark:border-charcoal-700;
   }
 
   body {
-    @apply bg-white text-charcoal antialiased;
+    @apply bg-white text-charcoal antialiased dark:bg-charcoal-900 dark:text-cream-50;
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-charcoal;
+    @apply text-charcoal dark:text-cream-50;
   }
 }
 
@@ -58,11 +80,11 @@
 
   /* Superhuman-style cards */
   .card-super {
-    @apply bg-white border border-parchment rounded-card p-6 transition-all;
+    @apply bg-white border border-parchment rounded-card p-6 transition-all dark:bg-charcoal-800 dark:border-charcoal-700;
   }
 
   .card-super:hover {
-    @apply shadow-lg;
+    @apply shadow-lg dark:shadow-charcoal-900/50;
   }
 
   /* Hero gradient */

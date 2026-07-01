@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/auth-context';
+import { useLanguage } from '@/contexts/language-context';
 import { formatDate } from '@/lib/utils';
 
 interface UserProfile {
@@ -34,6 +35,7 @@ interface UserProfile {
 
 export default function ProfilePage() {
   const { updateUser } = useAuth();
+  const { language, t } = useLanguage();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -82,10 +84,10 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-charcoal-900">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria dark:border-lavender" />
           </div>
         </div>
       </div>
@@ -93,13 +95,13 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-charcoal-900">
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-display-section text-charcoal">Profile</h1>
-          <p className="text-body text-charcoal/60 mt-2">
-            Manage your account settings and preferences
+          <h1 className="text-display-section text-charcoal dark:text-cream-50">{t('profile.title')}</h1>
+          <p className="text-body text-charcoal/60 dark:text-cream-50/60 mt-2">
+            {t('profile.description')}
           </p>
         </div>
 
@@ -109,54 +111,55 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle className="text-body-heading flex items-center gap-2">
                 <User className="h-5 w-5" />
-                Personal Information
+                {t('profile.personalInfo')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {success && (
-                <div className="p-3 rounded-button bg-green-50 text-green-600 text-sm">
+                <div className="p-3 rounded-button bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 text-sm">
                   {success}
                 </div>
               )}
               {error && (
-                <div className="p-3 rounded-button bg-red-50 text-red-600 text-sm">
+                <div className="p-3 rounded-button bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 text-sm">
                   {error}
                 </div>
               )}
 
               {/* Avatar */}
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-mysteria/10">
-                  <span className="text-xl font-bold text-mysteria">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-mysteria/10 dark:bg-lavender/15">
+                  <span className="text-xl font-bold text-mysteria dark:text-lavender">
                     {profile?.name?.charAt(0)?.toUpperCase() || '?'}
                   </span>
                 </div>
                 <div>
-                  <p className="text-body font-medium text-charcoal">{profile?.name}</p>
-                  <p className="text-caption text-charcoal/50">{profile?.email}</p>
+                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{profile?.name}</p>
+                  <p className="text-caption text-charcoal/50 dark:text-cream-50/50">{profile?.email}</p>
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name">{t('profile.name')}</Label>
                   <Input
                     id="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    className="dark:bg-charcoal-800 dark:border-charcoal-600 dark:text-cream-50"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('profile.email')}</Label>
                   <Input
                     id="email"
                     value={profile?.email || ''}
                     disabled
-                    className="bg-gray-50"
+                    className="bg-gray-50 dark:bg-charcoal-800 dark:border-charcoal-600 dark:text-cream-50/50"
                   />
-                  <p className="text-caption text-charcoal/40">
-                    Email cannot be changed
+                  <p className="text-caption text-charcoal/40 dark:text-cream-50/40">
+                    {t('profile.emailCannotChange')}
                   </p>
                 </div>
               </div>
@@ -168,7 +171,7 @@ export default function ProfilePage() {
                   ) : (
                     <Save className="mr-2 h-4 w-4" />
                   )}
-                  Save Changes
+                  {t('common.save')}
                 </Button>
               </div>
             </CardContent>
@@ -179,7 +182,7 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle className="text-body-heading flex items-center gap-2">
                 <FileCode className="h-5 w-5" />
-                Activity Stats
+                {t('profile.activityStats')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -188,34 +191,34 @@ export default function ProfilePage() {
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-lavender/20 mb-3">
                     <FileCode className="h-6 w-6 text-amethyst" />
                   </div>
-                  <p className="text-2xl font-bold text-charcoal">{profile?._count.reviews || 0}</p>
-                  <p className="text-caption text-charcoal/60">Reviews</p>
+                  <p className="text-2xl font-bold text-charcoal dark:text-cream-50">{profile?._count.reviews || 0}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('profile.reviews')}</p>
                 </div>
 
                 <div className="text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-lavender/20 mb-3">
                     <MessageSquare className="h-6 w-6 text-amethyst" />
                   </div>
-                  <p className="text-2xl font-bold text-charcoal">{profile?._count.comments || 0}</p>
-                  <p className="text-caption text-charcoal/60">Comments</p>
+                  <p className="text-2xl font-bold text-charcoal dark:text-cream-50">{profile?._count.comments || 0}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('profile.comments')}</p>
                 </div>
 
                 <div className="text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-lavender/20 mb-3">
                     <Shield className="h-6 w-6 text-amethyst" />
                   </div>
-                  <p className="text-2xl font-bold text-charcoal capitalize">{profile?.role?.toLowerCase() || 'member'}</p>
-                  <p className="text-caption text-charcoal/60">Role</p>
+                  <p className="text-2xl font-bold text-charcoal dark:text-cream-50 capitalize">{profile?.role?.toLowerCase() || 'member'}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('profile.role')}</p>
                 </div>
 
                 <div className="text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-lavender/20 mb-3">
                     <Calendar className="h-6 w-6 text-amethyst" />
                   </div>
-                  <p className="text-body font-bold text-charcoal">
-                    {profile?.createdAt ? formatDate(profile.createdAt) : '-'}
+                  <p className="text-body font-bold text-charcoal dark:text-cream-50">
+                    {profile?.createdAt ? formatDate(profile.createdAt, language) : '-'}
                   </p>
-                  <p className="text-caption text-charcoal/60">Joined</p>
+                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('profile.joined')}</p>
                 </div>
               </div>
             </CardContent>
@@ -226,26 +229,26 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle className="text-body-heading flex items-center gap-2">
                 <Mail className="h-5 w-5" />
-                Account Details
+                {t('profile.accountDetails')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between py-3 border-b border-parchment">
-                  <span className="text-body text-charcoal">User ID</span>
-                  <span className="text-caption text-charcoal/60 font-mono">{profile?.id || '-'}</span>
+                <div className="flex items-center justify-between py-3 border-b border-parchment dark:border-charcoal-700">
+                  <span className="text-body text-charcoal dark:text-cream-50">{t('profile.userId')}</span>
+                  <span className="text-caption text-charcoal/60 dark:text-cream-50/60 font-mono">{profile?.id || '-'}</span>
                 </div>
-                <div className="flex items-center justify-between py-3 border-b border-parchment">
-                  <span className="text-body text-charcoal">Email</span>
-                  <span className="text-caption text-charcoal/60">{profile?.email || '-'}</span>
+                <div className="flex items-center justify-between py-3 border-b border-parchment dark:border-charcoal-700">
+                  <span className="text-body text-charcoal dark:text-cream-50">{t('profile.email')}</span>
+                  <span className="text-caption text-charcoal/60 dark:text-cream-50/60">{profile?.email || '-'}</span>
                 </div>
-                <div className="flex items-center justify-between py-3 border-b border-parchment">
-                  <span className="text-body text-charcoal">Role</span>
-                  <span className="text-caption text-charcoal/60">{profile?.role || '-'}</span>
+                <div className="flex items-center justify-between py-3 border-b border-parchment dark:border-charcoal-700">
+                  <span className="text-body text-charcoal dark:text-cream-50">{t('profile.role')}</span>
+                  <span className="text-caption text-charcoal/60 dark:text-cream-50/60">{profile?.role || '-'}</span>
                 </div>
                 <div className="flex items-center justify-between py-3">
-                  <span className="text-body text-charcoal">Member Since</span>
-                  <span className="text-caption text-charcoal/60">
+                  <span className="text-body text-charcoal dark:text-cream-50">{t('profile.memberSince')}</span>
+                  <span className="text-caption text-charcoal/60 dark:text-cream-50/60">
                     {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : '-'}
                   </span>
                 </div>
