@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PasswordInput } from '@/components/ui/password-input';
 import {
   Settings, Bell, Lock, Trash2, LogOut, AlertTriangle,
-  Loader2, Eye, EyeOff, Sun, Moon, Globe,
+  Loader2, Sun, Moon, Globe,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import { useTheme } from '@/contexts/theme-context';
@@ -65,8 +66,6 @@ export default function SettingsPage() {
   const [currentPwd, setCurrentPwd] = useState('');
   const [newPwd, setNewPwd] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
-  const [showCurrentPwd, setShowCurrentPwd] = useState(false);
-  const [showNewPwd, setShowNewPwd] = useState(false);
   const [pwdLoading, setPwdLoading] = useState(false);
   const [pwdSuccess, setPwdSuccess] = useState('');
   const [pwdError, setPwdError] = useState('');
@@ -261,49 +260,28 @@ export default function SettingsPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="current-pwd">{t('settings.currentPassword')}</Label>
-                    <div className="relative">
-                      <Input
-                        id="current-pwd"
-                        type={showCurrentPwd ? 'text' : 'password'}
-                        value={currentPwd}
-                        onChange={(e) => setCurrentPwd(e.target.value)}
-                        className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal dark:text-gray-100/40 dark:hover:text-cream-50"
-                        onClick={() => setShowCurrentPwd(!showCurrentPwd)}
-                      >
-                        {showCurrentPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
+                    <PasswordInput
+                      id="current-pwd"
+                      value={currentPwd}
+                      onChange={(e) => setCurrentPwd(e.target.value)}
+                      className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="new-pwd">{t('settings.newPassword')}</Label>
-                    <div className="relative">
-                      <Input
-                        id="new-pwd"
-                        type={showNewPwd ? 'text' : 'password'}
-                        value={newPwd}
-                        onChange={(e) => setNewPwd(e.target.value)}
-                        className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal dark:text-gray-100/40 dark:hover:text-cream-50"
-                        onClick={() => setShowNewPwd(!showNewPwd)}
-                      >
-                        {showNewPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
+                    <PasswordInput
+                      id="new-pwd"
+                      value={newPwd}
+                      onChange={(e) => setNewPwd(e.target.value)}
+                      className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="confirm-pwd">{t('settings.confirmPassword')}</Label>
-                    <Input
+                    <PasswordInput
                       id="confirm-pwd"
-                      type="password"
                       value={confirmPwd}
                       onChange={(e) => setConfirmPwd(e.target.value)}
                       className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"

@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PasswordInput } from '@/components/ui/password-input';
 import {
   User,
   Mail,
@@ -476,8 +477,7 @@ export default function ProfilePage() {
                       </Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal/30 dark:text-gray-500" />
-                        <Input
-                          type="password"
+                        <PasswordInput
                           value={currentPassword}
                           onChange={(e) => setCurrentPassword(e.target.value)}
                           placeholder={t('profile.currentPassword')}
@@ -492,8 +492,7 @@ export default function ProfilePage() {
                       </Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal/30 dark:text-gray-500" />
-                        <Input
-                          type="password"
+                        <PasswordInput
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                           placeholder={t('profile.newPassword')}
@@ -511,8 +510,7 @@ export default function ProfilePage() {
                       </Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal/30 dark:text-gray-500" />
-                        <Input
-                          type="password"
+                        <PasswordInput
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder={t('profile.confirmNewPassword')}
