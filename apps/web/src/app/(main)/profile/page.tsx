@@ -33,7 +33,7 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
-  const { user, loading: authLoading } = useAuth();
+  const { updateUser } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -42,12 +42,10 @@ export default function ProfilePage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (authLoading) return;
-
     const fetchProfile = async () => {
       try {
-        const data = await api.getProfile() as UserProfile;
-        setProfile(data);
+        const data = await api.getProfile();
+        setProfile(data as UserProfile);
         setName(data.name);
       } catch (err) {
         console.error('Failed to fetch profile:', err);
@@ -57,16 +55,22 @@ export default function ProfilePage() {
     };
 
     fetchProfile();
-  }, [authLoading]);
+  }, []);
 
   const handleSave = async () => {
+    if (!name.trim()) {
+      setError('Name cannot be empty');
+      return;
+    }
+
     setSaving(true);
     setSuccess('');
     setError('');
 
     try {
-      // Profile update endpoint would go here
-      // For now, just show success
+      const updated = await api.updateProfile(name.trim());
+      setProfile(updated as UserProfile);
+      updateUser({ name: updated.name });
       setSuccess('Profile updated successfully');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
@@ -76,7 +80,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (authLoading || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-white">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
@@ -90,7 +94,6 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-white">
-
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-8">
@@ -121,6 +124,19 @@ export default function ProfilePage() {
                 </div>
               )}
 
+              {/* Avatar */}
+              <div className="flex items-center gap-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-mysteria/10">
+                  <span className="text-xl font-bold text-mysteria">
+                    {profile?.name?.charAt(0)?.toUpperCase() || '?'}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-body font-medium text-charcoal">{profile?.name}</p>
+                  <p className="text-caption text-charcoal/50">{profile?.email}</p>
+                </div>
+              </div>
+
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
@@ -146,7 +162,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="flex justify-end">
-                <Button variant="cream" onClick={handleSave} disabled={saving}>
+                <Button variant="cream" onClick={handleSave} disabled={saving || !name.trim()}>
                   {saving ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (

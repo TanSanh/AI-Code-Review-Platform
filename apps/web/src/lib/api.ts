@@ -57,10 +57,12 @@ class ApiClient {
       this.token = localStorage.getItem('token');
     }
 
-    const requestHeaders: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...headers,
-    };
+    const requestHeaders: Record<string, string> = { ...headers };
+
+    // Only set Content-Type for methods with a body
+    if (body) {
+      requestHeaders['Content-Type'] = 'application/json';
+    }
 
     if (this.token) {
       requestHeaders['Authorization'] = `Bearer ${this.token}`;
@@ -107,7 +109,37 @@ class ApiClient {
   }
 
   async getProfile() {
-    return this.request<{ id: string; email: string; name: string; role: string }>('/api/v1/auth/me');
+    return this.request<{
+      id: string;
+      email: string;
+      name: string;
+      avatarUrl: string | null;
+      role: string;
+      createdAt: string;
+      _count: { reviews: number; comments: number };
+    }>('/api/v1/auth/me');
+  }
+
+  async updateProfile(name: string) {
+    return this.request<{
+      id: string;
+      email: string;
+      name: string;
+      avatarUrl: string | null;
+      role: string;
+      createdAt: string;
+      _count: { reviews: number; comments: number };
+    }>('/api/v1/auth/me', {
+      method: 'PATCH',
+      body: { name },
+    });
+  }
+
+  async changePassword(currentPassword: string, newPassword: string) {
+    return this.request<{ message: string }>('/api/v1/auth/change-password', {
+      method: 'POST',
+      body: { currentPassword, newPassword },
+    });
   }
 
   // Reviews

@@ -9,6 +9,9 @@ interface User {
   email: string;
   name: string;
   role: string;
+  avatarUrl?: string | null;
+  createdAt?: string;
+  _count?: { reviews: number; comments: number };
 }
 
 interface AuthContextType {
@@ -17,6 +20,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, name: string, password: string) => Promise<void>;
   logout: () => void;
+  updateUser: (data: Partial<User>) => void;
   isAuthenticated: boolean;
 }
 
@@ -69,8 +73,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push('/login');
   };
 
+  const updateUser = (data: Partial<User>) => {
+    setUser((prev) => (prev ? { ...prev, ...data } : null));
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );
