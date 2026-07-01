@@ -9,6 +9,7 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
+import { useTheme } from '@/contexts/theme-context';
 
 interface LanguageData {
   language: string;
@@ -31,9 +32,16 @@ const COLORS = [
 ];
 
 export function LanguageDistributionChart({ data }: LanguageDistributionChartProps) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  const textColor = isDark ? '#a1a1aa' : '#292827';
+  const tooltipBg = isDark ? '#242640' : '#fff';
+  const tooltipBorder = isDark ? '#33355a' : '#e9e5dd';
+
   if (!data || data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-charcoal/40">
+      <div className="flex items-center justify-center h-64 text-charcoal/40 dark:text-gray-500">
         No language data yet
       </div>
     );
@@ -59,13 +67,14 @@ export function LanguageDistributionChart({ data }: LanguageDistributionChartPro
         </Pie>
         <Tooltip
           contentStyle={{
-            backgroundColor: '#fff',
-            border: '1px solid #e9e5dd',
+            backgroundColor: tooltipBg,
+            border: `1px solid ${tooltipBorder}`,
             borderRadius: '8px',
+            color: isDark ? '#f4f4f5' : '#292827',
           }}
           formatter={(value, name) => [`${value} reviews`, name]}
         />
-        <Legend />
+        <Legend wrapperStyle={{ color: textColor }} />
       </PieChart>
     </ResponsiveContainer>
   );

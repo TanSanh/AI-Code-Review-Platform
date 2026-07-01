@@ -67,7 +67,7 @@ const steps = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
       {/* Hero Section */}
       <section className="hero-gradient relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 md:py-32">
@@ -96,17 +96,17 @@ export default function HomePage() {
         </div>
 
         {/* Gradient overlay at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-[#1a1b2e] to-transparent" />
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 bg-white">
+      <section id="features" className="py-24 bg-white dark:bg-[#1a1b2e]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-display-section text-charcoal mb-4">
+            <h2 className="text-display-section text-charcoal dark:text-gray-50 mb-4">
               Everything you need for better code
             </h2>
-            <p className="text-body-emphasis text-charcoal/60 max-w-2xl mx-auto">
+            <p className="text-body-emphasis text-charcoal/60 dark:text-gray-400 max-w-2xl mx-auto">
               A comprehensive code review platform powered by advanced AI analysis.
             </p>
           </div>
@@ -116,10 +116,10 @@ export default function HomePage() {
               <Card key={feature.title} className="card-super">
                 <CardContent className="p-6">
                   <feature.icon className="h-10 w-10 text-lavender mb-4" />
-                  <h3 className="text-body-heading font-semibold text-charcoal mb-2">
+                  <h3 className="text-body-heading font-semibold text-charcoal dark:text-gray-100 mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-body text-charcoal/60">
+                  <p className="text-body text-charcoal/60 dark:text-gray-400">
                     {feature.description}
                   </p>
                 </CardContent>
@@ -130,13 +130,13 @@ export default function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-24 bg-cream/30">
+      <section id="how-it-works" className="py-24 bg-cream/30 dark:bg-[#242640]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-display-section text-charcoal mb-4">
+            <h2 className="text-display-section text-charcoal dark:text-gray-50 mb-4">
               How it works
             </h2>
-            <p className="text-body-emphasis text-charcoal/60 max-w-2xl mx-auto">
+            <p className="text-body-emphasis text-charcoal/60 dark:text-gray-400 max-w-2xl mx-auto">
               Three simple steps to smarter code reviews.
             </p>
           </div>
@@ -144,13 +144,13 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
             {steps.map((step) => (
               <div key={step.step} className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-mysteria text-white text-2xl font-bold mb-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-mysteria dark:bg-lavender text-white text-2xl font-bold mb-6">
                   {step.step}
                 </div>
-                <h3 className="text-body-heading font-semibold text-charcoal mb-3">
+                <h3 className="text-body-heading font-semibold text-charcoal dark:text-gray-100 mb-3">
                   {step.title}
                 </h3>
-                <p className="text-body text-charcoal/60">
+                <p className="text-body text-charcoal/60 dark:text-gray-400">
                   {step.description}
                 </p>
               </div>
@@ -160,12 +160,12 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white dark:bg-[#1a1b2e]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-display-section text-charcoal mb-6">
+          <h2 className="text-display-section text-charcoal dark:text-gray-50 mb-6">
             Ready to write better code?
           </h2>
-          <p className="text-body-emphasis text-charcoal/60 mb-10 max-w-2xl mx-auto">
+          <p className="text-body-emphasis text-charcoal/60 dark:text-gray-400 mb-10 max-w-2xl mx-auto">
             Join thousands of developers who are shipping better code with AI-powered reviews.
           </p>
           <Link href="/register">

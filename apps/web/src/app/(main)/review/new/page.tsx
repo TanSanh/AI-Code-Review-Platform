@@ -111,8 +111,8 @@ export default function NewReviewPage() {
       <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-display-section text-charcoal">New Code Review</h1>
-          <p className="text-body text-charcoal/60 mt-2">
+          <h1 className="text-display-section text-charcoal dark:text-gray-50">New Code Review</h1>
+          <p className="text-body text-charcoal/60 dark:text-gray-400 mt-2">
             Submit your code for AI-powered analysis
           </p>
         </div>
@@ -121,7 +121,7 @@ export default function NewReviewPage() {
           <CardContent className="p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <div className="p-3 rounded-button bg-red-50 text-red-600 text-sm">
+                <div className="p-3 rounded-button bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 text-sm">
                   {error}
                 </div>
               )}
@@ -190,9 +190,9 @@ export default function NewReviewPage() {
                       accept=".ts,.tsx,.js,.jsx,.py,.java,.go,.rs,.php,.rb"
                       onChange={handleFileUpload}
                     />
-                    <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-parchment rounded-card cursor-pointer hover:border-lavender transition-colors">
-                      <Upload className="h-5 w-5 text-charcoal/40" />
-                      <span className="text-sm text-charcoal/60">Choose file or drag & drop</span>
+                    <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-parchment dark:border-[#33355a] rounded-card cursor-pointer hover:border-lavender transition-colors">
+                      <Upload className="h-5 w-5 text-charcoal/40 dark:text-gray-500" />
+                      <span className="text-sm text-charcoal/60 dark:text-gray-400">Choose file or drag & drop</span>
                     </div>
                   </label>
                 </div>
@@ -204,7 +204,7 @@ export default function NewReviewPage() {
                 <textarea
                   id="code"
                   placeholder="Paste your code here..."
-                  className="w-full h-64 p-4 font-mono text-sm bg-charcoal text-green-400 rounded-card border-0 resize-none focus:outline-none focus:ring-2 focus:ring-lavender"
+                  className="w-full h-64 p-4 font-mono text-sm bg-charcoal dark:bg-[#0d0e1a] text-green-400 rounded-card border-0 resize-none focus:outline-none focus:ring-2 focus:ring-lavender"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   required
