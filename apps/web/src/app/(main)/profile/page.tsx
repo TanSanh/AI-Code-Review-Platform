@@ -17,6 +17,9 @@ import {
   Save,
   LogOut,
   Settings,
+  Lock,
+  Info,
+  CheckCircle,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/auth-context';
@@ -52,6 +55,12 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordSuccess, setPasswordSuccess] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<Tab>('general');
@@ -98,6 +107,34 @@ export default function ProfilePage() {
   const handleLogout = () => {
     logout();
     router.push('/login');
+  };
+
+  const handleChangePassword = async () => {
+    setPasswordError('');
+    setPasswordSuccess('');
+
+    if (newPassword.length < 8) {
+      setPasswordError(t('profile.passwordHint'));
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError(t('profile.passwordMismatch'));
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      await api.changePassword(currentPassword, newPassword);
+      setPasswordSuccess(t('profile.passwordUpdated'));
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setTimeout(() => setPasswordSuccess(''), 3000);
+    } catch (err) {
+      setPasswordError(err instanceof Error ? err.message : 'Failed to change password');
+    } finally {
+      setPasswordLoading(false);
+    }
   };
 
   if (loading) {
@@ -406,21 +443,117 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* ── Other Tabs (placeholder) ── */}
-            {activeTab !== 'general' && (
-              <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] p-12 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-[#1a1b2e] mb-4">
-                  {sidebarItems.filter(i => i.key === activeTab).map(i => {
-                    const Icon = i.icon;
-                    return <Icon key={i.key} className="h-7 w-7 text-charcoal/30 dark:text-gray-500" />;
-                  })}
+            {/* ── Security Tab ── */}
+            {activeTab === 'security' && (
+              <div className="space-y-6">
+                <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#33355a]">
+                    <h3 className="text-base font-semibold text-charcoal dark:text-gray-100 flex items-center gap-2">
+                      <Lock className="h-4 w-4" />
+                      {t('profile.changePassword')}
+                    </h3>
+                  </div>
+                  <div className="p-6 space-y-5">
+                    <p className="text-sm text-charcoal/60 dark:text-gray-400">
+                      {t('profile.changePasswordDesc')}
+                    </p>
+
+                    {passwordSuccess && (
+                      <div className="p-3 rounded-xl bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 text-sm flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4" />
+                        {passwordSuccess}
+                      </div>
+                    )}
+                    {passwordError && (
+                      <div className="p-3 rounded-xl bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 text-sm">
+                        {passwordError}
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      <Label className="text-xs font-semibold uppercase tracking-wider text-charcoal/50 dark:text-gray-400">
+                        {t('profile.currentPassword')}
+                      </Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal/30 dark:text-gray-500" />
+                        <Input
+                          type="password"
+                          value={currentPassword}
+                          onChange={(e) => setCurrentPassword(e.target.value)}
+                          placeholder={t('profile.currentPassword')}
+                          className="h-11 rounded-xl border-gray-200 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100 pl-10"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-xs font-semibold uppercase tracking-wider text-charcoal/50 dark:text-gray-400">
+                        {t('profile.newPassword')}
+                      </Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal/30 dark:text-gray-500" />
+                        <Input
+                          type="password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder={t('profile.newPassword')}
+                          className="h-11 rounded-xl border-gray-200 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100 pl-10"
+                        />
+                      </div>
+                      <p className="text-xs text-charcoal/40 dark:text-gray-500">
+                        {t('profile.passwordHint')}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-xs font-semibold uppercase tracking-wider text-charcoal/50 dark:text-gray-400">
+                        {t('profile.confirmNewPassword')}
+                      </Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal/30 dark:text-gray-500" />
+                        <Input
+                          type="password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder={t('profile.confirmNewPassword')}
+                          className="h-11 rounded-xl border-gray-200 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100 pl-10"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-charcoal dark:text-gray-100 mb-2">
-                  {t(`profile.${activeTab}` as any)}
-                </h3>
-                <p className="text-sm text-charcoal/40 dark:text-gray-500">
-                  Coming soon...
-                </p>
+
+                {/* Security Tip */}
+                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-800/30 p-6">
+                  <div className="flex gap-3">
+                    <Info className="h-5 w-5 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-1">
+                        {t('profile.securityTip')}
+                      </p>
+                      <p className="text-sm text-blue-600/80 dark:text-blue-400/70">
+                        {t('profile.securityTipDesc')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Update Button */}
+                <div className="flex justify-end">
+                  <Button
+                    variant="cream"
+                    onClick={handleChangePassword}
+                    disabled={passwordLoading || !currentPassword || !newPassword || !confirmPassword}
+                    className="rounded-xl px-6 h-11 font-medium"
+                  >
+                    {passwordLoading ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                    )}
+                    {t('profile.updatePassword')}
+                  </Button>
+                </div>
               </div>
             )}
           </main>
