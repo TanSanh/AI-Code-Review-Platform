@@ -68,9 +68,9 @@ export function Navbar() {
     [pathname],
   );
 
-  // Pause navbar auto-hide for 5 seconds after clicking a nav link
+  // Pause navbar auto-hide for 3 seconds after clicking a nav link
   const pauseHide = useCallback(() => {
-    pauseHideUntil.current = Date.now() + 5000;
+    pauseHideUntil.current = Date.now() + 3000;
     setHidden(false);
   }, []);
 
