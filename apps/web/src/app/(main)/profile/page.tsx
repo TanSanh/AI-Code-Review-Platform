@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Navbar } from '@/components/layout/navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -80,7 +79,6 @@ export default function ProfilePage() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-white">
-        <Navbar />
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria" />
@@ -92,7 +90,6 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
 
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Navbar } from '@/components/layout/navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -136,7 +135,6 @@ export default function ReviewDetailPage() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-white">
-        <Navbar />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria" />
@@ -149,7 +147,6 @@ export default function ReviewDetailPage() {
   if (!review) {
     return (
       <div className="min-h-screen bg-white">
-        <Navbar />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <p className="text-body text-charcoal/60">Review not found</p>
         </div>
@@ -162,8 +159,6 @@ export default function ReviewDetailPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
-
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">

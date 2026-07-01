@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Navbar } from '@/components/layout/navbar';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -96,7 +96,6 @@ export default function NewReviewPage() {
   if (authLoading) {
     return (
       <div className="min-h-screen bg-white">
-        <Navbar />
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria" />
@@ -108,7 +107,6 @@ export default function NewReviewPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
 
       <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}

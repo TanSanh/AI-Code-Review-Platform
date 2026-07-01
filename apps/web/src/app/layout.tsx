@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/contexts/auth-context';
 import { SocketProvider } from '@/contexts/socket-context';
+import { Navbar } from '@/components/layout/navbar';
 import './globals.css';
 
 const inter = Inter({
@@ -24,7 +25,10 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="min-h-screen bg-white font-sans">
         <AuthProvider>
-          <SocketProvider>{children}</SocketProvider>
+          <SocketProvider>
+            <Navbar />
+            <main className="pt-20">{children}</main>
+          </SocketProvider>
         </AuthProvider>
       </body>
     </html>
