@@ -97,7 +97,7 @@ export default function ReviewsPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria" />
@@ -108,13 +108,13 @@ export default function ReviewsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-display-section text-charcoal">All Reviews</h1>
-            <p className="text-body text-charcoal/60 mt-2">
+            <h1 className="text-display-section text-charcoal dark:text-gray-100">All Reviews</h1>
+            <p className="text-body text-charcoal/60 dark:text-gray-400 mt-2">
               {total} review{total !== 1 ? 's' : ''} total
             </p>
           </div>
@@ -132,7 +132,7 @@ export default function ReviewsPage() {
             <div className="flex flex-col md:flex-row gap-4">
               {/* Search */}
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-charcoal/40" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-charcoal/40 dark:text-gray-500" />
                 <Input
                   placeholder="Search reviews..."
                   value={searchQuery}
@@ -187,9 +187,9 @@ export default function ReviewsPage() {
           <Card className="card-super">
             <CardContent className="py-16">
               <div className="text-center">
-                <Code2 className="h-16 w-16 text-charcoal/20 mx-auto mb-4" />
-                <h3 className="text-body-heading text-charcoal mb-2">No reviews found</h3>
-                <p className="text-body text-charcoal/60 mb-6">
+                <Code2 className="h-16 w-16 text-charcoal/20 dark:text-gray-600 mx-auto mb-4" />
+                <h3 className="text-body-heading text-charcoal dark:text-gray-100 mb-2">No reviews found</h3>
+                <p className="text-body text-charcoal/60 dark:text-gray-400 mb-6">
                   {searchQuery || statusFilter !== 'all' || languageFilter !== 'all'
                     ? 'Try adjusting your filters'
                     : 'Create your first review to get started'}
@@ -220,19 +220,19 @@ export default function ReviewsPage() {
                             <FileCode className="h-6 w-6 text-amethyst" />
                           </div>
                           <div>
-                            <h3 className="text-body-heading font-medium text-charcoal">
+                            <h3 className="text-body-heading font-medium text-charcoal dark:text-gray-100">
                               {review.title}
                             </h3>
                             <div className="flex items-center gap-3 mt-1">
-                              <span className="text-caption text-charcoal/60">
+                              <span className="text-caption text-charcoal/60 dark:text-gray-400">
                                 {review.language}
                               </span>
-                              <span className="text-caption text-charcoal/40">•</span>
-                              <span className="text-caption text-charcoal/60">
+                              <span className="text-caption text-charcoal/40 dark:text-gray-500">•</span>
+                              <span className="text-caption text-charcoal/60 dark:text-gray-400">
                                 {review._count.issues} issues
                               </span>
-                              <span className="text-caption text-charcoal/40">•</span>
-                              <span className="text-caption text-charcoal/60">
+                              <span className="text-caption text-charcoal/40 dark:text-gray-500">•</span>
+                              <span className="text-caption text-charcoal/60 dark:text-gray-400">
                                 {formatDate(review.createdAt)}
                               </span>
                             </div>
@@ -242,7 +242,7 @@ export default function ReviewsPage() {
                         <div className="flex items-center gap-4">
                           {review.score !== null && (
                             <div className="text-right">
-                              <p className="text-caption text-charcoal/60">Score</p>
+                              <p className="text-caption text-charcoal/60 dark:text-gray-400">Score</p>
                               <p className={`text-body-heading font-semibold ${getScoreColor(review.score)}`}>
                                 {review.score}/100
                               </p>
@@ -258,7 +258,7 @@ export default function ReviewsPage() {
                             {review.status}
                           </div>
 
-                          <ArrowRight className="h-5 w-5 text-charcoal/40" />
+                          <ArrowRight className="h-5 w-5 text-charcoal/40 dark:text-gray-500" />
                         </div>
                       </div>
                     </CardContent>

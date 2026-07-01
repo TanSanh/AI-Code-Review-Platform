@@ -42,7 +42,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-white text-charcoal font-sans dark:bg-charcoal-900 dark:text-cream-50">
+      <body className="min-h-screen bg-white text-charcoal font-sans dark:bg-[#1a1b2e] dark:text-gray-100">
         <ThemeProvider>
           <LanguageProvider>
             <AuthProvider>

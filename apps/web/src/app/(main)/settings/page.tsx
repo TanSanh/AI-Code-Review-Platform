@@ -22,7 +22,7 @@ function Toggle({ enabled, onToggle }: { enabled: boolean; onToggle: () => void 
       type="button"
       onClick={onToggle}
       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-        enabled ? 'bg-mysteria dark:bg-lavender' : 'bg-charcoal/20 dark:bg-charcoal-600'
+        enabled ? 'bg-mysteria dark:bg-lavender' : 'bg-charcoal/20 dark:bg-[#33355a]'
       }`}
     >
       <span
@@ -112,12 +112,12 @@ export default function SettingsPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-charcoal-900">
+    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-display-section text-charcoal dark:text-cream-50">{t('settings.title')}</h1>
-          <p className="text-body text-charcoal/60 dark:text-cream-50/60 mt-2">
+          <h1 className="text-display-section text-charcoal dark:text-gray-100">{t('settings.title')}</h1>
+          <p className="text-body text-charcoal/60 dark:text-gray-100/60 mt-2">
             {t('settings.description')}
           </p>
         </div>
@@ -142,8 +142,8 @@ export default function SettingsPage() {
               {/* Theme */}
               <div className="flex items-center justify-between py-3">
                 <div>
-                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.theme')}</p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.themeDesc')}</p>
+                  <p className="text-body font-medium text-charcoal dark:text-gray-100">{t('settings.theme')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('settings.themeDesc')}</p>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -166,10 +166,10 @@ export default function SettingsPage() {
               </div>
 
               {/* Language */}
-              <div className="flex items-center justify-between py-3 border-t border-parchment dark:border-charcoal-700">
+              <div className="flex items-center justify-between py-3 border-t border-parchment dark:border-[#33355a]">
                 <div>
-                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.language')}</p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.languageDesc')}</p>
+                  <p className="text-body font-medium text-charcoal dark:text-gray-100">{t('settings.language')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('settings.languageDesc')}</p>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -202,8 +202,8 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between py-3">
                 <div>
-                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.emailNotif')}</p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.emailNotifDesc')}</p>
+                  <p className="text-body font-medium text-charcoal dark:text-gray-100">{t('settings.emailNotif')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('settings.emailNotifDesc')}</p>
                 </div>
                 <Toggle
                   enabled={emailNotif}
@@ -211,10 +211,10 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-parchment dark:border-charcoal-700">
+              <div className="flex items-center justify-between py-3 border-t border-parchment dark:border-[#33355a]">
                 <div>
-                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.reviewNotif')}</p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.reviewNotifDesc')}</p>
+                  <p className="text-body font-medium text-charcoal dark:text-gray-100">{t('settings.reviewNotif')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('settings.reviewNotifDesc')}</p>
                 </div>
                 <Toggle
                   enabled={reviewNotif}
@@ -235,8 +235,8 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between py-3">
                 <div>
-                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.changePassword')}</p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.changePasswordDesc')}</p>
+                  <p className="text-body font-medium text-charcoal dark:text-gray-100">{t('settings.changePassword')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('settings.changePasswordDesc')}</p>
                 </div>
                 <Button
                   variant="outline"
@@ -252,7 +252,7 @@ export default function SettingsPage() {
               </div>
 
               {showPasswordForm && (
-                <div className="p-4 bg-charcoal/[0.02] dark:bg-charcoal-800 rounded-card border border-parchment dark:border-charcoal-700 space-y-4">
+                <div className="p-4 bg-charcoal/[0.02] dark:bg-[#242640] rounded-card border border-parchment dark:border-[#33355a] space-y-4">
                   {pwdError && (
                     <div className="p-3 rounded-button bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 text-sm">
                       {pwdError}
@@ -267,11 +267,11 @@ export default function SettingsPage() {
                         type={showCurrentPwd ? 'text' : 'password'}
                         value={currentPwd}
                         onChange={(e) => setCurrentPwd(e.target.value)}
-                        className="dark:bg-charcoal-800 dark:border-charcoal-600 dark:text-cream-50"
+                        className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal dark:text-cream-50/40 dark:hover:text-cream-50"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal dark:text-gray-100/40 dark:hover:text-cream-50"
                         onClick={() => setShowCurrentPwd(!showCurrentPwd)}
                       >
                         {showCurrentPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -287,11 +287,11 @@ export default function SettingsPage() {
                         type={showNewPwd ? 'text' : 'password'}
                         value={newPwd}
                         onChange={(e) => setNewPwd(e.target.value)}
-                        className="dark:bg-charcoal-800 dark:border-charcoal-600 dark:text-cream-50"
+                        className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal dark:text-cream-50/40 dark:hover:text-cream-50"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal dark:text-gray-100/40 dark:hover:text-cream-50"
                         onClick={() => setShowNewPwd(!showNewPwd)}
                       >
                         {showNewPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -306,7 +306,7 @@ export default function SettingsPage() {
                       type="password"
                       value={confirmPwd}
                       onChange={(e) => setConfirmPwd(e.target.value)}
-                      className="dark:bg-charcoal-800 dark:border-charcoal-600 dark:text-cream-50"
+                      className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
                     />
                   </div>
 
@@ -341,8 +341,8 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between py-3">
                 <div>
-                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{t('settings.signOut')}</p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('settings.signOutDesc')}</p>
+                  <p className="text-body font-medium text-charcoal dark:text-gray-100">{t('settings.signOut')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('settings.signOutDesc')}</p>
                 </div>
                 <Button variant="ghost" onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
@@ -353,7 +353,7 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between py-3 border-t border-red-100 dark:border-red-900/30">
                 <div>
                   <p className="text-body font-medium text-red-600 dark:text-red-400">{t('settings.deleteAccount')}</p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">
                     {t('settings.deleteAccountDesc')}
                   </p>
                 </div>

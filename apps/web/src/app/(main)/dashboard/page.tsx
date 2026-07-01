@@ -88,7 +88,7 @@ export default function DashboardPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria" />
@@ -99,14 +99,14 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-display-section text-charcoal">Dashboard</h1>
-            <p className="text-body text-charcoal/60 mt-2">
+            <h1 className="text-display-section text-charcoal dark:text-gray-100">Dashboard</h1>
+            <p className="text-body text-charcoal dark:text-gray-400 mt-2">
               Welcome back, {user?.name || 'User'}
             </p>
           </div>
@@ -127,7 +127,7 @@ export default function DashboardPage() {
                   <FileCode className="h-5 w-5 text-amethyst" />
                 </div>
                 <div>
-                  <p className="text-caption text-charcoal/60">Total Reviews</p>
+                  <p className="text-caption text-charcoal dark:text-gray-400">Total Reviews</p>
                   <p className="text-body-heading font-semibold">{overview?.totalReviews || 0}</p>
                 </div>
               </div>
@@ -141,7 +141,7 @@ export default function DashboardPage() {
                   <CheckCircle className="h-5 w-5 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-caption text-charcoal/60">Completed</p>
+                  <p className="text-caption text-charcoal dark:text-gray-400">Completed</p>
                   <p className="text-body-heading font-semibold">{overview?.completedReviews || 0}</p>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default function DashboardPage() {
                   <AlertTriangle className="h-5 w-5 text-orange-600" />
                 </div>
                 <div>
-                  <p className="text-caption text-charcoal/60">Issues Found</p>
+                  <p className="text-caption text-charcoal dark:text-gray-400">Issues Found</p>
                   <p className="text-body-heading font-semibold">{overview?.totalIssues || 0}</p>
                 </div>
               </div>
@@ -169,7 +169,7 @@ export default function DashboardPage() {
                   <Code2 className="h-5 w-5 text-mysteria" />
                 </div>
                 <div>
-                  <p className="text-caption text-charcoal/60">Avg. Score</p>
+                  <p className="text-caption text-charcoal dark:text-gray-400">Avg. Score</p>
                   <p className="text-body-heading font-semibold">{overview?.averageScore || 0}</p>
                 </div>
               </div>
@@ -211,8 +211,8 @@ export default function DashboardPage() {
           <CardContent>
             {reviews.length === 0 ? (
               <div className="text-center py-12">
-                <Code2 className="h-12 w-12 text-charcoal/20 mx-auto mb-4" />
-                <p className="text-body text-charcoal/60 mb-4">No reviews yet</p>
+                <Code2 className="h-12 w-12 text-charcoal dark:text-gray-600 mx-auto mb-4" />
+                <p className="text-body text-charcoal dark:text-gray-400 mb-4">No reviews yet</p>
                 <Link href="/review/new">
                   <Button variant="cream">
                     <Plus className="mr-2 h-4 w-4" />
@@ -233,8 +233,8 @@ export default function DashboardPage() {
                         <FileCode className="h-5 w-5 text-amethyst" />
                       </div>
                       <div>
-                        <p className="text-body font-medium text-charcoal">{review.title}</p>
-                        <p className="text-caption text-charcoal/60">
+                        <p className="text-body font-medium text-charcoal dark:text-gray-100">{review.title}</p>
+                        <p className="text-caption text-charcoal dark:text-gray-400">
                           {review.language} • {review._count.issues} issues • {formatDate(review.createdAt)}
                         </p>
                       </div>
@@ -252,7 +252,7 @@ export default function DashboardPage() {
                       }`}>
                         {review.status}
                       </div>
-                      <ArrowRight className="h-4 w-4 text-charcoal/40" />
+                      <ArrowRight className="h-4 w-4 text-charcoal dark:text-gray-500" />
                     </div>
                   </Link>
                 ))}

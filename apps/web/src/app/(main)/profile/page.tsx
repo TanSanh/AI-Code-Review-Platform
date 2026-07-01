@@ -84,7 +84,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-charcoal-900">
+      <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria dark:border-lavender" />
@@ -95,12 +95,12 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-charcoal-900">
+    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-display-section text-charcoal dark:text-cream-50">{t('profile.title')}</h1>
-          <p className="text-body text-charcoal/60 dark:text-cream-50/60 mt-2">
+          <h1 className="text-display-section text-charcoal dark:text-gray-100">{t('profile.title')}</h1>
+          <p className="text-body text-charcoal/60 dark:text-gray-100/60 mt-2">
             {t('profile.description')}
           </p>
         </div>
@@ -134,8 +134,8 @@ export default function ProfilePage() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-body font-medium text-charcoal dark:text-cream-50">{profile?.name}</p>
-                  <p className="text-caption text-charcoal/50 dark:text-cream-50/50">{profile?.email}</p>
+                  <p className="text-body font-medium text-charcoal dark:text-gray-100">{profile?.name}</p>
+                  <p className="text-caption text-charcoal/50 dark:text-gray-100/50">{profile?.email}</p>
                 </div>
               </div>
 
@@ -146,7 +146,7 @@ export default function ProfilePage() {
                     id="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="dark:bg-charcoal-800 dark:border-charcoal-600 dark:text-cream-50"
+                    className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
                   />
                 </div>
 
@@ -156,9 +156,9 @@ export default function ProfilePage() {
                     id="email"
                     value={profile?.email || ''}
                     disabled
-                    className="bg-gray-50 dark:bg-charcoal-800 dark:border-charcoal-600 dark:text-cream-50/50"
+                    className="bg-gray-50 dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100/50"
                   />
-                  <p className="text-caption text-charcoal/40 dark:text-cream-50/40">
+                  <p className="text-caption text-charcoal/40 dark:text-gray-100/40">
                     {t('profile.emailCannotChange')}
                   </p>
                 </div>
@@ -191,34 +191,34 @@ export default function ProfilePage() {
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-lavender/20 mb-3">
                     <FileCode className="h-6 w-6 text-amethyst" />
                   </div>
-                  <p className="text-2xl font-bold text-charcoal dark:text-cream-50">{profile?._count.reviews || 0}</p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('profile.reviews')}</p>
+                  <p className="text-2xl font-bold text-charcoal dark:text-gray-100">{profile?._count.reviews || 0}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('profile.reviews')}</p>
                 </div>
 
                 <div className="text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-lavender/20 mb-3">
                     <MessageSquare className="h-6 w-6 text-amethyst" />
                   </div>
-                  <p className="text-2xl font-bold text-charcoal dark:text-cream-50">{profile?._count.comments || 0}</p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('profile.comments')}</p>
+                  <p className="text-2xl font-bold text-charcoal dark:text-gray-100">{profile?._count.comments || 0}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('profile.comments')}</p>
                 </div>
 
                 <div className="text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-lavender/20 mb-3">
                     <Shield className="h-6 w-6 text-amethyst" />
                   </div>
-                  <p className="text-2xl font-bold text-charcoal dark:text-cream-50 capitalize">{profile?.role?.toLowerCase() || 'member'}</p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('profile.role')}</p>
+                  <p className="text-2xl font-bold text-charcoal dark:text-gray-100 capitalize">{profile?.role?.toLowerCase() || 'member'}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('profile.role')}</p>
                 </div>
 
                 <div className="text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-lavender/20 mb-3">
                     <Calendar className="h-6 w-6 text-amethyst" />
                   </div>
-                  <p className="text-body font-bold text-charcoal dark:text-cream-50">
+                  <p className="text-body font-bold text-charcoal dark:text-gray-100">
                     {profile?.createdAt ? formatDate(profile.createdAt, language) : '-'}
                   </p>
-                  <p className="text-caption text-charcoal/60 dark:text-cream-50/60">{t('profile.joined')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('profile.joined')}</p>
                 </div>
               </div>
             </CardContent>
@@ -234,21 +234,21 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between py-3 border-b border-parchment dark:border-charcoal-700">
-                  <span className="text-body text-charcoal dark:text-cream-50">{t('profile.userId')}</span>
-                  <span className="text-caption text-charcoal/60 dark:text-cream-50/60 font-mono">{profile?.id || '-'}</span>
+                <div className="flex items-center justify-between py-3 border-b border-parchment dark:border-[#33355a]">
+                  <span className="text-body text-charcoal dark:text-gray-100">{t('profile.userId')}</span>
+                  <span className="text-caption text-charcoal/60 dark:text-gray-100/60 font-mono">{profile?.id || '-'}</span>
                 </div>
-                <div className="flex items-center justify-between py-3 border-b border-parchment dark:border-charcoal-700">
-                  <span className="text-body text-charcoal dark:text-cream-50">{t('profile.email')}</span>
-                  <span className="text-caption text-charcoal/60 dark:text-cream-50/60">{profile?.email || '-'}</span>
+                <div className="flex items-center justify-between py-3 border-b border-parchment dark:border-[#33355a]">
+                  <span className="text-body text-charcoal dark:text-gray-100">{t('profile.email')}</span>
+                  <span className="text-caption text-charcoal/60 dark:text-gray-100/60">{profile?.email || '-'}</span>
                 </div>
-                <div className="flex items-center justify-between py-3 border-b border-parchment dark:border-charcoal-700">
-                  <span className="text-body text-charcoal dark:text-cream-50">{t('profile.role')}</span>
-                  <span className="text-caption text-charcoal/60 dark:text-cream-50/60">{profile?.role || '-'}</span>
+                <div className="flex items-center justify-between py-3 border-b border-parchment dark:border-[#33355a]">
+                  <span className="text-body text-charcoal dark:text-gray-100">{t('profile.role')}</span>
+                  <span className="text-caption text-charcoal/60 dark:text-gray-100/60">{profile?.role || '-'}</span>
                 </div>
                 <div className="flex items-center justify-between py-3">
-                  <span className="text-body text-charcoal dark:text-cream-50">{t('profile.memberSince')}</span>
-                  <span className="text-caption text-charcoal/60 dark:text-cream-50/60">
+                  <span className="text-body text-charcoal dark:text-gray-100">{t('profile.memberSince')}</span>
+                  <span className="text-caption text-charcoal/60 dark:text-gray-100/60">
                     {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : '-'}
                   </span>
                 </div>

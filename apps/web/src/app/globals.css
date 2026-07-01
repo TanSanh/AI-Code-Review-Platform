@@ -27,25 +27,25 @@
   }
 
   .dark {
-    --background: 240 10% 8%;
-    --foreground: 30 5% 90%;
-    --card: 240 8% 12%;
-    --card-foreground: 30 5% 90%;
-    --popover: 240 8% 12%;
-    --popover-foreground: 30 5% 90%;
-    --primary: 260 60% 70%;
-    --primary-foreground: 240 10% 8%;
-    --secondary: 240 6% 16%;
-    --secondary-foreground: 30 5% 85%;
-    --muted: 240 6% 16%;
-    --muted-foreground: 30 3% 55%;
-    --accent: 260 60% 70%;
-    --accent-foreground: 30 5% 90%;
-    --destructive: 0 70% 55%;
+    --background: 220 13% 11%;
+    --foreground: 0 0% 93%;
+    --card: 220 14% 16%;
+    --card-foreground: 0 0% 93%;
+    --popover: 220 14% 16%;
+    --popover-foreground: 0 0% 93%;
+    --primary: 263 70% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 20%;
+    --secondary-foreground: 0 0% 88%;
+    --muted: 220 14% 20%;
+    --muted-foreground: 0 0% 63%;
+    --accent: 263 70% 65%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 6% 20%;
-    --input: 240 6% 20%;
-    --ring: 260 60% 70%;
+    --border: 220 13% 22%;
+    --input: 220 13% 22%;
+    --ring: 263 70% 65%;
   }
 }
 
@@ -55,12 +55,12 @@
   }
 
   body {
-    @apply bg-white text-charcoal antialiased dark:bg-charcoal-900 dark:text-cream-50;
+    @apply bg-white text-charcoal antialiased dark:bg-[#1a1b2e] dark:text-gray-100;
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-charcoal dark:text-cream-50;
+    @apply text-charcoal dark:text-gray-50;
   }
 }
 
@@ -80,11 +80,11 @@
 
   /* Superhuman-style cards */
   .card-super {
-    @apply bg-white border border-parchment rounded-card p-6 transition-all dark:bg-charcoal-800 dark:border-charcoal-700;
+    @apply bg-white border border-parchment rounded-card p-6 transition-all dark:bg-[#242640] dark:border-[#33355a];
   }
 
   .card-super:hover {
-    @apply shadow-lg dark:shadow-charcoal-900/50;
+    @apply shadow-lg dark:shadow-[#1a1b2e]/80;
   }
 
   /* Hero gradient */
