@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Code2, Menu, X, LogOut, User, Settings, FileCode, Globe, Sun, Moon } from 'lucide-react';
+import { Code2, Menu, X, LogOut, User, Settings, FileCode, Globe, Sun, Moon, Users } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import { useTheme } from '@/contexts/theme-context';
 import { useLanguage } from '@/contexts/language-context';
@@ -135,6 +135,7 @@ export function Navbar() {
               <div className="relative z-10 hidden items-center gap-1 md:flex">
                 <NavPill href="/dashboard" active={isActive('/dashboard')} isDark={isDark} onClick={pauseHide}>{t('nav.dashboard')}</NavPill>
                 <NavPill href="/reviews" active={isActive('/reviews')} isDark={isDark} onClick={pauseHide}>{t('nav.reviews')}</NavPill>
+                <NavPill href="/community" active={isActive('/community')} isDark={isDark} onClick={pauseHide}>{t('nav.community')}</NavPill>
               </div>
 
               <div className="relative z-10 hidden items-center gap-1.5 md:flex">
@@ -270,6 +271,9 @@ export function Navbar() {
                   </MobileNavLink>
                   <MobileNavLink href="/reviews" icon={<FileCode className="h-4 w-4" />} active={isActive('/reviews')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                     {t('nav.allReviews')}
+                  </MobileNavLink>
+                  <MobileNavLink href="/community" icon={<Users className="h-4 w-4" />} active={isActive('/community')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
+                    {t('nav.community')}
                   </MobileNavLink>
                   <div className="my-2 border-t border-mysteria/10 dark:border-[#33355a]" />
                   <MobileNavLink href="/profile" icon={<User className="h-4 w-4" />} active={isActive('/profile')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>

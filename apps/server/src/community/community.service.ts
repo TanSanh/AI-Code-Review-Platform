@@ -1,0 +1,333 @@
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { PrismaService } from '../common/prisma/prisma.service';
+import { CreatePostDto } from './dto/create-post.dto';
+import { CommunityFilterDto } from './dto/community-filter.dto';
+import { CreateCommunityCommentDto } from './dto/create-community-comment.dto';
+
+@Injectable()
+export class CommunityService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async findAll(userId: string, filters: CommunityFilterDto) {
+    const page = filters.page || 1;
+    const limit = Math.min(filters.limit || 20, 50);
+    const skip = (page - 1) * limit;
+
+    const where: Record<string, unknown> = {};
+
+    if (filters.language) {
+      where.language = filters.language;
+    }
+
+    if (filters.authorId) {
+      where.authorId = filters.authorId;
+    }
+
+    if (filters.search) {
+      where.OR = [
+        { title: { contains: filters.search, mode: 'insensitive' } },
+        { content: { contains: filters.search, mode: 'insensitive' } },
+      ];
+    }
+
+    const orderBy =
+      filters.sort === 'popular'
+        ? { likeCount: 'desc' as const }
+        : { createdAt: 'desc' as const };
+
+    const [posts, total] = await Promise.all([
+      this.prisma.communityPost.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          author: { select: { id: true, name: true, avatarUrl: true } },
+          review: {
+            select: { id: true, title: true, language: true, score: true },
+          },
+          _count: { select: { likes: true, comments: true } },
+        },
+      }),
+      this.prisma.communityPost.count({ where }),
+    ]);
+
+    // Check which posts the current user has liked
+    const userLikes = await this.prisma.communityLike.findMany({
+      where: { userId, postId: { in: posts.map((p) => p.id) } },
+      select: { postId: true },
+    });
+    const likedPostIds = new Set(userLikes.map((l) => l.postId));
+
+    const postsWithLikeStatus = posts.map((post) => ({
+      ...post,
+      isLiked: likedPostIds.has(post.id),
+      likeCount: post._count.likes,
+      commentCount: post._count.comments,
+      _count: undefined,
+    }));
+
+    return {
+      data: postsWithLikeStatus,
+      meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
+    };
+  }
+
+  async findOne(id: string, userId: string) {
+    const post = await this.prisma.communityPost.findUnique({
+      where: { id },
+      include: {
+        author: { select: { id: true, name: true, avatarUrl: true, bio: true } },
+        review: {
+          select: { id: true, title: true, language: true, score: true },
+        },
+        comments: {
+          where: { parentId: null },
+          include: {
+            author: { select: { id: true, name: true, avatarUrl: true } },
+            replies: {
+              include: {
+                author: { select: { id: true, name: true, avatarUrl: true } },
+              },
+              orderBy: { createdAt: 'asc' },
+            },
+          },
+          orderBy: { createdAt: 'desc' },
+        },
+        _count: { select: { likes: true, comments: true } },
+      },
+    });
+
+    if (!post) throw new NotFoundException('Post not found');
+
+    const userLike = await this.prisma.communityLike.findUnique({
+      where: { userId_postId: { userId, postId: id } },
+    });
+
+    return {
+      ...post,
+      isLiked: !!userLike,
+      likeCount: post._count.likes,
+      commentCount: post._count.comments,
+      _count: undefined,
+    };
+  }
+
+  async create(userId: string, dto: CreatePostDto) {
+    // If reviewId provided, verify it belongs to the user
+    if (dto.reviewId) {
+      const review = await this.prisma.review.findUnique({
+        where: { id: dto.reviewId },
+        select: { authorId: true },
+      });
+      if (!review || review.authorId !== userId) {
+        throw new NotFoundException('Review not found');
+      }
+    }
+
+    const post = await this.prisma.communityPost.create({
+      data: {
+        title: dto.title,
+        content: dto.content,
+        language: dto.language,
+        tags: dto.tags,
+        imageUrl: dto.imageUrl || null,
+        authorId: userId,
+        reviewId: dto.reviewId || null,
+      },
+      include: {
+        author: { select: { id: true, name: true, avatarUrl: true } },
+        _count: { select: { likes: true, comments: true } },
+      },
+    });
+
+    return {
+      ...post,
+      isLiked: false,
+      likeCount: post._count.likes,
+      commentCount: post._count.comments,
+      _count: undefined,
+    };
+  }
+
+  async update(id: string, userId: string, dto: CreatePostDto) {
+    const post = await this.prisma.communityPost.findUnique({
+      where: { id },
+      select: { authorId: true },
+    });
+    if (!post) throw new NotFoundException('Post not found');
+    if (post.authorId !== userId) throw new ForbiddenException('Only owner can edit');
+
+    const updated = await this.prisma.communityPost.update({
+      where: { id },
+      data: {
+        title: dto.title,
+        content: dto.content,
+        language: dto.language || null,
+        tags: dto.tags || null,
+        imageUrl: dto.imageUrl || null,
+        reviewId: dto.reviewId || null,
+      },
+      include: {
+        author: { select: { id: true, name: true, avatarUrl: true } },
+        review: {
+          select: { id: true, title: true, language: true, score: true },
+        },
+        _count: { select: { likes: true, comments: true } },
+      },
+    });
+
+    const userLike = await this.prisma.communityLike.findUnique({
+      where: { userId_postId: { userId, postId: id } },
+    });
+
+    return {
+      ...updated,
+      isLiked: !!userLike,
+      likeCount: updated._count.likes,
+      commentCount: updated._count.comments,
+      _count: undefined,
+    };
+  }
+
+  async remove(id: string, userId: string) {
+    const post = await this.prisma.communityPost.findUnique({
+      where: { id },
+      select: { authorId: true },
+    });
+    if (!post) throw new NotFoundException('Post not found');
+    if (post.authorId !== userId) throw new ForbiddenException('Only owner can delete');
+
+    await this.prisma.communityComment.deleteMany({ where: { postId: id } });
+    await this.prisma.communityLike.deleteMany({ where: { postId: id } });
+    await this.prisma.communityPost.delete({ where: { id } });
+
+    return { message: 'Post deleted successfully' };
+  }
+
+  async toggleLike(id: string, userId: string) {
+    const post = await this.prisma.communityPost.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+    if (!post) throw new NotFoundException('Post not found');
+
+    const existingLike = await this.prisma.communityLike.findUnique({
+      where: { userId_postId: { userId, postId: id } },
+    });
+
+    if (existingLike) {
+      // Unlike
+      await this.prisma.$transaction([
+        this.prisma.communityLike.delete({
+          where: { id: existingLike.id },
+        }),
+        this.prisma.communityPost.update({
+          where: { id },
+          data: { likeCount: { decrement: 1 } },
+        }),
+      ]);
+      return { isLiked: false };
+    } else {
+      // Like
+      await this.prisma.$transaction([
+        this.prisma.communityLike.create({
+          data: { userId, postId: id },
+        }),
+        this.prisma.communityPost.update({
+          where: { id },
+          data: { likeCount: { increment: 1 } },
+        }),
+      ]);
+      return { isLiked: true };
+    }
+  }
+
+  async getComments(postId: string) {
+    const post = await this.prisma.communityPost.findUnique({
+      where: { id: postId },
+      select: { id: true },
+    });
+    if (!post) throw new NotFoundException('Post not found');
+
+    return this.prisma.communityComment.findMany({
+      where: { postId, parentId: null },
+      include: {
+        author: { select: { id: true, name: true, avatarUrl: true } },
+        replies: {
+          include: {
+            author: { select: { id: true, name: true, avatarUrl: true } },
+          },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async createComment(postId: string, userId: string, dto: CreateCommunityCommentDto) {
+    const post = await this.prisma.communityPost.findUnique({
+      where: { id: postId },
+      select: { id: true },
+    });
+    if (!post) throw new NotFoundException('Post not found');
+
+    // If replying to a comment, verify parent exists
+    if (dto.parentId) {
+      const parentComment = await this.prisma.communityComment.findUnique({
+        where: { id: dto.parentId },
+        select: { id: true, postId: true },
+      });
+      if (!parentComment || parentComment.postId !== postId) {
+        throw new NotFoundException('Parent comment not found');
+      }
+    }
+
+    const [comment] = await this.prisma.$transaction([
+      this.prisma.communityComment.create({
+        data: {
+          content: dto.content,
+          postId,
+          authorId: userId,
+          parentId: dto.parentId || null,
+        },
+        include: {
+          author: { select: { id: true, name: true, avatarUrl: true } },
+        },
+      }),
+      this.prisma.communityPost.update({
+        where: { id: postId },
+        data: { commentCount: { increment: 1 } },
+      }),
+    ]);
+
+    return comment;
+  }
+
+  async removeComment(postId: string, commentId: string, userId: string) {
+    const comment = await this.prisma.communityComment.findUnique({
+      where: { id: commentId },
+      select: { authorId: true, postId: true },
+    });
+    if (!comment) throw new NotFoundException('Comment not found');
+    if (comment.postId !== postId) throw new NotFoundException('Comment not found');
+    if (comment.authorId !== userId) throw new ForbiddenException('Only owner can delete');
+
+    // Count comments being deleted (the comment + its replies)
+    const repliesCount = await this.prisma.communityComment.count({
+      where: { parentId: commentId },
+    });
+
+    await this.prisma.$transaction([
+      this.prisma.communityComment.deleteMany({
+        where: { OR: [{ id: commentId }, { parentId: commentId }] },
+      }),
+      this.prisma.communityPost.update({
+        where: { id: postId },
+        data: { commentCount: { decrement: repliesCount + 1 } },
+      }),
+    ]);
+
+    return { message: 'Comment deleted' };
+  }
+}

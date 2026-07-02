@@ -3,12 +3,17 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
+import { json, urlencoded } from 'express';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // ─── Body Parser: increase limit for base64 images ──
+  app.use(json({ limit: '10mb' }));
+  app.use(urlencoded({ limit: '10mb', extended: true }));
 
   const configService = app.get(ConfigService);
 
@@ -53,6 +58,7 @@ async function bootstrap() {
     .addTag('issues', 'Review issues')
     .addTag('comments', 'Discussion comments')
     .addTag('analytics', 'Dashboard analytics')
+    .addTag('community', 'Community posts and discussions')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

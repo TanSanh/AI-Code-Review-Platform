@@ -20,6 +20,10 @@ model User {
   reviews  Review[]
   comments Comment[]
 
+  communityPosts    CommunityPost[]
+  communityLikes    CommunityLike[]
+  communityComments CommunityComment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -41,6 +45,8 @@ model Review {
 
   issues  Issue[]
   comments Comment[]
+
+  communityPosts CommunityPost[]
 
   createdAt   DateTime  @default(now())
   completedAt DateTime?
@@ -131,4 +137,71 @@ enum Category {
   PERFORMANCE
   MAINTAINABILITY
   STYLE
+}
+
+model CommunityPost {
+  id           String   @id @default(cuid())
+  title        String   @db.VarChar(200)
+  content      String   @db.Text
+  language     String?
+  tags         String?
+  imageUrl     String?  @db.Text
+
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  review   Review? @relation(fields: [reviewId], references: [id], onDelete: SetNull)
+  reviewId String?
+
+  likes    CommunityLike[]
+  comments CommunityComment[]
+
+  likeCount    Int @default(0)
+  commentCount Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([language])
+  @@map("community_posts")
+}
+
+model CommunityLike {
+  id String @id @default(cuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  post   CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@index([postId])
+  @@map("community_likes")
+}
+
+model CommunityComment {
+  id      String  @id @default(cuid())
+  content String  @db.Text
+
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  post   CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  parent  CommunityComment?  @relation("CommunityThread", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId String?
+  replies CommunityComment[] @relation("CommunityThread")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+  @@index([parentId])
+  @@map("community_comments")
 }

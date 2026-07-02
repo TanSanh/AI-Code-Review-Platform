@@ -21,6 +21,8 @@ import {
   Lock,
   Info,
   CheckCircle,
+  Heart,
+  Users,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/auth-context';
@@ -41,11 +43,22 @@ interface UserProfile {
   };
 }
 
-type Tab = 'general' | 'security';
+interface UserPost {
+  id: string;
+  title: string;
+  content: string;
+  language: string | null;
+  likeCount: number;
+  commentCount: number;
+  createdAt: string;
+}
+
+type Tab = 'general' | 'security' | 'posts';
 
 const sidebarItems: { key: Tab; icon: React.ElementType; labelKey: string }[] = [
   { key: 'general', icon: Settings, labelKey: 'profile.general' },
   { key: 'security', icon: Shield, labelKey: 'profile.security' },
+  { key: 'posts', icon: Users, labelKey: 'community.title' },
 ];
 
 export default function ProfilePage() {
@@ -66,6 +79,8 @@ export default function ProfilePage() {
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<Tab>('general');
+  const [userPosts, setUserPosts] = useState<UserPost[]>([]);
+  const [postsLoading, setPostsLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -83,6 +98,25 @@ export default function ProfilePage() {
 
     fetchProfile();
   }, []);
+
+  // Fetch user's community posts
+  useEffect(() => {
+    if (activeTab !== 'posts' || !user?.id) return;
+
+    const fetchUserPosts = async () => {
+      setPostsLoading(true);
+      try {
+        const result = await api.getCommunityPosts({ authorId: user.id, limit: 50 });
+        setUserPosts(result.data as UserPost[]);
+      } catch (err) {
+        console.error('Failed to fetch posts:', err);
+      } finally {
+        setPostsLoading(false);
+      }
+    };
+
+    fetchUserPosts();
+  }, [activeTab, user?.id]);
 
   const handleSave = async () => {
     if (!name.trim()) {
@@ -538,6 +572,77 @@ export default function ProfilePage() {
                     )}
                     {t('profile.updatePassword')}
                   </Button>
+                </div>
+              </div>
+            )}
+
+            {/* ── Posts Tab ── */}
+            {activeTab === 'posts' && (
+              <div className="space-y-6">
+                <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#33355a]">
+                    <h3 className="text-base font-semibold text-charcoal dark:text-gray-100 flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      {t('community.title')} ({userPosts.length})
+                    </h3>
+                  </div>
+                  <div className="p-6">
+                    {postsLoading ? (
+                      <div className="flex items-center justify-center py-12">
+                        <Loader2 className="h-6 w-6 animate-spin text-amethyst dark:text-[#714cb6]" />
+                      </div>
+                    ) : userPosts.length === 0 ? (
+                      <div className="py-12 text-center">
+                        <Users className="mx-auto mb-3 h-10 w-10 text-charcoal/15 dark:text-gray-700" />
+                        <p className="text-sm text-charcoal/50 dark:text-gray-400">
+                          {t('community.noPosts')}
+                        </p>
+                        <a
+                          href="/community"
+                          className="mt-3 inline-block text-sm font-medium text-amethyst hover:text-amethyst/80 dark:text-[#cbb7fb] dark:hover:text-[#cbb7fb]/80"
+                        >
+                          {t('community.newPost')} →
+                        </a>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {userPosts.map((post) => (
+                          <a
+                            key={post.id}
+                            href={`/community/${post.id}`}
+                            className="block rounded-xl border border-gray-100 dark:border-[#33355a] p-4 transition-all hover:border-amethyst/30 hover:shadow-sm dark:hover:border-[#714cb6]/30"
+                          >
+                            <div className="mb-1 flex items-start justify-between gap-2">
+                              <h4 className="text-sm font-semibold text-charcoal dark:text-gray-100 line-clamp-1">
+                                {post.title}
+                              </h4>
+                              {post.language && (
+                                <span className="shrink-0 rounded-badge bg-cream px-2 py-0.5 text-[10px] font-medium text-charcoal/70 dark:bg-[#33355a] dark:text-gray-300">
+                                  {post.language}
+                                </span>
+                              )}
+                            </div>
+                            <p className="mb-2 text-xs text-charcoal/50 dark:text-gray-400 line-clamp-2">
+                              {post.content}
+                            </p>
+                            <div className="flex items-center gap-3 text-[10px] text-charcoal/40 dark:text-gray-500">
+                              <span className="flex items-center gap-1">
+                                <Heart className="h-3 w-3" />
+                                {post.likeCount}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <MessageSquare className="h-3 w-3" />
+                                {post.commentCount}
+                              </span>
+                              <span className="ml-auto">
+                                {new Date(post.createdAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

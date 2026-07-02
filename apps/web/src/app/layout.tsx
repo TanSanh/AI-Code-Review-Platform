@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Toaster } from 'sonner';
 import { AuthProvider } from '@/contexts/auth-context';
 import { SocketProvider } from '@/contexts/socket-context';
 import { ThemeProvider } from '@/contexts/theme-context';
@@ -47,6 +48,12 @@ export default function RootLayout({
           <LanguageProvider>
             <AuthProvider>
               <SocketProvider>
+                <Toaster
+                  position="top-right"
+                  toastOptions={{
+                    className: 'dark:bg-[#242640] dark:text-gray-100 dark:border-[#33355a]',
+                  }}
+                />
                 <Navbar />
                 <main className="pt-20">{children}</main>
               </SocketProvider>

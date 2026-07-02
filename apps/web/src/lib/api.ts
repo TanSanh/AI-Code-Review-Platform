@@ -210,6 +210,77 @@ class ApiClient {
   async getAnalyticsLanguages() {
     return this.request<unknown[]>('/api/v1/analytics/languages');
   }
+
+  // Community
+  async getCommunityPosts(params?: {
+    page?: number; limit?: number; language?: string;
+    search?: string; sort?: 'latest' | 'popular'; authorId?: string;
+  }) {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.set('page', String(params.page));
+    if (params?.limit) searchParams.set('limit', String(params.limit));
+    if (params?.language) searchParams.set('language', params.language);
+    if (params?.search) searchParams.set('search', params.search);
+    if (params?.sort) searchParams.set('sort', params.sort);
+    if (params?.authorId) searchParams.set('authorId', params.authorId);
+
+    const query = searchParams.toString();
+    return this.request<{
+      data: unknown[];
+      meta: { page: number; limit: number; total: number; totalPages: number };
+    }>(`/api/v1/community${query ? `?${query}` : ''}`);
+  }
+
+  async getCommunityPost(id: string) {
+    return this.request<unknown>(`/api/v1/community/${id}`);
+  }
+
+  async createCommunityPost(data: {
+    title: string; content: string; language?: string;
+    tags?: string; reviewId?: string; imageUrl?: string;
+  }) {
+    return this.request<unknown>('/api/v1/community', {
+      method: 'POST',
+      body: data,
+    });
+  }
+
+  async deleteCommunityPost(id: string) {
+    return this.request<unknown>(`/api/v1/community/${id}`, { method: 'DELETE' });
+  }
+
+  async updateCommunityPost(id: string, data: {
+    title: string; content: string; language?: string;
+    tags?: string; imageUrl?: string; reviewId?: string;
+  }) {
+    return this.request<unknown>(`/api/v1/community/${id}`, {
+      method: 'PUT',
+      body: data,
+    });
+  }
+
+  async toggleCommunityLike(id: string) {
+    return this.request<{ isLiked: boolean }>(`/api/v1/community/${id}/like`, {
+      method: 'POST',
+    });
+  }
+
+  async getCommunityComments(postId: string) {
+    return this.request<unknown[]>(`/api/v1/community/${postId}/comments`);
+  }
+
+  async createCommunityComment(postId: string, data: { content: string; parentId?: string }) {
+    return this.request<unknown>(`/api/v1/community/${postId}/comments`, {
+      method: 'POST',
+      body: data,
+    });
+  }
+
+  async deleteCommunityComment(postId: string, commentId: string) {
+    return this.request<unknown>(`/api/v1/community/${postId}/comments/${commentId}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export const api = new ApiClient(API_BASE);
