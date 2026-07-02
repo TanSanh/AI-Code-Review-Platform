@@ -135,7 +135,6 @@ export function Navbar() {
               <div className="relative z-10 hidden items-center gap-1 md:flex">
                 <NavPill href="/dashboard" active={isActive('/dashboard')} isDark={isDark} onClick={pauseHide}>{t('nav.dashboard')}</NavPill>
                 <NavPill href="/reviews" active={isActive('/reviews')} isDark={isDark} onClick={pauseHide}>{t('nav.reviews')}</NavPill>
-                <NavPill href="/review/new" active={isActive('/review/new')} isDark={isDark} onClick={pauseHide}>{t('nav.newReview')}</NavPill>
               </div>
 
               <div className="relative z-10 hidden items-center gap-1.5 md:flex">
@@ -271,9 +270,6 @@ export function Navbar() {
                   </MobileNavLink>
                   <MobileNavLink href="/reviews" icon={<FileCode className="h-4 w-4" />} active={isActive('/reviews')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                     {t('nav.allReviews')}
-                  </MobileNavLink>
-                  <MobileNavLink href="/review/new" icon={<FileCode className="h-4 w-4" />} active={isActive('/review/new')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
-                    {t('nav.newReview')}
                   </MobileNavLink>
                   <div className="my-2 border-t border-mysteria/10 dark:border-[#33355a]" />
                   <MobileNavLink href="/profile" icon={<User className="h-4 w-4" />} active={isActive('/profile')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
