@@ -8,6 +8,7 @@ interface User {
   id: string;
   email: string;
   name: string;
+  bio?: string | null;
   role: string;
   avatarUrl?: string | null;
   createdAt?: string;

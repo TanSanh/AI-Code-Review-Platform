@@ -48,14 +48,6 @@ const translations = {
     'settings.newPassword': 'New Password',
     'settings.confirmPassword': 'Confirm New Password',
     'settings.updatePassword': 'Update Password',
-    'settings.dangerZone': 'Danger Zone',
-    'settings.signOut': 'Sign Out',
-    'settings.signOutDesc': 'Sign out from your account',
-    'settings.deleteAccount': 'Delete Account',
-    'settings.deleteAccountDesc': 'Permanently delete your account and all data',
-    'settings.deleteConfirm': 'Are you sure? This action cannot be undone.',
-    'settings.deleteWarning': 'All your reviews, comments, and data will be permanently deleted.',
-    'settings.yesDelete': 'Yes, Delete Account',
 
     // Profile
     'profile.title': 'My Profile',

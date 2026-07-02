@@ -92,6 +92,7 @@ export class AuthService {
         id: true,
         email: true,
         name: true,
+        bio: true,
         avatarUrl: true,
         role: true,
         createdAt: true,
@@ -122,11 +123,12 @@ export class AuthService {
 
     const updated = await this.prisma.user.update({
       where: { id: userId },
-      data: { name: dto.name },
+      data: { name: dto.name, bio: dto.bio ?? null },
       select: {
         id: true,
         email: true,
         name: true,
+        bio: true,
         avatarUrl: true,
         role: true,
         createdAt: true,

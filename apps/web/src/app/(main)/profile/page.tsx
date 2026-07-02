@@ -31,6 +31,7 @@ interface UserProfile {
   id: string;
   email: string;
   name: string;
+  bio: string | null;
   avatarUrl: string | null;
   role: string;
   createdAt: string;
@@ -72,6 +73,7 @@ export default function ProfilePage() {
         const data = await api.getProfile();
         setProfile(data as UserProfile);
         setName(data.name);
+        setBio(data.bio || '');
       } catch (err) {
         console.error('Failed to fetch profile:', err);
       } finally {
@@ -93,7 +95,7 @@ export default function ProfilePage() {
     setError('');
 
     try {
-      const updated = await api.updateProfile(name.trim());
+      const updated = await api.updateProfile(name.trim(), bio.trim() || undefined);
       setProfile(updated as UserProfile);
       updateUser({ name: updated.name });
       setSuccess(t('profile.updatedSuccess'));
@@ -289,30 +291,15 @@ export default function ProfilePage() {
                       </div>
                     )}
 
-                    <div className="grid md:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label className="text-xs font-semibold uppercase tracking-wider text-charcoal/50 dark:text-gray-400">
-                          {t('profile.displayName')}
-                        </Label>
-                        <Input
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          className="h-11 rounded-xl border-gray-200 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-xs font-semibold uppercase tracking-wider text-charcoal/50 dark:text-gray-400">
-                          {t('profile.usernameLabel')}
-                        </Label>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-charcoal/40 dark:text-gray-500">@</span>
-                          <Input
-                            value={username}
-                            disabled
-                            className="h-11 rounded-xl border-gray-200 bg-gray-50 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100/50 pl-7"
-                          />
-                        </div>
-                      </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs font-semibold uppercase tracking-wider text-charcoal/50 dark:text-gray-400">
+                        {t('profile.displayName')}
+                      </Label>
+                      <Input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="h-11 rounded-xl border-gray-200 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100"
+                      />
                     </div>
 
                     <div className="space-y-2">

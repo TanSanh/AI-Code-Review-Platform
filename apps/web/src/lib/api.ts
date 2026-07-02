@@ -113,6 +113,7 @@ class ApiClient {
       id: string;
       email: string;
       name: string;
+      bio: string | null;
       avatarUrl: string | null;
       role: string;
       createdAt: string;
@@ -120,18 +121,19 @@ class ApiClient {
     }>('/api/v1/auth/me');
   }
 
-  async updateProfile(name: string) {
+  async updateProfile(name: string, bio?: string) {
     return this.request<{
       id: string;
       email: string;
       name: string;
+      bio: string | null;
       avatarUrl: string | null;
       role: string;
       createdAt: string;
       _count: { reviews: number; comments: number };
     }>('/api/v1/auth/me', {
       method: 'PATCH',
-      body: { name },
+      body: { name, bio },
     });
   }
 
