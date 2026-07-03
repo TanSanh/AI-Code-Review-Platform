@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { CommunityGateway } from './community.gateway';
+import { NotificationService } from '../notification/notification.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { CommunityFilterDto } from './dto/community-filter.dto';
 import { CreateCommunityCommentDto } from './dto/create-community-comment.dto';
@@ -10,6 +11,7 @@ export class CommunityService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly gateway: CommunityGateway,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async findAll(userId: string, filters: CommunityFilterDto) {
@@ -234,6 +236,27 @@ export class CommunityService {
           data: { likeCount: { increment: 1 } },
         }),
       ]);
+
+      // Get post author for notification
+      const post = await this.prisma.communityPost.findUnique({
+        where: { id },
+        select: { authorId: true, title: true },
+      });
+
+      // Send notification
+      if (post) {
+        await this.notificationService.create({
+          type: 'post_like',
+          title: 'Thích bài viết',
+          message: 'đã thích bài viết của bạn',
+          link: `/community/${id}`,
+          actorId: userId,
+          targetId: id,
+          targetType: 'post',
+          recipientId: post.authorId,
+        });
+      }
+
       return { isLiked: true };
     }
   }
@@ -297,6 +320,45 @@ export class CommunityService {
       ...comment,
       postId,
     });
+
+    // Send notifications
+    const postWithAuthor = await this.prisma.communityPost.findUnique({
+      where: { id: postId },
+      select: { authorId: true, title: true },
+    });
+
+    if (dto.parentId) {
+      // Reply to comment - notify parent comment author
+      const parentComment = await this.prisma.communityComment.findUnique({
+        where: { id: dto.parentId },
+        select: { authorId: true },
+      });
+
+      if (parentComment) {
+        await this.notificationService.create({
+          type: 'comment_reply',
+          title: 'Trả lời bình luận',
+          message: 'đã trả lời bình luận của bạn',
+          link: `/community/${postId}`,
+          actorId: userId,
+          targetId: postId,
+          targetType: 'comment',
+          recipientId: parentComment.authorId,
+        });
+      }
+    } else if (postWithAuthor) {
+      // New comment on post - notify post author
+      await this.notificationService.create({
+        type: 'post_comment',
+        title: 'Bình luận mới',
+        message: 'đã bình luận về bài viết của bạn',
+        link: `/community/${postId}`,
+        actorId: userId,
+        targetId: postId,
+        targetType: 'post',
+        recipientId: postWithAuthor.authorId,
+      });
+    }
 
     return comment;
   }

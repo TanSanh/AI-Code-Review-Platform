@@ -24,6 +24,12 @@ model User {
   communityLikes    CommunityLike[]
   communityComments CommunityComment[]
 
+  notificationsReceived Notification[] @relation("NotificationRecipient")
+  notificationsActor     Notification[] @relation("NotificationActor")
+  notificationPreference NotificationPreference?
+
+  pushSubscription Json? // Web Push subscription object
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -204,4 +210,43 @@ model CommunityComment {
   @@index([postId])
   @@index([parentId])
   @@map("community_comments")
+}
+
+model Notification {
+  id         String   @id @default(cuid())
+  type       String   // review_completed, review_comment, post_comment, comment_reply, post_like, system
+  title      String   // Tiêu đề ngắn
+  message    String   // Nội dung chi tiết
+  link       String?  // URL điều hướng khi click vào
+  isRead     Boolean  @default(false)
+  actorId    String?  // User đã trigger thông báo (null nếu system)
+  actor      User?    @relation("NotificationActor", fields: [actorId], references: [id])
+  targetId   String?  // ID của entity liên quan (post, review, comment...)
+  targetType String?  // "post", "review", "comment"
+  recipientId String  // User nhận thông báo
+  recipient  User     @relation("NotificationRecipient", fields: [recipientId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([recipientId, isRead])
+  @@index([recipientId, createdAt])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  browserPush     Boolean  @default(true)
+  email           Boolean  @default(true)
+  sound           Boolean  @default(true)
+  postComment     Boolean  @default(true)
+  commentReply    Boolean  @default(true)
+  postLike        Boolean  @default(true)
+  reviewCompleted Boolean  @default(true)
+  reviewComment   Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("notification_preferences")
 }

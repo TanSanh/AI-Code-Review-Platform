@@ -5,6 +5,7 @@ export interface ClientToServerEvents {
   'typing:stop': (data: { reviewId: string }) => void;
   'join:community': (data: { postId: string }) => void;
   'leave:community': (data: { postId: string }) => void;
+  'join:user': (data: { userId: string }) => void;
 }
 
 export interface ServerToClientEvents {
@@ -14,6 +15,8 @@ export interface ServerToClientEvents {
   'user:typing': (data: { userId: string; isTyping: boolean }) => void;
   'community:comment:created': (comment: CommunityCommentEvent) => void;
   'community:comment:deleted': (data: { postId: string; commentId: string }) => void;
+  'notification:created': (notification: NotificationEvent) => void;
+  'notification:count': (count: number) => void;
 }
 
 export interface CommentEvent {
@@ -55,5 +58,20 @@ export interface CommunityCommentEvent {
     name: string;
     avatarUrl?: string | null;
   };
+  createdAt: string;
+}
+
+export interface NotificationEvent {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  link: string | null;
+  isRead: boolean;
+  actor: {
+    id: string;
+    name: string;
+    avatarUrl: string | null;
+  } | null;
   createdAt: string;
 }

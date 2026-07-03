@@ -281,6 +281,81 @@ class ApiClient {
       method: 'DELETE',
     });
   }
+
+  // Notifications
+  async getNotifications(params?: { page?: number; limit?: number }) {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.set('page', String(params.page));
+    if (params?.limit) searchParams.set('limit', String(params.limit));
+
+    const query = searchParams.toString();
+    return this.request<{
+      notifications: Array<{
+        id: string;
+        type: string;
+        title: string;
+        message: string;
+        link: string | null;
+        isRead: boolean;
+        actor: { id: string; name: string; avatarUrl: string | null } | null;
+        createdAt: string;
+      }>;
+      total: number;
+      page: number;
+      totalPages: number;
+    }>(`/api/v1/notifications${query ? `?${query}` : ''}`);
+  }
+
+  async getUnreadNotificationCount() {
+    return this.request<{ count: number }>('/api/v1/notifications/unread-count');
+  }
+
+  async markNotificationAsRead(id: string) {
+    return this.request<unknown>(`/api/v1/notifications/${id}/read`, {
+      method: 'PATCH',
+    });
+  }
+
+  async markAllNotificationsAsRead() {
+    return this.request<unknown>('/api/v1/notifications/read-all', {
+      method: 'PATCH',
+    });
+  }
+
+  async deleteNotification(id: string) {
+    return this.request<unknown>(`/api/v1/notifications/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getNotificationPreferences() {
+    return this.request<{
+      browserPush: boolean;
+      email: boolean;
+      sound: boolean;
+      postComment: boolean;
+      commentReply: boolean;
+      postLike: boolean;
+      reviewCompleted: boolean;
+      reviewComment: boolean;
+    }>('/api/v1/notifications/preferences');
+  }
+
+  async updateNotificationPreferences(data: Partial<{
+    browserPush: boolean;
+    email: boolean;
+    sound: boolean;
+    postComment: boolean;
+    commentReply: boolean;
+    postLike: boolean;
+    reviewCompleted: boolean;
+    reviewComment: boolean;
+  }>) {
+    return this.request<unknown>('/api/v1/notifications/preferences', {
+      method: 'PATCH',
+      body: data,
+    });
+  }
 }
 
 export const api = new ApiClient(API_BASE);

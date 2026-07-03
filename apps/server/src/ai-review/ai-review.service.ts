@@ -4,6 +4,7 @@ import { StaticAnalyzerService } from './static-analyzer.service';
 import { SecurityScannerService } from './security-scanner.service';
 import { LlmAnalyzerService } from './llm-analyzer.service';
 import { CommentGateway } from '../comment/comment.gateway';
+import { NotificationService } from '../notification/notification.service';
 
 export interface ReviewIssue {
   severity: 'ERROR' | 'WARNING' | 'INFO' | 'SUGGESTION';
@@ -27,6 +28,7 @@ export class AiReviewService {
     private readonly securityScanner: SecurityScannerService,
     private readonly llmAnalyzer: LlmAnalyzerService,
     private readonly commentGateway: CommentGateway,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async analyzeReview(reviewId: string, code: string, language: string) {
@@ -73,6 +75,24 @@ export class AiReviewService {
       });
 
       this.commentGateway.broadcastReviewCompleted(reviewId, updatedReview);
+
+      // Send notification to review author
+      const review = await this.prisma.review.findUnique({
+        where: { id: reviewId },
+        select: { authorId: true, title: true },
+      });
+
+      if (review) {
+        await this.notificationService.create({
+          type: 'review_completed',
+          title: 'Review hoàn thành',
+          message: `Review "${review.title}" đã hoàn thành với điểm ${score}/100`,
+          link: `/review/${reviewId}`,
+          targetId: reviewId,
+          targetType: 'review',
+          recipientId: review.authorId,
+        });
+      }
 
       this.logger.log(
         `AI review completed for ${reviewId}: ${deduplicated.length} issues, score: ${score}`,

@@ -11,6 +11,7 @@ import { CommentModule } from './comment/comment.module';
 import { AiReviewModule } from './ai-review/ai-review.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { CommunityModule } from './community/community.module';
+import { NotificationModule } from './notification/notification.module';
 import { AppController } from './app.controller';
 
 @Module({
@@ -37,6 +38,7 @@ import { AppController } from './app.controller';
     AiReviewModule,
     AnalyticsModule,
     CommunityModule,
+    NotificationModule,
   ],
   controllers: [AppController],
 })

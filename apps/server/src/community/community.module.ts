@@ -3,9 +3,10 @@ import { CommunityController } from './community.controller';
 import { CommunityService } from './community.service';
 import { CommunityGateway } from './community.gateway';
 import { AuthModule } from '../auth/auth.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, NotificationModule],
   controllers: [CommunityController],
   providers: [CommunityService, CommunityGateway],
   exports: [CommunityService, CommunityGateway],

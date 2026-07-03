@@ -8,6 +8,7 @@ import { Code2, Menu, X, LogOut, User, Settings, FileCode, Globe, Sun, Moon, Use
 import { useAuth } from '@/contexts/auth-context';
 import { useTheme } from '@/contexts/theme-context';
 import { useLanguage } from '@/contexts/language-context';
+import NotificationBell from '@/components/notifications/notification-bell';
 
 /* ─── Navbar Component ───────────────────────────────────────────── */
 
@@ -158,6 +159,9 @@ export function Navbar() {
                   {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                 </button>
 
+                {/* Notification Bell */}
+                <NotificationBell />
+
                 <Link
                   href="/profile"
                   onClick={pauseHide}
@@ -296,6 +300,9 @@ export function Navbar() {
                   <MobileNavLink href="/settings" icon={<Settings className="h-4 w-4" />} active={isActive('/settings')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                     {t('nav.settings')}
                   </MobileNavLink>
+                  <div className="px-3 py-2">
+                    <NotificationBell />
+                  </div>
                   <button
                     onClick={() => { logout(); setMobileMenuOpen(false); }}
                     className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-red-600 transition-colors hover:bg-red-50/60 dark:text-red-400 dark:hover:bg-red-900/30"
