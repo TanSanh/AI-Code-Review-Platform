@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -32,8 +32,15 @@ const languages = [
 
 export default function NewReviewPage() {
   const router = useRouter();
-  const { loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { t } = useLanguage();
+
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [authLoading, user, router]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [language, setLanguage] = useState('');

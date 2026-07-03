@@ -65,8 +65,16 @@ const sidebarItems: { key: Tab; icon: React.ElementType; labelKey: string }[] = 
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, updateUser, logout } = useAuth();
+  const { user, updateUser, logout, loading: authLoading } = useAuth();
   const { language, t } = useLanguage();
+
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [authLoading, user, router]);
+
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -147,7 +155,6 @@ export default function ProfilePage() {
 
   const handleLogout = () => {
     logout();
-    router.push('/login');
   };
 
   const handleChangePassword = async () => {

@@ -56,8 +56,16 @@ const severityConfig: Record<string, { icon: React.ElementType; color: string; b
 export default function ReviewDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { t } = useLanguage();
+
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [authLoading, user, router]);
+
   const [review, setReview] = useState<Review | null>(null);
   const [loading, setLoading] = useState(true);
   const [reReviewing, setReReviewing] = useState(false);

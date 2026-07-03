@@ -113,6 +113,13 @@ export default function CommunityPostDetailPage() {
   const { t } = useLanguage();
   const postId = params.id as string;
 
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [authLoading, user, router]);
+
   const [post, setPost] = useState<PostDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

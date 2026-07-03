@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     api.setToken(null);
     setUser(null);
-    router.push('/login');
+    router.push('/');
   };
 
   const updateUser = (data: Partial<User>) => {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,9 +39,17 @@ function Toggle({ enabled, onToggle }: { enabled: boolean; onToggle: () => void 
 /* ─── Settings Page ──────────────────────────────────────────────── */
 
 export default function SettingsPage() {
-  const { logout } = useAuth();
+  const router = useRouter();
+  const { logout, user, loading: authLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
+
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [authLoading, user, router]);
 
   // ── Notification preferences (localStorage) ──
   const [emailNotif, setEmailNotif] = useState(true);

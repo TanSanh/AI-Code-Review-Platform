@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -57,6 +58,14 @@ interface LanguageData {
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth();
   const { t } = useLanguage();
+  const router = useRouter();
+
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [authLoading, user, router]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [trends, setTrends] = useState<TrendData[]>([]);

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus, Search, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
@@ -16,6 +17,14 @@ import { CommunityEditPost } from '@/components/community/community-edit-post';
 export default function CommunityPage() {
   const { user, loading: authLoading } = useAuth();
   const { t } = useLanguage();
+  const router = useRouter();
+
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [authLoading, user, router]);
 
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [loading, setLoading] = useState(true);
