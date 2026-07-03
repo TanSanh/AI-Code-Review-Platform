@@ -15,12 +15,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'AI Code Review — Intelligent Code Analysis',
+  title: 'AI Code Review',
   description: 'AI-powered code review platform for modern development teams. Get instant feedback on bugs, security vulnerabilities, and code quality.',
   keywords: ['code review', 'AI', 'security', 'code quality', 'development'],
   icons: {
     icon: [
-      { url: '/logo.svg', type: 'image/svg+xml' },
+      { url: '/favicon.png', type: 'image/png' },
     ],
   },
 };
@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
         <script
           dangerouslySetInnerHTML={{
             __html: `

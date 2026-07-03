@@ -121,9 +121,9 @@ export function Navbar() {
           )}
 
           {/* ── Logo ── */}
-          <Link href="/" className="group relative z-10 flex items-center gap-2.5">
-            <img src="/logo.svg" alt="AI Code Review" className="h-8 w-8" />
-            <span className="text-base font-semibold tracking-tight text-charcoal dark:text-gray-100">
+          <Link href="/" className="group relative z-10 flex items-center gap-3">
+            <img src="/logo.svg" alt="AI Code Review" className="h-14 w-14" />
+            <span className="text-xl font-bold tracking-tight text-charcoal dark:text-gray-100">
               AI Code Review
             </span>
           </Link>
