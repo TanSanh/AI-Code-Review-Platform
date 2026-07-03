@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { X, Save, ImagePlus, Trash2, Link as LinkIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -56,18 +56,28 @@ export function CommunityEditPost({ open, post, reviews = [], onClose, onSubmit 
   const [reviewId, setReviewId] = useState('');
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const lastInitId = useRef<string | null>(null);
 
-  useEffect(() => {
-    if (post && open) {
-      setTitle(post.title);
-      setContent(post.content);
-      setLanguage(post.language || '');
-      setTags(post.tags || '');
-      setImageUrl(post.imageUrl || '');
-      setImagePreview(post.imageUrl || '');
-      setReviewId(post.reviewId || '');
-    }
-  }, [post, open]);
+  // Initialize form when dialog opens with a new post
+  if (post && open && post.id !== lastInitId.current) {
+    lastInitId.current = post.id;
+    setTitle(post.title);
+    setContent(post.content);
+    const lang = (post.language || '').trim();
+    const matchedLang = LANGUAGES.find(
+      (l) => l.toLowerCase() === lang.toLowerCase()
+    );
+    setLanguage(matchedLang || lang);
+    setTags(post.tags || '');
+    setImageUrl(post.imageUrl || '');
+    setImagePreview(post.imageUrl || '');
+    setReviewId(post.reviewId || '');
+  }
+
+  // Reset when dialog closes
+  if (!open && lastInitId.current) {
+    lastInitId.current = null;
+  }
 
   if (!open || !post) return null;
 
