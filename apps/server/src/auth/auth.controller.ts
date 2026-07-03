@@ -140,8 +140,15 @@ export class AuthController {
   @UseGuards(GoogleStrategy)
   async googleCallback(@Req() req: Request & { user: { id: string; email: string; name: string; avatarUrl?: string } }, @Res() res: Response) {
     const result = await this.authService.googleLogin(req.user);
-    // Redirect to frontend with token as query param
     const frontendUrl = this.configService.get<string>('cors_origin') || 'http://localhost:3000';
     res.redirect(`${frontendUrl}/auth/callback?token=${result.accessToken}`);
+  }
+
+  @Public()
+  @Get('google/status')
+  @HttpCode(HttpStatus.OK)
+  async googleStatus() {
+    const clientId = this.configService.get<string>('google.client_id');
+    return { configured: !!clientId };
   }
 }
