@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   title: 'AI Code Review — Intelligent Code Analysis',
   description: 'AI-powered code review platform for modern development teams. Get instant feedback on bugs, security vulnerabilities, and code quality.',
   keywords: ['code review', 'AI', 'security', 'code quality', 'development'],
+  icons: {
+    icon: [
+      { url: '/logo.svg', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -28,6 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
