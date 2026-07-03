@@ -122,9 +122,7 @@ export function Navbar() {
 
           {/* ── Logo ── */}
           <Link href="/" className="group relative z-10 flex items-center gap-2.5">
-            <span className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-mysteria/8 transition-colors duration-300 group-hover:bg-mysteria/15 dark:bg-lavender/15 dark:group-hover:bg-lavender/25">
-              <Code2 className="h-4.5 w-4.5 text-mysteria dark:text-lavender transition-transform duration-300 group-hover:scale-110" />
-            </span>
+            <img src="/logo.svg" alt="AI Code Review" className="h-8 w-8" />
             <span className="text-base font-semibold tracking-tight text-charcoal dark:text-gray-100">
               AI Code Review
             </span>

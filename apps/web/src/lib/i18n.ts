@@ -352,6 +352,22 @@ const translations = {
     'profile.privacy': 'Privacy',
     'profile.makePublic': 'Make Public',
     'profile.makePrivate': 'Make Private',
+
+    // Footer
+    'footer.description': 'AI-powered code review platform for modern development teams.',
+    'footer.product': 'Sản phẩm',
+    'footer.features': 'Tính năng',
+    'footer.dashboard': 'Bảng điều khiển',
+    'footer.reviews': 'Đánh giá',
+    'footer.community': 'Cộng đồng',
+    'footer.company': 'Công ty',
+    'footer.about': 'Về chúng tôi',
+    'footer.blog': 'Blog',
+    'footer.contact': 'Liên hệ',
+    'footer.legal': 'Pháp lý',
+    'footer.privacy': 'Chính sách bảo mật',
+    'footer.terms': 'Điều khoản sử dụng',
+    'footer.copyright': '© 2026 AI Code Review. All rights reserved.',
   },
 
   vi: {
@@ -713,6 +729,22 @@ const translations = {
     'profile.privacy': 'Quyền riêng tư',
     'profile.makePublic': 'Công khai',
     'profile.makePrivate': 'Riêng tư',
+
+    // Footer
+    'footer.description': 'Nền tảng đánh giá code bằng AI cho các nhóm phát triển hiện đại.',
+    'footer.product': 'Sản phẩm',
+    'footer.features': 'Tính năng',
+    'footer.dashboard': 'Bảng điều khiển',
+    'footer.reviews': 'Đánh giá',
+    'footer.community': 'Cộng đồng',
+    'footer.company': 'Công ty',
+    'footer.about': 'Về chúng tôi',
+    'footer.blog': 'Blog',
+    'footer.contact': 'Liên hệ',
+    'footer.legal': 'Pháp lý',
+    'footer.privacy': 'Chính sách bảo mật',
+    'footer.terms': 'Điều khoản sử dụng',
+    'footer.copyright': '© 2026 AI Code Review. All rights reserved.',
   },
 } as const;
 

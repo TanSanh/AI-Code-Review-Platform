@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/language-context';
@@ -170,8 +169,6 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

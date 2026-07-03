@@ -6,6 +6,7 @@ import { SocketProvider } from '@/contexts/socket-context';
 import { ThemeProvider } from '@/contexts/theme-context';
 import { LanguageProvider } from '@/contexts/language-context';
 import { Navbar } from '@/components/layout/navbar';
+import { Footer } from '@/components/layout/footer';
 import './globals.css';
 
 const inter = Inter({
@@ -55,7 +56,8 @@ export default function RootLayout({
                   }}
                 />
                 <Navbar />
-                <main className="pt-20">{children}</main>
+                <main className="pt-20 min-h-screen">{children}</main>
+                <Footer />
               </SocketProvider>
             </AuthProvider>
           </LanguageProvider>
