@@ -212,6 +212,47 @@ export class AuthService {
     return { message: 'Password reset successfully' };
   }
 
+  async googleLogin(profile: { id: string; email: string; name: string; avatarUrl?: string }) {
+    const { email, name, avatarUrl } = profile;
+
+    // Find existing user by email
+    let user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (user) {
+      // Update provider if not set
+      if (!user.provider) {
+        user = await this.prisma.user.update({
+          where: { id: user.id },
+          data: { provider: 'google', avatarUrl: user.avatarUrl || avatarUrl },
+        });
+      }
+    } else {
+      // Create new user
+      user = await this.prisma.user.create({
+        data: {
+          email,
+          name,
+          avatarUrl,
+          provider: 'google',
+        },
+      });
+    }
+
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
+
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+      ...tokens,
+    };
+  }
+
   private async generateTokens(userId: string, email: string, role: string) {
     const payload = { sub: userId, email, role };
 

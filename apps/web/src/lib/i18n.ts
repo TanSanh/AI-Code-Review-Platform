@@ -237,6 +237,7 @@ const translations = {
     'auth.passwordResetSuccess': 'Password reset successfully! You can now login with your new password.',
     'auth.goToLogin': 'Go to Login',
     'auth.orContinueWith': 'Or continue with',
+    'auth.continueWithGoogle': 'Continue with Google',
     'auth.illustrationTitle': 'AI-Powered Code Review',
     'auth.illustrationDesc': 'Get instant feedback on bugs, security, and code quality',
 
@@ -645,6 +646,7 @@ const translations = {
     'auth.passwordResetSuccess': 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới.',
     'auth.goToLogin': 'Đi đến đăng nhập',
     'auth.orContinueWith': 'Hoặc tiếp tục với',
+    'auth.continueWithGoogle': 'Tiếp tục với Google',
     'auth.illustrationTitle': 'Đánh giá code bằng AI',
     'auth.illustrationDesc': 'Nhận phản hồi tức thì về lỗi, bảo mật và chất lượng code',
 

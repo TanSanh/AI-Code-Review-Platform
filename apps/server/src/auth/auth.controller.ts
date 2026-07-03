@@ -6,8 +6,11 @@ import {
   Body,
   HttpCode,
   HttpStatus,
+  Res,
   UseGuards,
+  Req,
 } from '@nestjs/common';
+import { Response, Request } from 'express';
 import {
   ApiTags,
   ApiOperation,
@@ -18,6 +21,8 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { AuthService } from './auth.service';
 import { OtpService } from './otp.service';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { ConfigService } from '@nestjs/config';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { SendOtpDto } from './dto/send-otp.dto';
@@ -35,6 +40,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly otpService: OtpService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Public()
@@ -120,5 +126,22 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'Invalid OTP or email' })
   async resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto);
+  }
+
+  @Public()
+  @Get('google')
+  @UseGuards(GoogleStrategy)
+  async googleAuth() {
+    // Guard redirects to Google
+  }
+
+  @Public()
+  @Get('google/callback')
+  @UseGuards(GoogleStrategy)
+  async googleCallback(@Req() req: Request & { user: { id: string; email: string; name: string; avatarUrl?: string } }, @Res() res: Response) {
+    const result = await this.authService.googleLogin(req.user);
+    // Redirect to frontend with token as query param
+    const frontendUrl = this.configService.get<string>('cors_origin') || 'http://localhost:3000';
+    res.redirect(`${frontendUrl}/auth/callback?token=${result.accessToken}`);
   }
 }
