@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Heart, MessageCircle, Trash2, ExternalLink, Pencil } from 'lucide-react';
+import { Heart, MessageCircle, ExternalLink, MoreVertical, Pencil, Trash2, Bookmark } from 'lucide-react';
 import { useLanguage } from '@/contexts/language-context';
 import { type TranslationKey } from '@/lib/i18n';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { DropdownMenu, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 interface PostAuthor {
   id: string;
@@ -76,70 +77,93 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
     : post.content;
 
   return (
-    <div className="group rounded-card border border-parchment bg-white p-5 transition-all duration-200 hover:border-amethyst/30 hover:shadow-md dark:border-[#33355a] dark:bg-[#242640] dark:hover:border-[#714cb6]/30 dark:hover:shadow-lg dark:hover:shadow-[#714cb6]/5">
-      {/* Header: Author + Time + Language */}
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {/* Avatar */}
+    <div className="group rounded-xl border border-gray-200/80 bg-white p-5 transition-all duration-300 hover:border-purple-300/50 hover:shadow-lg hover:shadow-purple-500/5 dark:border-[#2e3050] dark:bg-[#22243a] dark:hover:border-[#714cb6]/40 dark:hover:shadow-xl dark:hover:shadow-[#714cb6]/5">
+      {/* Header: Author + Time + Menu */}
+      <div className="mb-4 flex items-center justify-between">
+        <Link href={`/users/${post.author.id}`} className="flex items-center gap-3">
           {post.author.avatarUrl ? (
-            <img src={post.author.avatarUrl} alt={post.author.name} className="h-9 w-9 rounded-full object-cover" />
+            <img src={post.author.avatarUrl} alt={post.author.name} className="h-10 w-10 rounded-full object-cover ring-2 ring-purple-100 dark:ring-[#714cb6]/20" />
           ) : (
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amethyst/10 text-sm font-semibold text-amethyst dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-sm font-semibold text-white shadow-md shadow-purple-500/20">
               {getInitial(post.author.name)}
             </div>
           )}
           <div>
-            <Link
-              href={`/users/${post.author.id}`}
-              className="text-sm font-medium text-charcoal hover:text-[#714cb6] dark:text-gray-100 dark:hover:text-[#cbb7fb] transition-colors"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <span className="text-sm font-semibold text-gray-900 transition-colors hover:text-purple-600 dark:text-gray-100 dark:hover:text-[#cbb7fb]">
               {post.author.name}
-            </Link>
-            <span className="ml-2 text-xs text-charcoal/40 dark:text-gray-500">
-              {formatTimeAgo(post.createdAt, t)}
             </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-400 dark:text-gray-500">
+                {formatTimeAgo(post.createdAt, t)}
+              </span>
+              {post.language && (
+                <>
+                  <span className="text-gray-300 dark:text-gray-600">·</span>
+                  <span className="rounded-full bg-purple-50 px-2 py-0.5 text-xs font-medium text-purple-600 dark:bg-[#714cb6]/15 dark:text-[#cbb7fb]">
+                    {post.language}
+                  </span>
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        </Link>
 
-        {/* Language badge */}
-        {post.language && (
-          <span className="rounded-badge bg-cream px-2 py-0.5 text-xs font-medium text-charcoal/70 dark:bg-[#33355a] dark:text-gray-300">
-            {post.language}
-          </span>
+        {/* 3-dot menu for owner */}
+        {isOwner && (
+          <DropdownMenu
+            trigger={
+              <button className="rounded-lg p-1.5 text-gray-400 opacity-0 transition-all group-hover:opacity-100 hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-[#33355a] dark:hover:text-gray-300">
+                <MoreVertical className="h-4 w-4" />
+              </button>
+            }
+          >
+            <DropdownMenuItem
+              icon={<Pencil className="h-4 w-4" />}
+              onClick={() => onEdit(post)}
+            >
+              {t('community.edit')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              icon={<Trash2 className="h-4 w-4" />}
+              variant="danger"
+              onClick={() => setShowDeleteConfirm(true)}
+            >
+              {t('community.delete')}
+            </DropdownMenuItem>
+          </DropdownMenu>
         )}
       </div>
 
       {/* Title + Content */}
       <Link href={`/community/${post.id}`} className="block">
-        <h3 className="mb-1.5 text-heading-card font-semibold text-charcoal transition-colors group-hover:text-amethyst dark:text-gray-100 dark:group-hover:text-[#cbb7fb]">
+        <h3 className="mb-2 text-lg font-bold text-gray-900 transition-colors group-hover:text-purple-600 dark:text-gray-100 dark:group-hover:text-[#cbb7fb]">
           {post.title}
         </h3>
-        <p className="mb-3 text-body text-charcoal/60 dark:text-gray-400">
+        <p className="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
           {contentPreview}
         </p>
       </Link>
 
       {/* Image */}
       {post.imageUrl && (
-        <div className="mb-3">
+        <div className="mb-4">
           <img
             src={post.imageUrl}
             alt={post.title}
-            className="w-full max-h-[500px] object-contain rounded-button border border-parchment dark:border-[#33355a]"
+            className="w-full max-h-[500px] rounded-xl object-contain border border-gray-100 dark:border-[#2e3050]"
           />
         </div>
       )}
 
       {/* Tags */}
       {tags.length > 0 && (
-        <div className="mb-3 flex flex-wrap gap-1.5">
+        <div className="mb-4 flex flex-wrap gap-2">
           {tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-badge bg-amethyst/8 px-2 py-0.5 text-xs font-medium text-amethyst dark:bg-[#714cb6]/15 dark:text-[#cbb7fb]"
+              className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-50 to-indigo-50 px-3 py-1 text-xs font-medium text-purple-600 dark:from-[#714cb6]/10 dark:to-[#5a3d9a]/10 dark:text-[#cbb7fb]"
             >
-              {tag}
+              #{tag}
             </span>
           ))}
         </div>
@@ -149,59 +173,43 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
       {post.review && (
         <Link
           href={`/review/${post.review.id}`}
-          className="mb-3 flex items-center gap-2 rounded-button border border-parchment/50 bg-cream/50 px-3 py-2 text-xs text-charcoal/60 transition-colors hover:border-amethyst/30 hover:text-amethyst dark:border-[#33355a]/50 dark:bg-[#1e2038] dark:text-gray-400 dark:hover:border-[#714cb6]/30 dark:hover:text-[#cbb7fb]"
+          className="mb-4 flex items-center gap-3 rounded-xl border border-purple-100 bg-gradient-to-r from-purple-50/50 to-indigo-50/50 px-4 py-3 text-sm transition-all hover:border-purple-300 hover:shadow-md dark:border-[#714cb6]/20 dark:from-[#714cb6]/5 dark:to-[#5a3d9a]/5 dark:hover:border-[#714cb6]/40"
         >
-          <ExternalLink className="h-3.5 w-3.5" />
-          <span className="font-medium">{t('community.viewReview')}: {post.review.title}</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 dark:bg-[#714cb6]/20">
+            <ExternalLink className="h-4 w-4 text-purple-600 dark:text-[#cbb7fb]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <span className="font-medium text-gray-700 truncate block dark:text-gray-300">{post.review.title}</span>
+          </div>
           {post.review.score !== null && (
-            <span className="ml-auto font-semibold text-amethyst dark:text-[#cbb7fb]">
-              {post.review.score}/100
+            <span className="rounded-lg bg-purple-100 px-2 py-1 text-xs font-bold text-purple-600 dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
+              {post.review.score}
             </span>
           )}
         </Link>
       )}
 
-      {/* Footer: Like + Comment + Edit + Delete */}
-      <div className="flex items-center gap-4 border-t border-parchment/50 pt-3 dark:border-[#33355a]/50">
-        {/* Like button */}
+      {/* Footer: Like + Comment */}
+      <div className="flex items-center gap-1 border-t border-gray-100 pt-4 dark:border-[#2e3050]">
         <button
           onClick={() => onLike(post.id)}
-          className={`flex items-center gap-1.5 text-sm transition-colors ${
+          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
             post.isLiked
-              ? 'text-red-500 dark:text-red-400'
-              : 'text-charcoal/40 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400'
+              ? 'bg-red-50 text-red-500 dark:bg-red-500/10 dark:text-red-400'
+              : 'text-gray-500 hover:bg-gray-50 hover:text-red-500 dark:text-gray-400 dark:hover:bg-red-500/10 dark:hover:text-red-400'
           }`}
         >
           <Heart className={`h-4 w-4 ${post.isLiked ? 'fill-current' : ''}`} />
           <span>{post.likeCount}</span>
         </button>
 
-        {/* Comment count */}
         <Link
           href={`/community/${post.id}`}
-          className="flex items-center gap-1.5 text-sm text-charcoal/40 transition-colors hover:text-amethyst dark:text-gray-500 dark:hover:text-[#cbb7fb]"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 transition-all hover:bg-purple-50 hover:text-purple-600 dark:text-gray-400 dark:hover:bg-[#714cb6]/10 dark:hover:text-[#cbb7fb]"
         >
           <MessageCircle className="h-4 w-4" />
           <span>{post.commentCount}</span>
         </Link>
-
-        {/* Owner actions */}
-        {isOwner && (
-          <div className="ml-auto flex items-center gap-2">
-            <button
-              onClick={() => onEdit(post)}
-              className="text-charcoal/30 transition-colors hover:text-amethyst dark:text-gray-600 dark:hover:text-[#cbb7fb]"
-            >
-              <Pencil className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              className="text-charcoal/30 transition-colors hover:text-red-500 dark:text-gray-600 dark:hover:text-red-400"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          </div>
-        )}
       </div>
 
       <ConfirmDialog

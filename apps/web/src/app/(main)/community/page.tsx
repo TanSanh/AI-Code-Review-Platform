@@ -151,38 +151,40 @@ export default function CommunityPage() {
 
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-[#1a1b2e]">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-amethyst/30 border-t-amethyst dark:border-[#714cb6]/30 dark:border-t-[#714cb6]" />
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#1a1b2e]">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600 dark:border-[#714cb6]/30 dark:border-t-[#714cb6]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
-      <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#1a1b2e]">
+      <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
         {/* Header */}
-        <div className="mb-8 flex items-start justify-between">
-          <div>
-            <h1 className="mb-2 text-display-section font-bold text-charcoal dark:text-gray-100">
-              {t('community.title')}
-            </h1>
-            <p className="text-body text-charcoal/50 dark:text-gray-400">
-              {t('community.subtitle')}
-            </p>
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                {t('community.title')}
+              </h1>
+              <p className="mt-1 text-base text-gray-500 dark:text-gray-400">
+                {t('community.subtitle')}
+              </p>
+            </div>
+            <Button
+              onClick={handleOpenCreatePost}
+              className="bg-purple-600 text-white hover:bg-purple-700 shadow-lg shadow-purple-500/25 dark:bg-[#714cb6] dark:hover:bg-[#714cb6]/90 dark:shadow-[#714cb6]/25"
+            >
+              <Plus className="mr-1.5 h-4 w-4" />
+              {t('community.newPost')}
+            </Button>
           </div>
-          <Button
-            onClick={handleOpenCreatePost}
-            className="bg-amethyst text-white hover:bg-amethyst/90 dark:bg-[#714cb6] dark:hover:bg-[#714cb6]/90"
-          >
-            <Plus className="mr-1.5 h-4 w-4" />
-            {t('community.newPost')}
-          </Button>
         </div>
 
         {/* Filters */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-charcoal/30 dark:text-gray-600" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
             <Input
               value={searchQuery}
               onChange={(e) => {
@@ -190,7 +192,7 @@ export default function CommunityPage() {
                 setPage(1);
               }}
               placeholder={t('community.search')}
-              className="pl-10 border-parchment bg-white text-charcoal placeholder:text-charcoal/30 dark:border-[#33355a] dark:bg-[#242640] dark:text-gray-100 dark:placeholder:text-gray-600"
+              className="pl-10 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20 dark:border-[#2e3050] dark:bg-[#22243a] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-[#714cb6]"
             />
           </div>
 
@@ -201,10 +203,10 @@ export default function CommunityPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger className="w-full sm:w-44 border-parchment bg-white text-charcoal dark:border-[#33355a] dark:bg-[#242640] dark:text-gray-100">
+            <SelectTrigger className="w-full sm:w-44 border-gray-200 bg-white text-gray-900 dark:border-[#2e3050] dark:bg-[#22243a] dark:text-gray-100">
               <SelectValue placeholder={t('community.allLanguages')} />
             </SelectTrigger>
-            <SelectContent className="border-parchment bg-white dark:border-[#33355a] dark:bg-[#242640]">
+            <SelectContent className="border-gray-200 bg-white dark:border-[#2e3050] dark:bg-[#2a2c4a]">
               <SelectItem value="all">{t('community.allLanguages')}</SelectItem>
               <SelectItem value="TypeScript">TypeScript</SelectItem>
               <SelectItem value="JavaScript">JavaScript</SelectItem>
@@ -224,10 +226,10 @@ export default function CommunityPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger className="w-full sm:w-40 border-parchment bg-white text-charcoal dark:border-[#33355a] dark:bg-[#242640] dark:text-gray-100">
+            <SelectTrigger className="w-full sm:w-40 border-gray-200 bg-white text-gray-900 dark:border-[#2e3050] dark:bg-[#22243a] dark:text-gray-100">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="border-parchment bg-white dark:border-[#33355a] dark:bg-[#242640]">
+            <SelectContent className="border-gray-200 bg-white dark:border-[#2e3050] dark:bg-[#2a2c4a]">
               <SelectItem value="latest">{t('community.sortLatest')}</SelectItem>
               <SelectItem value="popular">{t('community.sortPopular')}</SelectItem>
             </SelectContent>
@@ -237,15 +239,15 @@ export default function CommunityPage() {
         {/* Posts */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-amethyst/30 border-t-amethyst dark:border-[#714cb6]/30 dark:border-t-[#714cb6]" />
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600 dark:border-[#714cb6]/30 dark:border-t-[#714cb6]" />
           </div>
         ) : posts.length === 0 ? (
-          <div className="py-20 text-center">
-            <Users className="mx-auto mb-4 h-12 w-12 text-charcoal/15 dark:text-gray-700" />
-            <h3 className="mb-1 text-heading-card font-semibold text-charcoal dark:text-gray-200">
+          <div className="rounded-2xl border border-gray-200 bg-white py-20 text-center shadow-sm dark:border-[#2e3050] dark:bg-[#22243a]">
+            <Users className="mx-auto mb-4 h-16 w-16 text-gray-200 dark:text-gray-700" />
+            <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-gray-200">
               {t('community.noPosts')}
             </h3>
-            <p className="text-body text-charcoal/40 dark:text-gray-500">
+            <p className="text-base text-gray-500 dark:text-gray-400">
               {t('community.noPostsDesc')}
             </p>
           </div>
@@ -272,11 +274,11 @@ export default function CommunityPage() {
               size="sm"
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
-              className="border-parchment text-charcoal dark:border-[#33355a] dark:text-gray-300"
+              className="border-gray-200 text-gray-700 hover:bg-white dark:border-[#2e3050] dark:text-gray-300 dark:hover:bg-[#242640]"
             >
               {t('reviews.previous')}
             </Button>
-            <span className="text-sm text-charcoal/50 dark:text-gray-400">
+            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
               {t('reviews.pageOf').replace('{page}', String(page)).replace('{total}', String(totalPages))}
             </span>
             <Button
@@ -284,7 +286,7 @@ export default function CommunityPage() {
               size="sm"
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
-              className="border-parchment text-charcoal dark:border-[#33355a] dark:text-gray-300"
+              className="border-gray-200 text-gray-700 hover:bg-white dark:border-[#2e3050] dark:text-gray-300 dark:hover:bg-[#242640]"
             >
               {t('reviews.next')}
             </Button>

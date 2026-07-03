@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Heart, Trash2, ExternalLink, Pencil } from 'lucide-react';
+import { ArrowLeft, Heart, ExternalLink, MoreVertical, Pencil, Trash2, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/auth-context';
@@ -11,6 +11,7 @@ import { useCommunitySocket } from '@/hooks/use-community-socket';
 import { type TranslationKey } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { DropdownMenu, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import {
   CommunityCommentSection,
   CommunityComment,
@@ -250,23 +251,23 @@ export default function CommunityPostDetailPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-[#1a1b2e]">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-amethyst/30 border-t-amethyst dark:border-[#714cb6]/30 dark:border-t-[#714cb6]" />
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#1a1b2e]">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600 dark:border-[#714cb6]/30 dark:border-t-[#714cb6]" />
       </div>
     );
   }
 
   if (error || !post) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-[#1a1b2e]">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#1a1b2e]">
         <div className="text-center">
-          <p className="mb-4 text-body text-charcoal/50 dark:text-gray-400">
+          <div className="mb-4 text-6xl">📝</div>
+          <p className="mb-4 text-lg text-gray-500 dark:text-gray-400">
             {error || t('reviewDetail.notFound')}
           </p>
           <Button
             onClick={() => router.push('/community')}
-            variant="outline"
-            className="border-parchment text-charcoal dark:border-[#33355a] dark:text-gray-300"
+            className="bg-purple-600 text-white hover:bg-purple-700 dark:bg-[#714cb6] dark:hover:bg-[#714cb6]/90"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('community.cancel')}
@@ -280,149 +281,176 @@ export default function CommunityPostDetailPage() {
   const tags = parseTags(post.tags);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
-      <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#1a1b2e]">
+      <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
         {/* Back button */}
         <button
           onClick={() => router.push('/community')}
-          className="mb-6 flex items-center gap-2 text-sm text-charcoal/50 transition-colors hover:text-amethyst dark:text-gray-400 dark:hover:text-[#cbb7fb]"
+          className="mb-6 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 transition-colors hover:bg-white hover:text-purple-600 dark:text-gray-400 dark:hover:bg-[#242640] dark:hover:text-[#cbb7fb]"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('reviewDetail.back')}
         </button>
 
         {/* Post card */}
-        <article className="rounded-card border border-parchment bg-white p-6 dark:border-[#33355a] dark:bg-[#242640]">
-          {/* Author header */}
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {post.author.avatarUrl ? (
-                <img src={post.author.avatarUrl} alt={post.author.name} className="h-10 w-10 rounded-full object-cover" />
-              ) : (
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amethyst/10 text-sm font-semibold text-amethyst dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
-                  {getInitial(post.author.name)}
-                </div>
-              )}
-              <div>
-                <span className="text-sm font-medium text-charcoal dark:text-gray-100">
-                  {post.author.name}
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-charcoal/40 dark:text-gray-500">
-                    {formatTimeAgo(post.createdAt, t)}
-                  </span>
-                  {post.language && (
-                    <>
-                      <span className="text-charcoal/20 dark:text-gray-600">·</span>
-                      <span className="rounded-badge bg-cream px-2 py-0.5 text-xs font-medium text-charcoal/70 dark:bg-[#33355a] dark:text-gray-300">
-                        {post.language}
-                      </span>
-                    </>
+        <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#2e3050] dark:bg-[#22243a]">
+          {/* Header with gradient accent */}
+          <div className="bg-gradient-to-r from-purple-500/5 to-indigo-500/5 px-6 py-4 dark:from-[#714cb6]/10 dark:to-[#5a3d9a]/10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <a href={`/users/${post.author.id}`}>
+                  {post.author.avatarUrl ? (
+                    <img src={post.author.avatarUrl} alt={post.author.name} className="h-12 w-12 rounded-full object-cover ring-2 ring-white shadow-md dark:ring-[#22243a]" />
+                  ) : (
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-lg font-bold text-white shadow-lg shadow-purple-500/25">
+                      {getInitial(post.author.name)}
+                    </div>
                   )}
+                </a>
+                <div>
+                  <a href={`/users/${post.author.id}`} className="text-base font-semibold text-gray-900 transition-colors hover:text-purple-600 dark:text-gray-100 dark:hover:text-[#cbb7fb]">
+                    {post.author.name}
+                  </a>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-sm text-gray-400 dark:text-gray-500">
+                      {formatTimeAgo(post.createdAt, t)}
+                    </span>
+                    {post.language && (
+                      <>
+                        <span className="text-gray-300 dark:text-gray-600">·</span>
+                        <span className="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-semibold text-purple-700 dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
+                          {post.language}
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
+
+              {/* 3-dot menu for owner */}
+              {isOwner && (
+                <DropdownMenu
+                  trigger={
+                    <button className="rounded-lg p-2 text-gray-400 transition-all hover:bg-white/80 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-[#33355a] dark:hover:text-gray-300">
+                      <MoreVertical className="h-5 w-5" />
+                    </button>
+                  }
+                >
+                  <DropdownMenuItem
+                    icon={<Pencil className="h-4 w-4" />}
+                    onClick={handleOpenEdit}
+                  >
+                    {t('community.edit')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    icon={<Trash2 className="h-4 w-4" />}
+                    variant="danger"
+                    onClick={() => setShowDeleteConfirm(true)}
+                  >
+                    {t('community.delete')}
+                  </DropdownMenuItem>
+                </DropdownMenu>
+              )}
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="px-6 py-5">
+            {/* Title */}
+            <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-gray-100">
+              {post.title}
+            </h1>
+
+            {/* Content */}
+            <div className="prose prose-gray max-w-none whitespace-pre-wrap text-base leading-relaxed text-gray-700 dark:text-gray-300">
+              {post.content}
             </div>
 
-            {isOwner && (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleOpenEdit}
-                  className="text-charcoal/30 transition-colors hover:text-amethyst dark:text-gray-600 dark:hover:text-[#cbb7fb]"
-                >
-                  <Pencil className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setShowDeleteConfirm(true)}
-                  className="text-charcoal/30 transition-colors hover:text-red-500 dark:text-gray-600 dark:hover:text-red-400"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
+            {/* Image */}
+            {post.imageUrl && (
+              <div className="mt-5">
+                <img
+                  src={post.imageUrl}
+                  alt={post.title}
+                  className="w-full max-h-[500px] rounded-xl object-contain border border-gray-100 dark:border-[#2e3050]"
+                />
               </div>
+            )}
+
+            {/* Tags */}
+            {tags.length > 0 && (
+              <div className="mt-5 flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-50 to-indigo-50 px-3 py-1.5 text-sm font-medium text-purple-600 dark:from-[#714cb6]/10 dark:to-[#5a3d9a]/10 dark:text-[#cbb7fb]"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Attached Review */}
+            {post.review && (
+              <a
+                href={`/review/${post.review.id}`}
+                className="mt-5 flex items-center gap-4 rounded-xl border border-purple-100 bg-gradient-to-r from-purple-50/50 to-indigo-50/50 px-5 py-4 transition-all hover:border-purple-300 hover:shadow-lg hover:shadow-purple-500/5 dark:border-[#714cb6]/20 dark:from-[#714cb6]/5 dark:to-[#5a3d9a]/5 dark:hover:border-[#714cb6]/40"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 dark:bg-[#714cb6]/20">
+                  <ExternalLink className="h-5 w-5 text-purple-600 dark:text-[#cbb7fb]" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('community.viewReview')}</span>
+                  <p className="font-semibold text-gray-900 truncate dark:text-gray-100">{post.review.title}</p>
+                </div>
+                {post.review.score !== null && (
+                  <div className="flex items-center gap-1">
+                    <span className="text-2xl font-bold text-purple-600 dark:text-[#cbb7fb]">{post.review.score}</span>
+                    <span className="text-sm text-gray-400 dark:text-gray-500">/100</span>
+                  </div>
+                )}
+              </a>
             )}
           </div>
 
-          {/* Title */}
-          <h1 className="mb-4 text-heading-large font-bold text-charcoal dark:text-gray-100">
-            {post.title}
-          </h1>
-
-          {/* Content */}
-          <div className="mb-4 whitespace-pre-wrap text-body leading-relaxed text-charcoal/70 dark:text-gray-300">
-            {post.content}
-          </div>
-
-          {/* Image */}
-          {post.imageUrl && (
-            <div className="mb-4">
-              <img
-                src={post.imageUrl}
-                alt={post.title}
-                className="w-full max-h-96 object-contain rounded-button border border-parchment dark:border-[#33355a]"
-              />
+          {/* Footer: Like + Comment count */}
+          <div className="border-t border-gray-100 bg-gray-50/50 px-6 py-4 dark:border-[#2e3050] dark:bg-[#1e2038]/50">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleLike}
+                className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
+                  post.isLiked
+                    ? 'bg-red-50 text-red-500 shadow-sm dark:bg-red-500/10 dark:text-red-400'
+                    : 'text-gray-500 hover:bg-white hover:text-red-500 dark:text-gray-400 dark:hover:bg-[#242640] dark:hover:text-red-400'
+                }`}
+              >
+                <Heart className={`h-5 w-5 ${post.isLiked ? 'fill-current' : ''}`} />
+                <span>{post.likeCount} {t('community.likes')}</span>
+              </button>
+              <span className="text-sm text-gray-400 dark:text-gray-500">
+                {post.commentCount} {t('community.comments')}
+              </span>
             </div>
-          )}
-
-          {/* Tags */}
-          {tags.length > 0 && (
-            <div className="mb-4 flex flex-wrap gap-1.5">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-badge bg-amethyst/8 px-2.5 py-1 text-xs font-medium text-amethyst dark:bg-[#714cb6]/15 dark:text-[#cbb7fb]"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Attached Review */}
-          {post.review && (
-            <a
-              href={`/review/${post.review.id}`}
-              className="mb-4 flex items-center gap-2 rounded-button border border-parchment/50 bg-cream/50 px-4 py-3 text-sm text-charcoal/60 transition-colors hover:border-amethyst/30 hover:text-amethyst dark:border-[#33355a]/50 dark:bg-[#1e2038] dark:text-gray-400 dark:hover:border-[#714cb6]/30 dark:hover:text-[#cbb7fb]"
-            >
-              <ExternalLink className="h-4 w-4 shrink-0" />
-              <span className="font-medium">{t('community.viewReview')}: {post.review.title}</span>
-              {post.review.score !== null && (
-                <span className="ml-auto font-semibold text-amethyst dark:text-[#cbb7fb]">
-                  {post.review.score}/100
-                </span>
-              )}
-            </a>
-          )}
-
-          {/* Like + Comment count */}
-          <div className="flex items-center gap-4 border-t border-parchment/50 pt-4 dark:border-[#33355a]/50">
-            <button
-              onClick={handleLike}
-              className={`flex items-center gap-1.5 text-sm transition-colors ${
-                post.isLiked
-                  ? 'text-red-500 dark:text-red-400'
-                  : 'text-charcoal/40 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400'
-              }`}
-            >
-              <Heart className={`h-5 w-5 ${post.isLiked ? 'fill-current' : ''}`} />
-              <span>{post.likeCount} {t('community.likes')}</span>
-            </button>
-            <span className="text-sm text-charcoal/40 dark:text-gray-500">
-              {post.commentCount} {t('community.comments')}
-            </span>
           </div>
         </article>
 
-        {/* Comments Section - connected to post card */}
-        <section className="rounded-card border border-t-0 border-parchment bg-white p-6 dark:border-[#33355a] dark:border-t-0 dark:bg-[#242640]">
-          <h2 className="mb-4 text-heading-card font-semibold text-charcoal dark:text-gray-100">
-            {t('community.comments')} ({post.commentCount})
-          </h2>
-          <CommunityCommentSection
-            postId={post.id}
-            comments={post.comments || []}
-            onAdd={handleAddComment}
-            onDelete={handleDeleteComment}
-            currentUserId={user?.id || ''}
-          />
+        {/* Comments Section */}
+        <section className="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#2e3050] dark:bg-[#22243a]">
+          <div className="border-b border-gray-100 px-6 py-4 dark:border-[#2e3050]">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+              {t('community.comments')} ({post.commentCount})
+            </h2>
+          </div>
+          <div className="p-6">
+            <CommunityCommentSection
+              postId={post.id}
+              comments={post.comments || []}
+              onAdd={handleAddComment}
+              onDelete={handleDeleteComment}
+              currentUserId={user?.id || ''}
+            />
+          </div>
         </section>
       </main>
 
