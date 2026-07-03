@@ -12,7 +12,6 @@ import {
   CheckCircle,
   Info,
   Lightbulb,
-  MessageSquare,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { formatDate, getScoreColor } from '@/lib/utils';
@@ -20,7 +19,6 @@ import { useAuth } from '@/contexts/auth-context';
 import { useLanguage } from '@/contexts/language-context';
 import { useReviewSocket } from '@/hooks/use-socket';
 import { CodeEditor } from '@/components/code-editor/code-editor';
-import { CommentSection } from '@/components/comments/comment-section';
 
 interface Issue {
   id: string;
@@ -319,19 +317,6 @@ export default function ReviewDetailPage() {
                     })}
                   </div>
                 )}
-              </CardContent>
-            </Card>
-
-            {/* Discussion - Real-time Comments */}
-            <Card className="card-super mt-6">
-              <CardHeader>
-                <CardTitle className="text-body-heading flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5" />
-                  {t('reviewDetail.discussion')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CommentSection reviewId={review.id} />
               </CardContent>
             </Card>
           </div>

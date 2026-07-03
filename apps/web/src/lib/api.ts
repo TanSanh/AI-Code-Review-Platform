@@ -186,18 +186,6 @@ class ApiClient {
     });
   }
 
-  // Comments
-  async getComments(reviewId: string) {
-    return this.request<unknown[]>(`/api/v1/reviews/${reviewId}/comments`);
-  }
-
-  async createComment(reviewId: string, data: { content: string; lineRef?: number; parentId?: string }) {
-    return this.request<unknown>(`/api/v1/reviews/${reviewId}/comments`, {
-      method: 'POST',
-      body: data,
-    });
-  }
-
   // Analytics
   async getAnalyticsOverview() {
     return this.request<unknown>('/api/v1/analytics/overview');

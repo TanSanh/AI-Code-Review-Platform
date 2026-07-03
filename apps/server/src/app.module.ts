@@ -7,7 +7,6 @@ import { PrismaModule } from './common/prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ReviewModule } from './review/review.module';
 import { IssueModule } from './issue/issue.module';
-import { CommentModule } from './comment/comment.module';
 import { AiReviewModule } from './ai-review/ai-review.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { CommunityModule } from './community/community.module';
@@ -35,7 +34,6 @@ import { AppController } from './app.controller';
     AuthModule,
     ReviewModule,
     IssueModule,
-    CommentModule,
     AiReviewModule,
     AnalyticsModule,
     CommunityModule,
