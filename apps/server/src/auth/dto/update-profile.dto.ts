@@ -13,4 +13,9 @@ export class UpdateProfileDto {
   @IsString()
   @MaxLength(500, { message: 'Bio must be at most 500 characters' })
   bio?: string;
+
+  @ApiProperty({ description: 'Base64 avatar image data', required: false })
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
 }

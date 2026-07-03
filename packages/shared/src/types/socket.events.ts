@@ -3,6 +3,8 @@ export interface ClientToServerEvents {
   'leave:review': (data: { reviewId: string }) => void;
   'typing:start': (data: { reviewId: string }) => void;
   'typing:stop': (data: { reviewId: string }) => void;
+  'join:community': (data: { postId: string }) => void;
+  'leave:community': (data: { postId: string }) => void;
 }
 
 export interface ServerToClientEvents {
@@ -10,6 +12,8 @@ export interface ServerToClientEvents {
   'issue:updated': (issue: IssueEvent) => void;
   'review:completed': (review: ReviewEvent) => void;
   'user:typing': (data: { userId: string; isTyping: boolean }) => void;
+  'community:comment:created': (comment: CommunityCommentEvent) => void;
+  'community:comment:deleted': (data: { postId: string; commentId: string }) => void;
 }
 
 export interface CommentEvent {
@@ -39,4 +43,17 @@ export interface ReviewEvent {
   status: string;
   score?: number;
   issuesCount: number;
+}
+
+export interface CommunityCommentEvent {
+  id: string;
+  content: string;
+  parentId: string | null;
+  postId: string;
+  author: {
+    id: string;
+    name: string;
+    avatarUrl?: string | null;
+  };
+  createdAt: string;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,11 +23,13 @@ import {
   CheckCircle,
   Heart,
   Users,
+  Camera,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/auth-context';
 import { useLanguage } from '@/contexts/language-context';
 import { formatDate } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface UserProfile {
   id: string;
@@ -81,6 +83,8 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<Tab>('general');
   const [userPosts, setUserPosts] = useState<UserPost[]>([]);
   const [postsLoading, setPostsLoading] = useState(false);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -174,6 +178,50 @@ export default function ProfilePage() {
     }
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error(t('profile.avatarTooLarge'));
+      return;
+    }
+
+    setAvatarUploading(true);
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const updated = await api.updateProfile(name.trim() || profile?.name || '', bio.trim() || undefined, base64);
+      setProfile(updated as UserProfile);
+      updateUser({ avatarUrl: updated.avatarUrl });
+      toast.success(t('profile.avatarUpdated'));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t('profile.avatarFailed'));
+    } finally {
+      setAvatarUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    setAvatarUploading(true);
+    try {
+      const updated = await api.updateProfile(name.trim() || profile?.name || '', bio.trim() || undefined, '');
+      setProfile(updated as UserProfile);
+      updateUser({ avatarUrl: null });
+      toast.success(t('profile.avatarRemoved'));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t('profile.avatarFailed'));
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#1a1b2e]">
@@ -200,11 +248,13 @@ export default function ProfilePage() {
               {/* User info */}
               <div className="px-6 pt-6 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-charcoal dark:bg-lavender">
-                    <span className="text-lg font-bold text-white">
-                      {userInitial}
-                    </span>
-                  </div>
+                  {profile?.avatarUrl ? (
+                    <img src={profile.avatarUrl} alt={profile.name} className="h-12 w-12 rounded-full object-cover" />
+                  ) : (
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-charcoal dark:bg-lavender">
+                      <span className="text-lg font-bold text-white">{userInitial}</span>
+                    </div>
+                  )}
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-charcoal dark:text-gray-100 truncate">
                       {profile?.email}
@@ -286,10 +336,25 @@ export default function ProfilePage() {
                 {/* User info card */}
                 <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] p-6">
                   <div className="flex items-center gap-5">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-charcoal dark:bg-lavender flex-shrink-0">
-                      <span className="text-2xl font-bold text-white">
-                        {userInitial}
-                      </span>
+                    <div className="relative group flex-shrink-0">
+                      {profile?.avatarUrl ? (
+                        <img src={profile.avatarUrl} alt={profile.name} className="h-20 w-20 rounded-full object-cover" />
+                      ) : (
+                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-charcoal dark:bg-lavender">
+                          <span className="text-2xl font-bold text-white">{userInitial}</span>
+                        </div>
+                      )}
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={avatarUploading}
+                        className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
+                      >
+                        {avatarUploading ? (
+                          <Loader2 className="h-5 w-5 text-white animate-spin" />
+                        ) : (
+                          <Camera className="h-5 w-5 text-white" />
+                        )}
+                      </button>
                     </div>
                     <div>
                       <p className="text-lg font-semibold text-charcoal dark:text-gray-100">
@@ -649,6 +714,15 @@ export default function ProfilePage() {
           </main>
         </div>
       </div>
+
+      {/* Hidden avatar file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleAvatarUpload}
+        className="hidden"
+      />
     </div>
   );
 }

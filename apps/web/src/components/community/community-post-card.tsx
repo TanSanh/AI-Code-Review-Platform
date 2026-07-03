@@ -81,9 +81,13 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {/* Avatar */}
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amethyst/10 text-sm font-semibold text-amethyst dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
-            {getInitial(post.author.name)}
-          </div>
+          {post.author.avatarUrl ? (
+            <img src={post.author.avatarUrl} alt={post.author.name} className="h-9 w-9 rounded-full object-cover" />
+          ) : (
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amethyst/10 text-sm font-semibold text-amethyst dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
+              {getInitial(post.author.name)}
+            </div>
+          )}
           <div>
             <span className="text-sm font-medium text-charcoal dark:text-gray-100">
               {post.author.name}

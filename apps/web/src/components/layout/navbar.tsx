@@ -167,7 +167,11 @@ export function Navbar() {
                       : 'text-charcoal/60 hover:bg-white/40 hover:text-charcoal dark:text-gray-100/60 dark:hover:bg-charcoal-700/50 dark:hover:text-cream-50'
                   }`}
                 >
-                  <User className="h-4 w-4" />
+                  {user?.avatarUrl ? (
+                    <img src={user.avatarUrl} alt={user.name || ''} className="h-6 w-6 rounded-full object-cover" />
+                  ) : (
+                    <User className="h-4 w-4" />
+                  )}
                   <span className="max-w-[100px] truncate">{user?.name || user?.email}</span>
                 </Link>
                 <Link href="/settings" onClick={pauseHide}>
@@ -276,7 +280,17 @@ export function Navbar() {
                     {t('nav.community')}
                   </MobileNavLink>
                   <div className="my-2 border-t border-mysteria/10 dark:border-[#33355a]" />
-                  <MobileNavLink href="/profile" icon={<User className="h-4 w-4" />} active={isActive('/profile')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
+                  <MobileNavLink
+                    href="/profile"
+                    icon={user?.avatarUrl ? (
+                      <img src={user.avatarUrl} alt={user.name || ''} className="h-5 w-5 rounded-full object-cover" />
+                    ) : (
+                      <User className="h-4 w-4" />
+                    )}
+                    active={isActive('/profile')}
+                    isDark={isDark}
+                    onClick={() => { pauseHide(); setMobileMenuOpen(false); }}
+                  >
                     {user?.name || user?.email}
                   </MobileNavLink>
                   <MobileNavLink href="/settings" icon={<Settings className="h-4 w-4" />} active={isActive('/settings')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>

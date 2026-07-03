@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/auth-context';
 import { useLanguage } from '@/contexts/language-context';
+import { useCommunitySocket } from '@/hooks/use-community-socket';
 import { type TranslationKey } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
@@ -67,6 +68,41 @@ function getInitial(name: string): string {
 function parseTags(tags: string | null): string[] {
   if (!tags) return [];
   return tags.split(',').map((t) => t.trim()).filter(Boolean);
+}
+
+/** Recursively insert a reply into the comment tree. Returns true if parent was found. */
+function insertReply(
+  comments: CommunityComment[],
+  parentId: string,
+  reply: CommunityComment,
+): boolean {
+  for (let i = 0; i < comments.length; i++) {
+    if (comments[i].id === parentId) {
+      comments[i] = {
+        ...comments[i],
+        replies: [...(comments[i].replies || []), reply],
+      };
+      return true;
+    }
+    if (comments[i].replies?.length) {
+      const cloned = { ...comments[i], replies: [...(comments[i].replies || [])] };
+      if (insertReply(cloned.replies, parentId, reply)) {
+        comments[i] = cloned;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/** Recursively remove a comment by ID from the tree at any depth. */
+function removeComment(comments: CommunityComment[], id: string): CommunityComment[] {
+  return comments
+    .filter((c) => c.id !== id)
+    .map((c) => ({
+      ...c,
+      replies: removeComment(c.replies || [], id),
+    }));
 }
 
 export default function CommunityPostDetailPage() {
@@ -171,6 +207,47 @@ export default function CommunityPostDetailPage() {
     await fetchPost();
   };
 
+  // Realtime: handle new comment from another user
+  const handleRemoteCommentCreated = useCallback((raw: unknown) => {
+    const comment = raw as CommunityComment;
+    setPost((prev) => {
+      if (!prev) return prev;
+      // Skip if this is our own comment (we already refetch)
+      if (comment.author.id === user?.id) return prev;
+
+      const newComments = [...(prev.comments || [])];
+      if (comment.parentId) {
+        // Recursively find parent at any depth and add reply
+        const added = insertReply(newComments, comment.parentId, comment);
+        if (!added) {
+          // Parent not found (deleted?), refetch
+          fetchPost();
+          return prev;
+        }
+      } else {
+        // Top-level comment
+        newComments.unshift(comment);
+      }
+      return { ...prev, comments: newComments, commentCount: prev.commentCount + 1 };
+    });
+  }, [user?.id, fetchPost]);
+
+  // Realtime: handle deleted comment
+  const handleRemoteCommentDeleted = useCallback((data: { postId: string; commentId: string }) => {
+    setPost((prev) => {
+      if (!prev || prev.id !== data.postId) return prev;
+      const newComments = removeComment(prev.comments, data.commentId);
+      return { ...prev, comments: newComments, commentCount: Math.max(0, prev.commentCount - 1) };
+    });
+  }, []);
+
+  // Connect to community socket
+  const { isConnected: isSocketConnected } = useCommunitySocket({
+    postId: post?.id,
+    onCommentCreated: handleRemoteCommentCreated,
+    onCommentDeleted: handleRemoteCommentDeleted,
+  });
+
   if (authLoading || loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white dark:bg-[#1a1b2e]">
@@ -219,9 +296,13 @@ export default function CommunityPostDetailPage() {
           {/* Author header */}
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amethyst/10 text-sm font-semibold text-amethyst dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
-                {getInitial(post.author.name)}
-              </div>
+              {post.author.avatarUrl ? (
+                <img src={post.author.avatarUrl} alt={post.author.name} className="h-10 w-10 rounded-full object-cover" />
+              ) : (
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amethyst/10 text-sm font-semibold text-amethyst dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
+                  {getInitial(post.author.name)}
+                </div>
+              )}
               <div>
                 <span className="text-sm font-medium text-charcoal dark:text-gray-100">
                   {post.author.name}
@@ -330,8 +411,8 @@ export default function CommunityPostDetailPage() {
           </div>
         </article>
 
-        {/* Comments Section */}
-        <section className="mt-6 rounded-card border border-parchment bg-white p-6 dark:border-[#33355a] dark:bg-[#242640]">
+        {/* Comments Section - connected to post card */}
+        <section className="rounded-card border border-t-0 border-parchment bg-white p-6 dark:border-[#33355a] dark:border-t-0 dark:bg-[#242640]">
           <h2 className="mb-4 text-heading-card font-semibold text-charcoal dark:text-gray-100">
             {t('community.comments')} ({post.commentCount})
           </h2>

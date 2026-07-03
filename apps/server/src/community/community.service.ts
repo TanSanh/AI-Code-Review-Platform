@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
+import { CommunityGateway } from './community.gateway';
 import { CreatePostDto } from './dto/create-post.dto';
 import { CommunityFilterDto } from './dto/community-filter.dto';
 import { CreateCommunityCommentDto } from './dto/create-community-comment.dto';
 
 @Injectable()
 export class CommunityService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly gateway: CommunityGateway,
+  ) {}
 
   async findAll(userId: string, filters: CommunityFilterDto) {
     const page = filters.page || 1;
@@ -81,31 +85,22 @@ export class CommunityService {
         review: {
           select: { id: true, title: true, language: true, score: true },
         },
-        comments: {
-          where: { parentId: null },
-          include: {
-            author: { select: { id: true, name: true, avatarUrl: true } },
-            replies: {
-              include: {
-                author: { select: { id: true, name: true, avatarUrl: true } },
-              },
-              orderBy: { createdAt: 'asc' },
-            },
-          },
-          orderBy: { createdAt: 'desc' },
-        },
         _count: { select: { likes: true, comments: true } },
       },
     });
 
     if (!post) throw new NotFoundException('Post not found');
 
-    const userLike = await this.prisma.communityLike.findUnique({
-      where: { userId_postId: { userId, postId: id } },
-    });
+    const [userLike, comments] = await Promise.all([
+      this.prisma.communityLike.findUnique({
+        where: { userId_postId: { userId, postId: id } },
+      }),
+      this.getComments(id),
+    ]);
 
     return {
       ...post,
+      comments,
       isLiked: !!userLike,
       likeCount: post._count.likes,
       commentCount: post._count.comments,
@@ -250,19 +245,15 @@ export class CommunityService {
     });
     if (!post) throw new NotFoundException('Post not found');
 
-    return this.prisma.communityComment.findMany({
-      where: { postId, parentId: null },
+    const flat = await this.prisma.communityComment.findMany({
+      where: { postId },
       include: {
         author: { select: { id: true, name: true, avatarUrl: true } },
-        replies: {
-          include: {
-            author: { select: { id: true, name: true, avatarUrl: true } },
-          },
-          orderBy: { createdAt: 'asc' },
-        },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: 'asc' },
     });
+
+    return this.buildCommentTree(flat);
   }
 
   async createComment(postId: string, userId: string, dto: CreateCommunityCommentDto) {
@@ -301,6 +292,12 @@ export class CommunityService {
       }),
     ]);
 
+    // Broadcast to other clients viewing this post
+    this.gateway.broadcastComment(postId, {
+      ...comment,
+      postId,
+    });
+
     return comment;
   }
 
@@ -328,6 +325,31 @@ export class CommunityService {
       }),
     ]);
 
+    // Broadcast deletion to other clients
+    this.gateway.broadcastCommentDeleted(postId, commentId);
+
     return { message: 'Comment deleted' };
+  }
+
+  /**
+   * Build a threaded comment tree from a flat list.
+   * Supports unlimited nesting depth.
+   */
+  private buildCommentTree(flat: any[]) {
+    const map = new Map<string, any>();
+    const roots: any[] = [];
+    for (const c of flat) {
+      map.set(c.id, { ...c, replies: [] });
+    }
+    for (const c of flat) {
+      const node = map.get(c.id)!;
+      if (c.parentId && map.has(c.parentId)) {
+        map.get(c.parentId)!.replies.push(node);
+      } else {
+        roots.push(node);
+      }
+    }
+    // Return top-level comments in descending order (newest first)
+    return roots.reverse();
   }
 }

@@ -123,7 +123,11 @@ export class AuthService {
 
     const updated = await this.prisma.user.update({
       where: { id: userId },
-      data: { name: dto.name, bio: dto.bio ?? null },
+      data: {
+        name: dto.name,
+        bio: dto.bio ?? null,
+        ...(dto.avatarUrl !== undefined && { avatarUrl: dto.avatarUrl }),
+      },
       select: {
         id: true,
         email: true,

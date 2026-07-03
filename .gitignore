@@ -55,3 +55,6 @@ logs/
 # Runtime
 tmp/
 temp/
+
+# MCP Config (contains secrets)
+.mcp.json

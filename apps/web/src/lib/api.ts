@@ -121,7 +121,7 @@ class ApiClient {
     }>('/api/v1/auth/me');
   }
 
-  async updateProfile(name: string, bio?: string) {
+  async updateProfile(name: string, bio?: string, avatarUrl?: string | null) {
     return this.request<{
       id: string;
       email: string;
@@ -133,7 +133,7 @@ class ApiClient {
       _count: { reviews: number; comments: number };
     }>('/api/v1/auth/me', {
       method: 'PATCH',
-      body: { name, bio },
+      body: { name, bio, avatarUrl },
     });
   }
 
