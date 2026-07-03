@@ -15,7 +15,8 @@ export function PasswordInput({ className, ...props }: PasswordInputProps) {
     <div className="relative">
       <Input
         type={visible ? 'text' : 'password'}
-        className={`pr-10 ${className || ''}`}
+        className={`pr-10 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${className || ''}`}
+        autoComplete="new-password"
         {...props}
       />
       <button

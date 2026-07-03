@@ -94,10 +94,24 @@ class ApiClient {
   }
 
   // Auth
-  async register(email: string, name: string, password: string) {
+  async sendOtp(email: string) {
+    return this.request<{ message: string }>('/api/v1/auth/send-otp', {
+      method: 'POST',
+      body: { email },
+    });
+  }
+
+  async verifyOtp(email: string, code: string) {
+    return this.request<{ verified: boolean; otpToken: string }>('/api/v1/auth/verify-otp', {
+      method: 'POST',
+      body: { email, code },
+    });
+  }
+
+  async register(email: string, name: string, password: string, otpToken: string) {
     return this.request<{ user: { id: string; email: string; name: string; role: string }; accessToken: string }>('/api/v1/auth/register', {
       method: 'POST',
-      body: { email, name, password },
+      body: { email, name, password, otpToken },
     });
   }
 

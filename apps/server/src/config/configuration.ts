@@ -37,4 +37,12 @@ export default () => ({
     window_ms: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10),
     max_requests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100', 10),
   },
+
+  smtp: {
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587', 10),
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+    from: process.env.SMTP_FROM,
+  },
 });

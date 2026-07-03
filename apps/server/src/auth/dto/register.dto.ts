@@ -16,4 +16,8 @@ export class RegisterDto {
   @IsString()
   @MinLength(8, { message: 'Password must be at least 8 characters' })
   password: string;
+
+  @ApiProperty({ example: 'abc123.xxxxx.abcdef123456' })
+  @IsString({ message: 'OTP verification token is required' })
+  otpToken: string;
 }

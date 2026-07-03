@@ -14,6 +14,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { OtpService } from './otp.service';
 
 @Injectable()
 export class AuthService {
@@ -21,9 +22,16 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly otpService: OtpService,
   ) {}
 
   async register(dto: RegisterDto) {
+    // Verify OTP token
+    const otpValid = this.otpService.verifyOtpToken(dto.email, dto.otpToken);
+    if (!otpValid) {
+      throw new BadRequestException('Email verification failed. Please verify your email first');
+    }
+
     const existing = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
