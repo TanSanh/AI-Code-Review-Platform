@@ -175,6 +175,13 @@ class ApiClient {
     return this.request<unknown>(`/api/v1/reviews/${id}/review`, { method: 'POST' });
   }
 
+  async updateReviewPrivacy(id: string, isPublic: boolean) {
+    return this.request<{ id: string; isPublic: boolean }>(`/api/v1/reviews/${id}/privacy`, {
+      method: 'PATCH',
+      body: { isPublic },
+    });
+  }
+
   // Issues
   async getIssues(reviewId: string) {
     return this.request<unknown[]>(`/api/v1/reviews/${reviewId}/issues`);
@@ -355,6 +362,36 @@ class ApiClient {
       method: 'PATCH',
       body: data,
     });
+  }
+
+  // Public User Profile
+  async getUserProfile(userId: string) {
+    return this.request<{
+      id: string;
+      name: string;
+      bio: string | null;
+      avatarUrl: string | null;
+      createdAt: string;
+      totalLikes: number;
+      _count: {
+        reviews: number;
+        comments: number;
+        communityPosts: number;
+        communityComments: number;
+      };
+    }>(`/api/v1/users/${userId}`);
+  }
+
+  async getUserPosts(userId: string, params?: { page?: number; limit?: number }) {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.set('page', String(params.page));
+    if (params?.limit) searchParams.set('limit', String(params.limit));
+
+    const query = searchParams.toString();
+    return this.request<{
+      data: unknown[];
+      meta: { page: number; limit: number; total: number; totalPages: number };
+    }>(`/api/v1/users/${userId}/posts${query ? `?${query}` : ''}`);
   }
 }
 

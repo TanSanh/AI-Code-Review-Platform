@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { Trash2, Reply, ChevronDown, ChevronUp } from 'lucide-react';
 import { useLanguage } from '@/contexts/language-context';
 import { useAuth } from '@/contexts/auth-context';
@@ -268,9 +269,12 @@ export function CommunityCommentSection({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-charcoal dark:text-gray-200">
+                      <Link
+                        href={`/users/${comment.author.id}`}
+                        className="text-sm font-semibold text-charcoal hover:text-[#714cb6] dark:text-gray-200 dark:hover:text-[#cbb7fb] transition-colors"
+                      >
                         {comment.author.name}
-                      </span>
+                      </Link>
                       <span className="text-xs text-charcoal/30 dark:text-gray-600">
                         {formatTimeAgo(comment.createdAt, t)}
                       </span>
@@ -347,9 +351,12 @@ export function CommunityCommentSection({
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
-                                  <span className="text-sm font-semibold text-charcoal dark:text-gray-200">
+                                  <Link
+                                    href={`/users/${reply.author.id}`}
+                                    className="text-sm font-semibold text-charcoal hover:text-[#714cb6] dark:text-gray-200 dark:hover:text-[#cbb7fb] transition-colors"
+                                  >
                                     {reply.author.name}
-                                  </span>
+                                  </Link>
                                   <span className="text-xs text-charcoal/30 dark:text-gray-600">
                                     {formatTimeAgo(reply.createdAt, t)}
                                   </span>

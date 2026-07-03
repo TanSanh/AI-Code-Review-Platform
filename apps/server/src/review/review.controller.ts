@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Delete,
+  Patch,
   Param,
   Body,
   Query,
@@ -55,6 +56,16 @@ export class ReviewController {
     @CurrentUserId() userId: string,
   ) {
     return this.reviewService.findOne(id, userId);
+  }
+
+  @Patch(':id/privacy')
+  @ApiOperation({ summary: 'Update review privacy (public/private)' })
+  async updatePrivacy(
+    @Param('id') id: string,
+    @CurrentUserId() userId: string,
+    @Body('isPublic') isPublic: boolean,
+  ) {
+    return this.reviewService.updatePrivacy(id, userId, isPublic);
   }
 
   @Delete(':id')

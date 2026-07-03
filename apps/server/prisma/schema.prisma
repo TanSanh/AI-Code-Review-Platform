@@ -45,6 +45,7 @@ model Review {
   originalCode String       @db.Text
   status       ReviewStatus @default(PENDING)
   score        Int?
+  isPublic     Boolean      @default(true)
 
   author   User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String

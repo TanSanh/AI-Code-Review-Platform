@@ -19,6 +19,8 @@ import {
   ArrowRight,
   Search,
   Filter,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { formatDate, getScoreColor } from '@/lib/utils';
@@ -31,6 +33,7 @@ interface Review {
   language: string;
   status: string;
   score: number | null;
+  isPublic: boolean;
   createdAt: string;
   _count: {
     issues: number;
@@ -59,6 +62,21 @@ export default function ReviewsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [languageFilter, setLanguageFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [updatingPrivacy, setUpdatingPrivacy] = useState<string | null>(null);
+
+  const handleTogglePrivacy = async (reviewId: string, currentIsPublic: boolean) => {
+    setUpdatingPrivacy(reviewId);
+    try {
+      const result = await api.updateReviewPrivacy(reviewId, !currentIsPublic);
+      setReviews((prev) =>
+        prev.map((r) => (r.id === reviewId ? { ...r, isPublic: result.isPublic } : r))
+      );
+    } catch (err) {
+      console.error('Failed to update privacy:', err);
+    } finally {
+      setUpdatingPrivacy(null);
+    }
+  };
 
   useEffect(() => {
     if (authLoading) return;
@@ -259,6 +277,28 @@ export default function ReviewsPage() {
                           }`}>
                             {review.status}
                           </div>
+
+                          {/* Privacy Toggle */}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleTogglePrivacy(review.id, review.isPublic);
+                            }}
+                            disabled={updatingPrivacy === review.id}
+                            className={`p-2 rounded-lg transition-colors ${
+                              review.isPublic
+                                ? 'text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20'
+                                : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                            }`}
+                            title={review.isPublic ? t('profile.isPublic') : t('profile.isPrivate')}
+                          >
+                            {review.isPublic ? (
+                              <Eye className="h-4 w-4" />
+                            ) : (
+                              <EyeOff className="h-4 w-4" />
+                            )}
+                          </button>
 
                           <ArrowRight className="h-5 w-5 text-charcoal/40 dark:text-gray-500" />
                         </div>

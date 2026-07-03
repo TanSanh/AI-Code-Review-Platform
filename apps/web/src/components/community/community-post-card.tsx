@@ -89,9 +89,13 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
             </div>
           )}
           <div>
-            <span className="text-sm font-medium text-charcoal dark:text-gray-100">
+            <Link
+              href={`/users/${post.author.id}`}
+              className="text-sm font-medium text-charcoal hover:text-[#714cb6] dark:text-gray-100 dark:hover:text-[#cbb7fb] transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
               {post.author.name}
-            </span>
+            </Link>
             <span className="ml-2 text-xs text-charcoal/40 dark:text-gray-500">
               {formatTimeAgo(post.createdAt, t)}
             </span>

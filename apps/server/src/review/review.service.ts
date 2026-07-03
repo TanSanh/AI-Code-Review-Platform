@@ -26,6 +26,7 @@ export class ReviewService {
         originalCode: dto.code,
         authorId: userId,
         status: 'PENDING',
+        isPublic: dto.isPublic ?? true,
       },
       include: {
         author: {
@@ -103,7 +104,11 @@ export class ReviewService {
     });
 
     if (!review) throw new NotFoundException('Review not found');
-    if (review.authorId !== userId) throw new ForbiddenException('Access denied');
+
+    // Allow access if: user is the author OR review is public
+    if (review.authorId !== userId && !review.isPublic) {
+      throw new ForbiddenException('Access denied');
+    }
 
     return review;
   }
@@ -144,5 +149,36 @@ export class ReviewService {
       .catch((err) => console.error('AI Re-review failed:', err));
 
     return { message: 'Re-review started' };
+  }
+
+  async updatePrivacy(id: string, userId: string, isPublic: boolean) {
+    const review = await this.prisma.review.findUnique({
+      where: { id },
+      select: { authorId: true },
+    });
+
+    if (!review) throw new NotFoundException('Review not found');
+    if (review.authorId !== userId) throw new ForbiddenException('Only owner can update');
+
+    return this.prisma.review.update({
+      where: { id },
+      data: { isPublic },
+      select: { id: true, isPublic: true },
+    });
+  }
+
+  async getPublicReviewsByUser(userId: string) {
+    return this.prisma.review.findMany({
+      where: { authorId: userId, isPublic: true },
+      select: {
+        id: true,
+        title: true,
+        language: true,
+        score: true,
+        status: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 }
