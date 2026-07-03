@@ -14,6 +14,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { OtpService } from './otp.service';
 
 @Injectable()
@@ -183,6 +184,32 @@ export class AuthService {
     });
 
     return { message: 'Password changed successfully' };
+  }
+
+  async resetPassword(dto: ResetPasswordDto) {
+    // Verify OTP token
+    const otpValid = this.otpService.verifyOtpToken(dto.email, dto.otpToken);
+    if (!otpValid) {
+      throw new BadRequestException('Email verification failed. Please verify your email first');
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(dto.newPassword, salt);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword },
+    });
+
+    return { message: 'Password reset successfully' };
   }
 
   private async generateTokens(userId: string, email: string, role: string) {

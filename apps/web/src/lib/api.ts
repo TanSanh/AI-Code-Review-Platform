@@ -115,6 +115,13 @@ class ApiClient {
     });
   }
 
+  async resetPassword(email: string, otpToken: string, newPassword: string) {
+    return this.request<{ message: string }>('/api/v1/auth/reset-password', {
+      method: 'POST',
+      body: { email, otpToken, newPassword },
+    });
+  }
+
   async login(email: string, password: string) {
     return this.request<{ user: { id: string; email: string; name: string; role: string }; accessToken: string }>('/api/v1/auth/login', {
       method: 'POST',
