@@ -175,13 +175,6 @@ class ApiClient {
     return this.request<unknown>(`/api/v1/reviews/${id}/review`, { method: 'POST' });
   }
 
-  async updateReviewPrivacy(id: string, isPublic: boolean) {
-    return this.request<{ id: string; isPublic: boolean }>(`/api/v1/reviews/${id}/privacy`, {
-      method: 'PATCH',
-      body: { isPublic },
-    });
-  }
-
   // Issues
   async getIssues(reviewId: string) {
     return this.request<unknown[]>(`/api/v1/reviews/${reviewId}/issues`);

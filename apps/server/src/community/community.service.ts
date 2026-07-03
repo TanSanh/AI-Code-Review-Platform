@@ -111,17 +111,14 @@ export class CommunityService {
   }
 
   async create(userId: string, dto: CreatePostDto) {
-    // If reviewId provided, verify it belongs to the user and is public
+    // If reviewId provided, verify it belongs to the user
     if (dto.reviewId) {
       const review = await this.prisma.review.findUnique({
         where: { id: dto.reviewId },
-        select: { authorId: true, isPublic: true },
+        select: { authorId: true },
       });
       if (!review || review.authorId !== userId) {
         throw new NotFoundException('Review not found');
-      }
-      if (!review.isPublic) {
-        throw new ForbiddenException('Cannot attach private review to post');
       }
     }
 
@@ -158,17 +155,14 @@ export class CommunityService {
     if (!post) throw new NotFoundException('Post not found');
     if (post.authorId !== userId) throw new ForbiddenException('Only owner can edit');
 
-    // If reviewId provided, verify it is public
+    // If reviewId provided, verify it belongs to the user
     if (dto.reviewId) {
       const review = await this.prisma.review.findUnique({
         where: { id: dto.reviewId },
-        select: { authorId: true, isPublic: true },
+        select: { authorId: true },
       });
       if (!review || review.authorId !== userId) {
         throw new NotFoundException('Review not found');
-      }
-      if (!review.isPublic) {
-        throw new ForbiddenException('Cannot attach private review to post');
       }
     }
 
