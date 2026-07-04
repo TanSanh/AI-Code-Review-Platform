@@ -39,12 +39,12 @@ export function ConfirmDialog({
           <div className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full ${
             danger
               ? 'bg-red-100 dark:bg-red-500/15'
-              : 'bg-amethyst/10 dark:bg-[#714cb6]/15'
+              : 'bg-amethyst/10 dark:bg-[#4b5563]/15'
           }`}>
             <AlertTriangle className={`h-6 w-6 ${
               danger
                 ? 'text-red-500 dark:text-red-400'
-                : 'text-amethyst dark:text-[#cbb7fb]'
+                : 'text-amethyst dark:text-[#9ca3af]'
             }`} />
           </div>
 
@@ -69,7 +69,7 @@ export function ConfirmDialog({
             className={`flex-1 text-white ${
               danger
                 ? 'bg-red-500 hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600'
-                : 'bg-amethyst hover:bg-amethyst/90 dark:bg-[#714cb6] dark:hover:bg-[#714cb6]/90'
+                : 'bg-amethyst hover:bg-amethyst/90 dark:bg-[#4b5563] dark:hover:bg-[#4b5563]/90'
             }`}
           >
             {confirmLabel || t('community.deleteConfirm')}

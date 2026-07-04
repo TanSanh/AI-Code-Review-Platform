@@ -21,13 +21,13 @@ interface LanguageDistributionChartProps {
 }
 
 const COLORS = [
-  '#7c3aed', // amethyst
+  '#4b5563', // gray-600
   '#1b1938', // mysteria
-  '#cbb7fb', // lavender
+  '#9ca3af', // gray-400
   '#292827', // charcoal
   '#e9e5dd', // cream
-  '#f5f3ff', // light purple
-  '#6b7280', // gray
+  '#d1d5db', // gray-300
+  '#6b7280', // gray-500
   '#10b981', // green
 ];
 
@@ -57,7 +57,7 @@ export function LanguageDistributionChart({ data }: LanguageDistributionChartPro
           labelLine={false}
           label={({ name, percent }: { name?: string; percent?: number }) => `${name || ''} ${((percent || 0) * 100).toFixed(0)}%`}
           outerRadius={100}
-          fill="#8884d8"
+          fill="#6b7280"
           dataKey="count"
           nameKey="language"
         >

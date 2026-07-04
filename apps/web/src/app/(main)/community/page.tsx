@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Search, Users } from 'lucide-react';
+import { Plus, Search, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/auth-context';
@@ -252,13 +252,20 @@ export default function CommunityPage() {
           </div>
         ) : posts.length === 0 ? (
           <div className="rounded-2xl border border-gray-200 bg-white py-20 text-center shadow-sm dark:border-[#33355a] dark:bg-[#242640]">
-            <Users className="mx-auto mb-4 h-16 w-16 text-gray-200 dark:text-gray-600" />
+            <FileText className="mx-auto mb-4 h-16 w-16 text-gray-300 dark:text-gray-600" />
             <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-gray-200">
               {t('community.noPosts')}
             </h3>
-            <p className="text-base text-gray-500 dark:text-gray-400">
+            <p className="mb-4 text-base text-gray-500 dark:text-gray-400">
               {t('community.noPostsDesc')}
             </p>
+            <Button
+              onClick={handleOpenCreatePost}
+              className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white"
+            >
+              <Plus className="mr-1.5 h-4 w-4" />
+              {t('community.newPost')}
+            </Button>
           </div>
         ) : (
           <div className="space-y-4">

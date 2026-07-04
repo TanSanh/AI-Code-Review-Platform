@@ -215,7 +215,7 @@ export default function DashboardPage() {
         <Card className="card-super">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-body-heading">{t('dashboard.recentReviews')}</CardTitle>
-            <Link href="/reviews" className="text-sm text-amethyst hover:underline">
+            <Link href="/reviews" className="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100">
               {t('dashboard.viewAll')}
             </Link>
           </CardHeader>

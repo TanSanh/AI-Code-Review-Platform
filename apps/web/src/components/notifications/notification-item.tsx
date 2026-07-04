@@ -52,7 +52,7 @@ export default function NotificationItem({ notification, onClick, onDelete }: No
     <div
       onClick={onClick}
       className={`flex items-start gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-white/5 ${
-        !notification.isRead ? 'bg-purple-50/50 dark:bg-[#714cb6]/10' : ''
+        !notification.isRead ? 'bg-gray-50/50 dark:bg-[#4b5563]/10' : ''
       }`}
     >
       {/* Actor Avatar or Type Icon */}
@@ -64,7 +64,7 @@ export default function NotificationItem({ notification, onClick, onDelete }: No
             className="w-10 h-10 rounded-full object-cover"
           />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#714cb6] to-[#9b7fd4] flex items-center justify-center text-white text-sm font-medium">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#4b5563] to-[#6b7280] flex items-center justify-center text-white text-sm font-medium">
             {notification.actor?.name?.charAt(0).toUpperCase() || 'H'}
           </div>
         )}
@@ -83,7 +83,7 @@ export default function NotificationItem({ notification, onClick, onDelete }: No
       {/* Unread indicator + Delete */}
       <div className="flex items-center gap-2 shrink-0">
         {!notification.isRead && (
-          <div className="w-2.5 h-2.5 rounded-full bg-[#714cb6] dark:bg-[#cbb7fb]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#4b5563] dark:bg-[#9ca3af]" />
         )}
         <button
           onClick={(e) => {

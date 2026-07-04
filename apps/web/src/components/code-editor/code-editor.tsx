@@ -75,7 +75,7 @@ export function CodeEditor({
         'editor.foreground': '#e0e0e0',
         'editor.lineHighlightBackground': '#1a1a2e',
         'editorLineNumber.foreground': '#6a737d',
-        'editor.selectionBackground': '#7c3aed33',
+        'editor.selectionBackground': '#4b556333',
       },
     });
 

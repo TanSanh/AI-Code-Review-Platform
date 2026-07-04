@@ -50,7 +50,7 @@ const severityConfig: Record<string, { icon: React.ElementType; color: string; b
   ERROR: { icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' },
   WARNING: { icon: AlertTriangle, color: 'text-yellow-600', bg: 'bg-yellow-50' },
   INFO: { icon: Info, color: 'text-blue-600', bg: 'bg-blue-50' },
-  SUGGESTION: { icon: Lightbulb, color: 'text-purple-600', bg: 'bg-purple-50' },
+  SUGGESTION: { icon: Lightbulb, color: 'text-gray-600', bg: 'bg-gray-50' },
 };
 
 export default function ReviewDetailPage() {

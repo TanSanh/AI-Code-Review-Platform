@@ -161,7 +161,7 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
               minLength={10}
               maxLength={10000}
               required
-              className="w-full rounded-button border border-parchment bg-white px-3 py-2 text-body text-charcoal placeholder:text-charcoal/30 focus:border-amethyst focus:outline-none focus:ring-1 focus:ring-amethyst/30 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-[#714cb6] dark:focus:ring-[#714cb6]/30"
+              className="w-full rounded-button border border-parchment bg-white px-3 py-2 text-body text-charcoal placeholder:text-charcoal/30 focus:border-amethyst focus:outline-none focus:ring-1 focus:ring-amethyst/30 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-[#4b5563] dark:focus:ring-[#4b5563]/30"
             />
             <p className="mt-1 text-right text-xs text-charcoal/30 dark:text-gray-600">
               {content.length}/10000
@@ -226,7 +226,7 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex h-24 w-full items-center justify-center rounded-button border-2 border-dashed border-parchment bg-cream/30 text-charcoal/40 transition-colors hover:border-amethyst/50 hover:text-amethyst dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-500 dark:hover:border-[#714cb6]/50 dark:hover:text-[#cbb7fb]"
+                className="flex h-24 w-full items-center justify-center rounded-button border-2 border-dashed border-parchment bg-cream/30 text-charcoal/40 transition-colors hover:border-amethyst/50 hover:text-amethyst dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-500 dark:hover:border-[#4b5563]/50 dark:hover:text-[#9ca3af]"
               >
                 <div className="text-center">
                   <ImagePlus className="mx-auto mb-1 h-6 w-6" />
@@ -279,7 +279,7 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
             <Button
               type="submit"
               disabled={publishing || !title.trim() || content.trim().length < 10}
-              className="bg-amethyst text-white hover:bg-amethyst/90 dark:bg-[#714cb6] dark:hover:bg-[#714cb6]/90"
+              className="bg-amethyst text-white hover:bg-amethyst/90 dark:bg-[#4b5563] dark:hover:bg-[#4b5563]/90"
             >
               {publishing ? (
                 <span className="flex items-center gap-2">

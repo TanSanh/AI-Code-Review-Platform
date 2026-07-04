@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Trash2, Reply, ChevronDown, ChevronUp } from 'lucide-react';
+import { Trash2, Reply, ChevronDown, ChevronUp, Send } from 'lucide-react';
 import { useLanguage } from '@/contexts/language-context';
 import { useAuth } from '@/contexts/auth-context';
 import { type TranslationKey } from '@/lib/i18n';
@@ -135,9 +135,9 @@ function ReplyInput({
       <button
         onClick={handleSubmit}
         disabled={submitting || !content.trim()}
-        className="text-sm font-semibold text-gray-900 transition-colors hover:text-gray-600 disabled:opacity-40 dark:text-gray-100 dark:hover:text-gray-300"
+        className="p-2 text-gray-500 transition-colors hover:text-gray-900 disabled:opacity-40 dark:text-gray-400 dark:hover:text-gray-100"
       >
-        {t('community.send')}
+        <Send className="h-4 w-4" />
       </button>
     </div>
   );
@@ -233,9 +233,9 @@ export function CommunityCommentSection({
             <button
               onClick={handleSubmit}
               disabled={submitting || !newComment.trim()}
-              className="text-sm font-semibold text-gray-900 transition-colors hover:text-gray-600 disabled:opacity-40 dark:text-gray-100 dark:hover:text-gray-300"
+              className="p-2 text-gray-500 transition-colors hover:text-gray-900 disabled:opacity-40 dark:text-gray-400 dark:hover:text-gray-100"
             >
-              {t('community.send')}
+              <Send className="h-4 w-4" />
             </button>
           </div>
         </div>

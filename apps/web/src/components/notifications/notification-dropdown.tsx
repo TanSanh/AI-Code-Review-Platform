@@ -52,7 +52,7 @@ export default function NotificationDropdown({
         {notifications.some((n) => !n.isRead) && (
           <button
             onClick={onMarkAllAsRead}
-            className="flex items-center gap-1 text-xs text-[#714cb6] hover:text-[#5a3a9a] dark:text-[#cbb7fb] dark:hover:text-[#a994d9] transition-colors"
+            className="flex items-center gap-1 text-xs text-[#4b5563] hover:text-[#374151] dark:text-[#9ca3af] dark:hover:text-[#a994d9] transition-colors"
           >
             <CheckCheck className="w-3.5 h-3.5" />
             Đánh dấu tất cả đã đọc
@@ -64,7 +64,7 @@ export default function NotificationDropdown({
       <div className="max-h-[400px] overflow-y-auto">
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-6 h-6 text-[#714cb6] dark:text-[#cbb7fb] animate-spin" />
+            <Loader2 className="w-6 h-6 text-[#4b5563] dark:text-[#9ca3af] animate-spin" />
           </div>
         ) : notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-gray-400 dark:text-gray-500">

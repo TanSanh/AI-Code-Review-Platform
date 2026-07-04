@@ -23,6 +23,7 @@ import {
   CheckCircle,
   Heart,
   Users,
+  FileText,
   Camera,
 } from 'lucide-react';
 import { api } from '@/lib/api';
@@ -60,7 +61,7 @@ type Tab = 'general' | 'security' | 'posts';
 const sidebarItems: { key: Tab; icon: React.ElementType; labelKey: string }[] = [
   { key: 'general', icon: Settings, labelKey: 'profile.general' },
   { key: 'security', icon: Shield, labelKey: 'profile.security' },
-  { key: 'posts', icon: Users, labelKey: 'community.title' },
+  { key: 'posts', icon: FileText, labelKey: 'community.title' },
 ];
 
 export default function ProfilePage() {
@@ -234,7 +235,7 @@ export default function ProfilePage() {
       <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#1a1b2e]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria dark:border-lavender" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria dark:border-gray-400" />
           </div>
         </div>
       </div>
@@ -258,7 +259,7 @@ export default function ProfilePage() {
                   {profile?.avatarUrl ? (
                     <img src={profile.avatarUrl} alt={profile.name} className="h-12 w-12 rounded-full object-cover" />
                   ) : (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-charcoal dark:bg-lavender">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-charcoal dark:bg-gray-400">
                       <span className="text-lg font-bold text-white">{userInitial}</span>
                     </div>
                   )}
@@ -289,7 +290,7 @@ export default function ProfilePage() {
                       onClick={() => setActiveTab(item.key)}
                       className={`flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                         isActive
-                          ? 'bg-charcoal text-white dark:bg-lavender dark:text-white'
+                          ? 'bg-charcoal text-white dark:bg-gray-400 dark:text-white'
                           : 'text-charcoal/60 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-white/5'
                       }`}
                     >
@@ -327,7 +328,7 @@ export default function ProfilePage() {
                     onClick={() => setActiveTab(item.key)}
                     className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 ${
                       isActive
-                        ? 'bg-charcoal text-white dark:bg-lavender dark:text-white shadow-sm'
+                        ? 'bg-charcoal text-white dark:bg-gray-400 dark:text-white shadow-sm'
                         : 'text-charcoal/50 hover:text-charcoal hover:bg-gray-50 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
                     }`}
                   >
@@ -347,7 +348,7 @@ export default function ProfilePage() {
                       {profile?.avatarUrl ? (
                         <img src={profile.avatarUrl} alt={profile.name} className="h-20 w-20 rounded-full object-cover" />
                       ) : (
-                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-charcoal dark:bg-lavender">
+                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-charcoal dark:bg-gray-400">
                           <span className="text-2xl font-bold text-white">{userInitial}</span>
                         </div>
                       )}
@@ -434,7 +435,7 @@ export default function ProfilePage() {
                         onChange={(e) => setBio(e.target.value.slice(0, 500))}
                         placeholder={t('profile.bioPlaceholder')}
                         rows={4}
-                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal resize-none focus:outline-none focus:ring-2 focus:ring-lavender focus:border-transparent dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100 dark:placeholder:text-gray-500"
+                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal resize-none focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100 dark:placeholder:text-gray-500"
                       />
                       <p className="text-xs text-charcoal/30 dark:text-gray-500 text-right">
                         {bio.length} / 500
@@ -470,29 +471,29 @@ export default function ProfilePage() {
                   <div className="p-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#1a1b2e]">
-                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-lavender/20 mb-2">
-                          <FileCode className="h-5 w-5 text-amethyst" />
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#33355a] mb-2">
+                          <FileCode className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         </div>
                         <p className="text-2xl font-bold text-charcoal dark:text-gray-100">{profile?._count.reviews || 0}</p>
                         <p className="text-xs text-charcoal/50 dark:text-gray-400">{t('profile.reviews')}</p>
                       </div>
                       <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#1a1b2e]">
-                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-lavender/20 mb-2">
-                          <MessageSquare className="h-5 w-5 text-amethyst" />
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#33355a] mb-2">
+                          <MessageSquare className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         </div>
                         <p className="text-2xl font-bold text-charcoal dark:text-gray-100">{profile?._count.comments || 0}</p>
                         <p className="text-xs text-charcoal/50 dark:text-gray-400">{t('profile.comments')}</p>
                       </div>
                       <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#1a1b2e]">
-                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-lavender/20 mb-2">
-                          <Shield className="h-5 w-5 text-amethyst" />
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#33355a] mb-2">
+                          <Shield className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         </div>
                         <p className="text-2xl font-bold text-charcoal dark:text-gray-100 capitalize">{profile?.role?.toLowerCase() || 'member'}</p>
                         <p className="text-xs text-charcoal/50 dark:text-gray-400">{t('profile.role')}</p>
                       </div>
                       <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#1a1b2e]">
-                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-lavender/20 mb-2">
-                          <Calendar className="h-5 w-5 text-amethyst" />
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#33355a] mb-2">
+                          <Calendar className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         </div>
                         <p className="text-sm font-bold text-charcoal dark:text-gray-100">
                           {profile?.createdAt ? formatDate(profile.createdAt, language) : '-'}
@@ -661,7 +662,7 @@ export default function ProfilePage() {
                   <div className="p-6">
                     {postsLoading ? (
                       <div className="flex items-center justify-center py-12">
-                        <Loader2 className="h-6 w-6 animate-spin text-amethyst dark:text-[#714cb6]" />
+                        <Loader2 className="h-6 w-6 animate-spin text-gray-600 dark:text-gray-400 dark:text-[#4b5563]" />
                       </div>
                     ) : userPosts.length === 0 ? (
                       <div className="py-12 text-center">
@@ -671,7 +672,7 @@ export default function ProfilePage() {
                         </p>
                         <a
                           href="/community"
-                          className="mt-3 inline-block text-sm font-medium text-amethyst hover:text-amethyst/80 dark:text-[#cbb7fb] dark:hover:text-[#cbb7fb]/80"
+                          className="mt-3 inline-block text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-600 dark:text-gray-400/80 dark:text-[#9ca3af] dark:hover:text-[#9ca3af]/80"
                         >
                           {t('community.newPost')} →
                         </a>
@@ -682,7 +683,7 @@ export default function ProfilePage() {
                           <a
                             key={post.id}
                             href={`/community/${post.id}`}
-                            className="block rounded-xl border border-gray-100 dark:border-[#33355a] p-4 transition-all hover:border-amethyst/30 hover:shadow-sm dark:hover:border-[#714cb6]/30"
+                            className="block rounded-xl border border-gray-100 dark:border-[#33355a] p-4 transition-all hover:border-gray-400/30 hover:shadow-sm dark:hover:border-[#4b5563]/30"
                           >
                             <div className="mb-1 flex items-start justify-between gap-2">
                               <h4 className="text-sm font-semibold text-charcoal dark:text-gray-100 line-clamp-1">

@@ -69,10 +69,10 @@ export function ScoreTrendChart({ data }: ScoreTrendChartProps) {
         <Line
           type="monotone"
           dataKey="avgScore"
-          stroke="#7c3aed"
+          stroke="#4b5563"
           strokeWidth={2}
-          dot={{ fill: '#7c3aed', strokeWidth: 2 }}
-          activeDot={{ r: 6, fill: '#7c3aed' }}
+          dot={{ fill: '#4b5563', strokeWidth: 2 }}
+          activeDot={{ r: 6, fill: '#4b5563' }}
         />
       </LineChart>
     </ResponsiveContainer>
