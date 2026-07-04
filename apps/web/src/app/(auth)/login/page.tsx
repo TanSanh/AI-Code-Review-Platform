@@ -24,7 +24,7 @@ export default function LoginPage() {
   useEffect(() => {
     fetch('/api/v1/auth/google/status')
       .then((res) => res.json())
-      .then((data) => setGoogleEnabled(data.configured))
+      .then((data) => setGoogleEnabled(data?.data?.configured ?? data?.configured))
       .catch(() => {});
   }, []);
 

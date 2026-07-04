@@ -21,8 +21,8 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { AuthService } from './auth.service';
 import { OtpService } from './otp.service';
-import { GoogleStrategy } from './strategies/google.strategy';
 import { ConfigService } from '@nestjs/config';
+import { AuthGuard } from '@nestjs/passport';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { SendOtpDto } from './dto/send-otp.dto';
@@ -130,18 +130,18 @@ export class AuthController {
 
   @Public()
   @Get('google')
-  @UseGuards(GoogleStrategy)
+  @UseGuards(AuthGuard('google'))
   async googleAuth() {
     // Guard redirects to Google
   }
 
   @Public()
   @Get('google/callback')
-  @UseGuards(GoogleStrategy)
+  @UseGuards(AuthGuard('google'))
   async googleCallback(@Req() req: Request & { user: { id: string; email: string; name: string; avatarUrl?: string } }, @Res() res: Response) {
     const result = await this.authService.googleLogin(req.user);
     const frontendUrl = this.configService.get<string>('cors_origin') || 'http://localhost:3000';
-    res.redirect(`${frontendUrl}/auth/callback?token=${result.accessToken}`);
+    res.redirect(`${frontendUrl}/callback?token=${result.accessToken}`);
   }
 
   @Public()
