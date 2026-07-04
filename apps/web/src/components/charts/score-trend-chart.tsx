@@ -27,9 +27,9 @@ export function ScoreTrendChart({ data }: ScoreTrendChartProps) {
   const isDark = theme === 'dark';
 
   const textColor = isDark ? '#a1a1aa' : '#292827';
-  const gridColor = isDark ? '#33355a' : '#e9e5dd';
-  const tooltipBg = isDark ? '#242640' : '#fff';
-  const tooltipBorder = isDark ? '#33355a' : '#e9e5dd';
+  const gridColor = isDark ? '#1e2d44' : '#e9e5dd';
+  const tooltipBg = isDark ? '#1a2332' : '#fff';
+  const tooltipBorder = isDark ? '#1e2d44' : '#e9e5dd';
 
   if (!data || data.length === 0) {
     return (

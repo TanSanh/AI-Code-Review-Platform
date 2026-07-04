@@ -121,11 +121,11 @@ export default function ForgotPasswordPage() {
 
   if (success) {
     return (
-      <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#1a1b2e]">
+      <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#0b1120]">
         <div className="mb-6 flex flex-col items-center">
           <img src="/logo.svg" alt="AI Code Review" className="h-12 w-12" />
         </div>
-        <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-[#33355a] dark:bg-[#242640]">
+        <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-[#1e2d44] dark:bg-[#1a2332]">
           <div className="p-6 text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
               <CheckCircle className="h-7 w-7 text-green-600 dark:text-green-400" />
@@ -146,7 +146,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#1a1b2e]">
+    <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#0b1120]">
       {/* Logo */}
       <div className="mb-6 flex flex-col items-center">
         <img src="/logo.svg" alt="AI Code Review" className="h-12 w-12" />
@@ -156,7 +156,7 @@ export default function ForgotPasswordPage() {
       </div>
 
       {/* Card */}
-      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-[#33355a] dark:bg-[#242640]">
+      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-[#1e2d44] dark:bg-[#1a2332]">
         <div className="p-6">
           {errors.general && (
             <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-800 dark:bg-red-900/30 dark:text-red-400">
@@ -176,7 +176,7 @@ export default function ForgotPasswordPage() {
                   placeholder="name@gmail.com"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: undefined })); }}
-                  className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.email ? 'border-red-500' : ''}`}
+                  className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.email ? 'border-red-500' : ''}`}
                 />
                 {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
               </div>
@@ -202,7 +202,7 @@ export default function ForgotPasswordPage() {
             /* Step 2: OTP */
             <div className="space-y-5">
               <div className="flex justify-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gray-100 dark:bg-[#33355a]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gray-100 dark:bg-[#1e2d44]">
                   <Shield className="h-7 w-7 text-gray-600 dark:text-gray-300" />
                 </div>
               </div>
@@ -253,7 +253,7 @@ export default function ForgotPasswordPage() {
             /* Step 3: New password */
             <div className="space-y-4">
               <div className="flex justify-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gray-100 dark:bg-[#33355a]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gray-100 dark:bg-[#1e2d44]">
                   <KeyRound className="h-7 w-7 text-gray-600 dark:text-gray-300" />
                 </div>
               </div>
@@ -266,7 +266,7 @@ export default function ForgotPasswordPage() {
                   placeholder="••••••••"
                   value={newPassword}
                   onChange={(e) => { setNewPassword(e.target.value); setErrors((p) => ({ ...p, newPassword: undefined })); }}
-                  className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.newPassword ? 'border-red-500' : ''}`}
+                  className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.newPassword ? 'border-red-500' : ''}`}
                 />
                 {errors.newPassword && <p className="text-xs text-red-500">{errors.newPassword}</p>}
                 <p className="text-xs text-gray-400 dark:text-gray-500">{t('auth.passwordHint')}</p>
@@ -280,7 +280,7 @@ export default function ForgotPasswordPage() {
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e) => { setConfirmPassword(e.target.value); setErrors((p) => ({ ...p, confirmPassword: undefined })); }}
-                  className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.confirmPassword ? 'border-red-500' : ''}`}
+                  className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.confirmPassword ? 'border-red-500' : ''}`}
                 />
                 {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword}</p>}
               </div>

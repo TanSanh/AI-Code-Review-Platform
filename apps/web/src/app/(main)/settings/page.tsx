@@ -24,7 +24,7 @@ function Toggle({ enabled, onToggle }: { enabled: boolean; onToggle: () => void 
       type="button"
       onClick={onToggle}
       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-        enabled ? 'bg-mysteria dark:bg-lavender' : 'bg-charcoal/20 dark:bg-[#33355a]'
+        enabled ? 'bg-mysteria dark:bg-lavender' : 'bg-charcoal/20 dark:bg-[#1e2d44]'
       }`}
     >
       <span
@@ -120,7 +120,7 @@ export default function SettingsPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
+    <div className="min-h-screen bg-white dark:bg-[#0b1120]">
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-8">
@@ -174,7 +174,7 @@ export default function SettingsPage() {
               </div>
 
               {/* Language */}
-              <div className="flex items-center justify-between py-3 border-t border-parchment dark:border-[#33355a]">
+              <div className="flex items-center justify-between py-3 border-t border-parchment dark:border-[#1e2d44]">
                 <div>
                   <p className="text-body font-medium text-charcoal dark:text-gray-100">{t('settings.language')}</p>
                   <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('settings.languageDesc')}</p>
@@ -219,7 +219,7 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-parchment dark:border-[#33355a]">
+              <div className="flex items-center justify-between py-3 border-t border-parchment dark:border-[#1e2d44]">
                 <div>
                   <p className="text-body font-medium text-charcoal dark:text-gray-100">{t('settings.reviewNotif')}</p>
                   <p className="text-caption text-charcoal/60 dark:text-gray-100/60">{t('settings.reviewNotifDesc')}</p>
@@ -260,7 +260,7 @@ export default function SettingsPage() {
               </div>
 
               {showPasswordForm && (
-                <div className="p-4 bg-charcoal/[0.02] dark:bg-[#242640] rounded-card border border-parchment dark:border-[#33355a] space-y-4">
+                <div className="p-4 bg-charcoal/[0.02] dark:bg-[#1a2332] rounded-card border border-parchment dark:border-[#1e2d44] space-y-4">
                   {pwdError && (
                     <div className="p-3 rounded-button bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 text-sm">
                       {pwdError}
@@ -273,7 +273,7 @@ export default function SettingsPage() {
                       id="current-pwd"
                       value={currentPwd}
                       onChange={(e) => setCurrentPwd(e.target.value)}
-                      className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
+                      className="dark:bg-[#1a2332] dark:border-[#1e2d44] dark:text-gray-100"
                     />
                   </div>
 
@@ -283,7 +283,7 @@ export default function SettingsPage() {
                       id="new-pwd"
                       value={newPwd}
                       onChange={(e) => setNewPwd(e.target.value)}
-                      className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
+                      className="dark:bg-[#1a2332] dark:border-[#1e2d44] dark:text-gray-100"
                     />
                   </div>
 
@@ -293,7 +293,7 @@ export default function SettingsPage() {
                       id="confirm-pwd"
                       value={confirmPwd}
                       onChange={(e) => setConfirmPwd(e.target.value)}
-                      className="dark:bg-[#242640] dark:border-[#33355a] dark:text-gray-100"
+                      className="dark:bg-[#1a2332] dark:border-[#1e2d44] dark:text-gray-100"
                     />
                   </div>
 

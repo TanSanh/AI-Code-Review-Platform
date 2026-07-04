@@ -104,7 +104,7 @@ export default function PublicProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#1a1b2e]">
+      <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#0b1120]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
             <Loader2 className="h-8 w-8 animate-spin text-[#4b5563] dark:text-[#9ca3af]" />
@@ -116,7 +116,7 @@ export default function PublicProfilePage() {
 
   if (error || !profile) {
     return (
-      <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#1a1b2e]">
+      <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#0b1120]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center py-16">
             <User className="mx-auto mb-4 h-16 w-16 text-gray-300 dark:text-gray-600" />
@@ -142,7 +142,7 @@ export default function PublicProfilePage() {
   const userInitial = profile.name?.charAt(0)?.toUpperCase() || '?';
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#1a1b2e]">
+    <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#0b1120]">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         {/* Back button */}
         <Link
@@ -154,7 +154,7 @@ export default function PublicProfilePage() {
         </Link>
 
         {/* Profile Header */}
-        <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] overflow-hidden mb-6">
+        <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] overflow-hidden mb-6">
           <div className="p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
               {/* Avatar */}
@@ -162,10 +162,10 @@ export default function PublicProfilePage() {
                 <img
                   src={profile.avatarUrl}
                   alt={profile.name}
-                  className="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-[#33355a] shadow-lg"
+                  className="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-[#1e2d44] shadow-lg"
                 />
               ) : (
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#4b5563] to-[#6b7280] border-4 border-white dark:border-[#33355a] shadow-lg">
+                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#4b5563] to-[#6b7280] border-4 border-white dark:border-[#1e2d44] shadow-lg">
                   <span className="text-3xl font-bold text-white">{userInitial}</span>
                 </div>
               )}
@@ -191,8 +191,8 @@ export default function PublicProfilePage() {
           </div>
 
           {/* Stats */}
-          <div className="border-t border-gray-100 dark:border-[#33355a] bg-gray-50 dark:bg-[#1a1b2e]/50">
-            <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-gray-100 dark:divide-[#33355a]">
+          <div className="border-t border-gray-100 dark:border-[#1e2d44] bg-gray-50 dark:bg-[#0b1120]/50">
+            <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-gray-100 dark:divide-[#1e2d44]">
               <div className="p-4 text-center">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#4b5563]/10 dark:bg-[#9ca3af]/10 mb-2">
                   <FileCode className="h-5 w-5 text-[#4b5563] dark:text-[#9ca3af]" />
@@ -234,12 +234,12 @@ export default function PublicProfilePage() {
         </div>
 
         {/* Tabs */}
-        <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] mb-6 px-2 py-1.5 flex gap-1">
+        <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] mb-6 px-2 py-1.5 flex gap-1">
           <button
             onClick={() => setActiveTab('overview')}
             className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 ${
               activeTab === 'overview'
-                ? 'bg-[#4b5563] text-white dark:bg-[#9ca3af] dark:text-[#1a1b2e] shadow-sm'
+                ? 'bg-[#4b5563] text-white dark:bg-[#9ca3af] dark:text-[#0b1120] shadow-sm'
                 : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
             }`}
           >
@@ -250,7 +250,7 @@ export default function PublicProfilePage() {
             onClick={() => setActiveTab('posts')}
             className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 ${
               activeTab === 'posts'
-                ? 'bg-[#4b5563] text-white dark:bg-[#9ca3af] dark:text-[#1a1b2e] shadow-sm'
+                ? 'bg-[#4b5563] text-white dark:bg-[#9ca3af] dark:text-[#0b1120] shadow-sm'
                 : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
             }`}
           >
@@ -261,7 +261,7 @@ export default function PublicProfilePage() {
 
         {/* Tab Content */}
         {activeTab === 'overview' && (
-          <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] p-6">
+          <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               {t('profile.about')}
             </h3>
@@ -284,7 +284,7 @@ export default function PublicProfilePage() {
                 <Loader2 className="h-6 w-6 animate-spin text-[#4b5563] dark:text-[#9ca3af]" />
               </div>
             ) : userPosts.length === 0 ? (
-              <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] p-12 text-center">
+              <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] p-12 text-center">
                 <BookOpen className="mx-auto mb-3 h-12 w-12 text-gray-300 dark:text-gray-600" />
                 <p className="text-gray-500 dark:text-gray-400">
                   {t('profile.noPosts')}
@@ -295,7 +295,7 @@ export default function PublicProfilePage() {
                 <Link
                   key={post.id}
                   href={`/community/${post.id}`}
-                  className="block bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] p-5 transition-all hover:border-[#4b5563]/30 hover:shadow-md dark:hover:border-[#9ca3af]/30"
+                  className="block bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] p-5 transition-all hover:border-[#4b5563]/30 hover:shadow-md dark:hover:border-[#9ca3af]/30"
                 >
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <h4 className="text-base font-semibold text-gray-900 dark:text-white line-clamp-1">

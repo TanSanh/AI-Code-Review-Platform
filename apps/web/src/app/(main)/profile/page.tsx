@@ -232,7 +232,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#1a1b2e]">
+      <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#0b1120]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria dark:border-gray-400" />
@@ -246,13 +246,13 @@ export default function ProfilePage() {
   const userInitial = profile?.name?.charAt(0)?.toUpperCase() || profile?.email?.charAt(0)?.toUpperCase() || '?';
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#1a1b2e]">
+    <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#0b1120]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-6">
 
           {/* ── Left Sidebar ── */}
           <aside className="w-full lg:w-72 flex-shrink-0">
-            <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] overflow-hidden">
+            <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] overflow-hidden">
               {/* User info */}
               <div className="px-6 pt-6 pb-4">
                 <div className="flex items-center gap-3">
@@ -277,7 +277,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="border-t border-gray-100 dark:border-[#33355a]" />
+              <div className="border-t border-gray-100 dark:border-[#1e2d44]" />
 
               {/* Navigation tabs */}
               <nav className="p-2">
@@ -301,7 +301,7 @@ export default function ProfilePage() {
                 })}
               </nav>
 
-              <div className="border-t border-gray-100 dark:border-[#33355a]" />
+              <div className="border-t border-gray-100 dark:border-[#1e2d44]" />
 
               {/* Logout */}
               <div className="p-2">
@@ -319,7 +319,7 @@ export default function ProfilePage() {
           {/* ── Main Content ── */}
           <main className="flex-1 min-w-0">
             {/* Top tabs (mobile & desktop) */}
-            <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] mb-6 px-2 py-1.5 flex gap-1 overflow-x-auto">
+            <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] mb-6 px-2 py-1.5 flex gap-1 overflow-x-auto">
               {sidebarItems.map((item) => {
                 const isActive = activeTab === item.key;
                 return (
@@ -342,7 +342,7 @@ export default function ProfilePage() {
             {activeTab === 'general' && (
               <div className="space-y-6">
                 {/* User info card */}
-                <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] p-6">
+                <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] p-6">
                   <div className="flex items-center gap-5">
                     <div className="relative group flex-shrink-0">
                       {profile?.avatarUrl ? (
@@ -379,8 +379,8 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Personal Info Form */}
-                <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] overflow-hidden">
-                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#33355a]">
+                <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#1e2d44]">
                     <h3 className="text-base font-semibold text-charcoal dark:text-gray-100 flex items-center gap-2">
                       <User className="h-4 w-4" />
                       {t('profile.personalInfo')}
@@ -405,7 +405,7 @@ export default function ProfilePage() {
                       <Input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="h-11 rounded-xl border-gray-200 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100"
+                        className="h-11 rounded-xl border-gray-200 dark:bg-[#0b1120] dark:border-[#1e2d44] dark:text-gray-100"
                       />
                     </div>
 
@@ -418,7 +418,7 @@ export default function ProfilePage() {
                         <Input
                           value={profile?.email || ''}
                           disabled
-                          className="h-11 rounded-xl border-gray-200 bg-gray-50 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100/50 pl-10"
+                          className="h-11 rounded-xl border-gray-200 bg-gray-50 dark:bg-[#0b1120] dark:border-[#1e2d44] dark:text-gray-100/50 pl-10"
                         />
                       </div>
                       <p className="text-xs text-charcoal/40 dark:text-gray-500">
@@ -435,7 +435,7 @@ export default function ProfilePage() {
                         onChange={(e) => setBio(e.target.value.slice(0, 500))}
                         placeholder={t('profile.bioPlaceholder')}
                         rows={4}
-                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal resize-none focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100 dark:placeholder:text-gray-500"
+                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal resize-none focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent dark:bg-[#0b1120] dark:border-[#1e2d44] dark:text-gray-100 dark:placeholder:text-gray-500"
                       />
                       <p className="text-xs text-charcoal/30 dark:text-gray-500 text-right">
                         {bio.length} / 500
@@ -461,8 +461,8 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Activity Stats */}
-                <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] overflow-hidden">
-                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#33355a]">
+                <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#1e2d44]">
                     <h3 className="text-base font-semibold text-charcoal dark:text-gray-100 flex items-center gap-2">
                       <FileCode className="h-4 w-4" />
                       {t('profile.activityStats')}
@@ -470,29 +470,29 @@ export default function ProfilePage() {
                   </div>
                   <div className="p-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#1a1b2e]">
-                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#33355a] mb-2">
+                      <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#0b1120]">
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#1e2d44] mb-2">
                           <FileCode className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         </div>
                         <p className="text-2xl font-bold text-charcoal dark:text-gray-100">{profile?._count.reviews || 0}</p>
                         <p className="text-xs text-charcoal/50 dark:text-gray-400">{t('profile.reviews')}</p>
                       </div>
-                      <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#1a1b2e]">
-                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#33355a] mb-2">
+                      <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#0b1120]">
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#1e2d44] mb-2">
                           <MessageSquare className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         </div>
                         <p className="text-2xl font-bold text-charcoal dark:text-gray-100">{profile?._count.comments || 0}</p>
                         <p className="text-xs text-charcoal/50 dark:text-gray-400">{t('profile.comments')}</p>
                       </div>
-                      <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#1a1b2e]">
-                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#33355a] mb-2">
+                      <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#0b1120]">
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#1e2d44] mb-2">
                           <Shield className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         </div>
                         <p className="text-2xl font-bold text-charcoal dark:text-gray-100 capitalize">{profile?.role?.toLowerCase() || 'member'}</p>
                         <p className="text-xs text-charcoal/50 dark:text-gray-400">{t('profile.role')}</p>
                       </div>
-                      <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#1a1b2e]">
-                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#33355a] mb-2">
+                      <div className="text-center p-4 rounded-xl bg-[#f8f9fc] dark:bg-[#0b1120]">
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#1e2d44] mb-2">
                           <Calendar className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         </div>
                         <p className="text-sm font-bold text-charcoal dark:text-gray-100">
@@ -505,8 +505,8 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Account Details */}
-                <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] overflow-hidden">
-                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#33355a]">
+                <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#1e2d44]">
                     <h3 className="text-base font-semibold text-charcoal dark:text-gray-100 flex items-center gap-2">
                       <Mail className="h-4 w-4" />
                       {t('profile.accountDetails')}
@@ -514,15 +514,15 @@ export default function ProfilePage() {
                   </div>
                   <div className="p-6">
                     <div className="space-y-0">
-                      <div className="flex items-center justify-between py-3.5 border-b border-gray-100 dark:border-[#33355a]">
+                      <div className="flex items-center justify-between py-3.5 border-b border-gray-100 dark:border-[#1e2d44]">
                         <span className="text-sm text-charcoal/60 dark:text-gray-400">{t('profile.userId')}</span>
                         <span className="text-sm text-charcoal dark:text-gray-100 font-mono">{profile?.id || '-'}</span>
                       </div>
-                      <div className="flex items-center justify-between py-3.5 border-b border-gray-100 dark:border-[#33355a]">
+                      <div className="flex items-center justify-between py-3.5 border-b border-gray-100 dark:border-[#1e2d44]">
                         <span className="text-sm text-charcoal/60 dark:text-gray-400">{t('profile.email')}</span>
                         <span className="text-sm text-charcoal dark:text-gray-100">{profile?.email || '-'}</span>
                       </div>
-                      <div className="flex items-center justify-between py-3.5 border-b border-gray-100 dark:border-[#33355a]">
+                      <div className="flex items-center justify-between py-3.5 border-b border-gray-100 dark:border-[#1e2d44]">
                         <span className="text-sm text-charcoal/60 dark:text-gray-400">{t('profile.role')}</span>
                         <span className="text-sm text-charcoal dark:text-gray-100">{profile?.role || '-'}</span>
                       </div>
@@ -541,8 +541,8 @@ export default function ProfilePage() {
             {/* ── Security Tab ── */}
             {activeTab === 'security' && (
               <div className="space-y-6">
-                <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] overflow-hidden">
-                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#33355a]">
+                <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#1e2d44]">
                     <h3 className="text-base font-semibold text-charcoal dark:text-gray-100 flex items-center gap-2">
                       <Lock className="h-4 w-4" />
                       {t('profile.changePassword')}
@@ -575,7 +575,7 @@ export default function ProfilePage() {
                           value={currentPassword}
                           onChange={(e) => setCurrentPassword(e.target.value)}
                           placeholder={t('profile.currentPassword')}
-                          className="h-11 rounded-xl border-gray-200 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100 pl-10"
+                          className="h-11 rounded-xl border-gray-200 dark:bg-[#0b1120] dark:border-[#1e2d44] dark:text-gray-100 pl-10"
                         />
                       </div>
                     </div>
@@ -590,7 +590,7 @@ export default function ProfilePage() {
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                           placeholder={t('profile.newPassword')}
-                          className="h-11 rounded-xl border-gray-200 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100 pl-10"
+                          className="h-11 rounded-xl border-gray-200 dark:bg-[#0b1120] dark:border-[#1e2d44] dark:text-gray-100 pl-10"
                         />
                       </div>
                       <p className="text-xs text-charcoal/40 dark:text-gray-500">
@@ -608,7 +608,7 @@ export default function ProfilePage() {
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder={t('profile.confirmNewPassword')}
-                          className="h-11 rounded-xl border-gray-200 dark:bg-[#1a1b2e] dark:border-[#33355a] dark:text-gray-100 pl-10"
+                          className="h-11 rounded-xl border-gray-200 dark:bg-[#0b1120] dark:border-[#1e2d44] dark:text-gray-100 pl-10"
                         />
                       </div>
                     </div>
@@ -652,8 +652,8 @@ export default function ProfilePage() {
             {/* ── Posts Tab ── */}
             {activeTab === 'posts' && (
               <div className="space-y-6">
-                <div className="bg-white dark:bg-[#242640] rounded-2xl border border-gray-100 dark:border-[#33355a] overflow-hidden">
-                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#33355a]">
+                <div className="bg-white dark:bg-[#1a2332] rounded-2xl border border-gray-100 dark:border-[#1e2d44] overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 dark:border-[#1e2d44]">
                     <h3 className="text-base font-semibold text-charcoal dark:text-gray-100 flex items-center gap-2">
                       <Users className="h-4 w-4" />
                       {t('community.title')} ({userPosts.length})
@@ -683,14 +683,14 @@ export default function ProfilePage() {
                           <a
                             key={post.id}
                             href={`/community/${post.id}`}
-                            className="block rounded-xl border border-gray-100 dark:border-[#33355a] p-4 transition-all hover:border-gray-400/30 hover:shadow-sm dark:hover:border-[#4b5563]/30"
+                            className="block rounded-xl border border-gray-100 dark:border-[#1e2d44] p-4 transition-all hover:border-gray-400/30 hover:shadow-sm dark:hover:border-[#4b5563]/30"
                           >
                             <div className="mb-1 flex items-start justify-between gap-2">
                               <h4 className="text-sm font-semibold text-charcoal dark:text-gray-100 line-clamp-1">
                                 {post.title}
                               </h4>
                               {post.language && (
-                                <span className="shrink-0 rounded-badge bg-cream px-2 py-0.5 text-[10px] font-medium text-charcoal/70 dark:bg-[#33355a] dark:text-gray-300">
+                                <span className="shrink-0 rounded-badge bg-cream px-2 py-0.5 text-[10px] font-medium text-charcoal/70 dark:bg-[#1e2d44] dark:text-gray-300">
                                   {post.language}
                                 </span>
                               )}

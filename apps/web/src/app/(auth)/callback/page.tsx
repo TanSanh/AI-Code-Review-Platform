@@ -37,8 +37,8 @@ export default function AuthCallbackPage() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#1a1b2e]">
-        <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-xl dark:border-[#33355a] dark:bg-[#242640]">
+      <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#0b1120]">
+        <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-xl dark:border-[#1e2d44] dark:bg-[#1a2332]">
           <p className="mb-4 text-sm text-red-600 dark:text-red-400">{error}</p>
           <button
             onClick={() => router.push('/login')}
@@ -52,8 +52,8 @@ export default function AuthCallbackPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#1a1b2e]">
-      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-xl dark:border-[#33355a] dark:bg-[#242640]">
+    <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#0b1120]">
+      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-xl dark:border-[#1e2d44] dark:bg-[#1a2332]">
         <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin text-gray-400" />
         <p className="text-sm text-gray-500 dark:text-gray-400">Completing authentication...</p>
       </div>

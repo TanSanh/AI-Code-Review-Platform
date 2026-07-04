@@ -88,7 +88,7 @@ export function OtpInput({ length = 6, value, onChange, disabled }: OtpInputProp
           disabled={disabled}
           className="h-12 w-11 rounded-lg border border-gray-200 bg-white text-center text-lg font-bold text-gray-900 transition-all duration-200
             focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none
-            dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:focus:border-gray-100 dark:focus:ring-gray-100/10
+            dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100 dark:focus:border-gray-100 dark:focus:ring-gray-100/10
             disabled:opacity-50"
           autoFocus={i === 0}
         />

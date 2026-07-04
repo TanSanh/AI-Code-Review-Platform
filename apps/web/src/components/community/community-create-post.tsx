@@ -117,9 +117,9 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
       />
 
       {/* Dialog */}
-      <div className="relative w-full max-w-lg rounded-card border border-parchment bg-white shadow-xl dark:border-[#33355a] dark:bg-[#242640]">
+      <div className="relative w-full max-w-lg rounded-card border border-parchment bg-white shadow-xl dark:border-[#1e2d44] dark:bg-[#1a2332]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-parchment px-6 py-4 dark:border-[#33355a]">
+        <div className="flex items-center justify-between border-b border-parchment px-6 py-4 dark:border-[#1e2d44]">
           <h2 className="text-heading-card font-semibold text-charcoal dark:text-gray-100">
             {t('community.createPost')}
           </h2>
@@ -144,7 +144,7 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
               placeholder={t('community.titlePlaceholder')}
               maxLength={200}
               required
-              className="border-parchment bg-white text-charcoal placeholder:text-charcoal/30 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-600"
+              className="border-parchment bg-white text-charcoal placeholder:text-charcoal/30 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-600"
             />
           </div>
 
@@ -161,7 +161,7 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
               minLength={10}
               maxLength={10000}
               required
-              className="w-full rounded-button border border-parchment bg-white px-3 py-2 text-body text-charcoal placeholder:text-charcoal/30 focus:border-amethyst focus:outline-none focus:ring-1 focus:ring-amethyst/30 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-[#4b5563] dark:focus:ring-[#4b5563]/30"
+              className="w-full rounded-button border border-parchment bg-white px-3 py-2 text-body text-charcoal placeholder:text-charcoal/30 focus:border-amethyst focus:outline-none focus:ring-1 focus:ring-amethyst/30 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-[#4b5563] dark:focus:ring-[#4b5563]/30"
             />
             <p className="mt-1 text-right text-xs text-charcoal/30 dark:text-gray-600">
               {content.length}/10000
@@ -175,10 +175,10 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
                 {t('community.languageLabel')}
               </Label>
               <Select value={language} onValueChange={setLanguage}>
-                <SelectTrigger className="border-parchment bg-white text-charcoal dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100">
+                <SelectTrigger className="border-parchment bg-white text-charcoal dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100">
                   <SelectValue placeholder={t('community.selectLanguage')} />
                 </SelectTrigger>
-                <SelectContent className="border-parchment bg-white dark:border-[#33355a] dark:bg-[#242640]">
+                <SelectContent className="border-parchment bg-white dark:border-[#1e2d44] dark:bg-[#1a2332]">
                   {LANGUAGES.map((lang) => (
                     <SelectItem key={lang} value={lang}>
                       {lang}
@@ -196,7 +196,7 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
                 onChange={(e) => setTags(e.target.value)}
                 placeholder={t('community.tagsPlaceholder')}
                 maxLength={500}
-                className="border-parchment bg-white text-charcoal placeholder:text-charcoal/30 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-600"
+                className="border-parchment bg-white text-charcoal placeholder:text-charcoal/30 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-600"
               />
             </div>
           </div>
@@ -212,7 +212,7 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
                 <img
                   src={imagePreview}
                   alt="Preview"
-                  className="max-h-64 w-full rounded-button object-contain border border-parchment dark:border-[#33355a]"
+                  className="max-h-64 w-full rounded-button object-contain border border-parchment dark:border-[#1e2d44]"
                 />
                 <button
                   type="button"
@@ -226,7 +226,7 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex h-24 w-full items-center justify-center rounded-button border-2 border-dashed border-parchment bg-cream/30 text-charcoal/40 transition-colors hover:border-amethyst/50 hover:text-amethyst dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-500 dark:hover:border-[#4b5563]/50 dark:hover:text-[#9ca3af]"
+                className="flex h-24 w-full items-center justify-center rounded-button border-2 border-dashed border-parchment bg-cream/30 text-charcoal/40 transition-colors hover:border-amethyst/50 hover:text-amethyst dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-500 dark:hover:border-[#4b5563]/50 dark:hover:text-[#9ca3af]"
               >
                 <div className="text-center">
                   <ImagePlus className="mx-auto mb-1 h-6 w-6" />
@@ -251,10 +251,10 @@ export function CommunityCreatePost({ open, onClose, onSubmit, reviews }: Commun
                 {t('community.attachReview')}
               </Label>
               <Select value={reviewId} onValueChange={setReviewId}>
-                <SelectTrigger className="border-parchment bg-white text-charcoal dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100">
+                <SelectTrigger className="border-parchment bg-white text-charcoal dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100">
                   <SelectValue placeholder={t('community.selectReview')} />
                 </SelectTrigger>
-                <SelectContent className="border-parchment bg-white dark:border-[#33355a] dark:bg-[#242640]">
+                <SelectContent className="border-parchment bg-white dark:border-[#1e2d44] dark:bg-[#1a2332]">
                   {reviews.map((review) => (
                     <SelectItem key={review.id} value={review.id}>
                       {review.title} ({review.language})

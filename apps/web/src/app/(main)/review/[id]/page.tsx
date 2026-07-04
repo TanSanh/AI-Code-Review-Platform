@@ -142,7 +142,7 @@ export default function ReviewDetailPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
+      <div className="min-h-screen bg-white dark:bg-[#0b1120]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria" />
@@ -154,7 +154,7 @@ export default function ReviewDetailPage() {
 
   if (!review) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
+      <div className="min-h-screen bg-white dark:bg-[#0b1120]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <p className="text-body text-charcoal/60">{t('reviewDetail.notFound')}</p>
         </div>
@@ -166,7 +166,7 @@ export default function ReviewDetailPage() {
   const unresolvedIssues = review.issues.filter((i) => !i.isResolved);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
+    <div className="min-h-screen bg-white dark:bg-[#0b1120]">
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">

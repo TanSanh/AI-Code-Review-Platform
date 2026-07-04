@@ -258,15 +258,15 @@ export default function CommunityPostDetailPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#1a1b2e]">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900 dark:border-[#33355a] dark:border-t-gray-100" />
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#0b1120]">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900 dark:border-[#1e2d44] dark:border-t-gray-100" />
       </div>
     );
   }
 
   if (error || !post) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#1a1b2e]">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#0b1120]">
         <div className="text-center">
           <div className="mb-4 text-6xl">📝</div>
           <p className="mb-4 text-lg text-gray-500 dark:text-gray-400">
@@ -288,26 +288,26 @@ export default function CommunityPostDetailPage() {
   const tags = parseTags(post.tags);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#1a1b2e]">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0b1120]">
       <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
         {/* Back button */}
         <button
           onClick={() => router.push('/community')}
-          className="mb-6 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 transition-colors hover:bg-white hover:text-gray-900 dark:text-gray-400 dark:hover:bg-[#242640] dark:hover:text-gray-100"
+          className="mb-6 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 transition-colors hover:bg-white hover:text-gray-900 dark:text-gray-400 dark:hover:bg-[#1a2332] dark:hover:text-gray-100"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('reviewDetail.back')}
         </button>
 
         {/* Post card */}
-        <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#33355a] dark:bg-[#242640]">
+        <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#1e2d44] dark:bg-[#1a2332]">
           {/* Header */}
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <a href={`/users/${post.author.id}`}>
                   {post.author.avatarUrl ? (
-                    <img src={post.author.avatarUrl} alt={post.author.name} className="h-12 w-12 rounded-full object-cover ring-2 ring-white shadow-md dark:ring-[#242640]" />
+                    <img src={post.author.avatarUrl} alt={post.author.name} className="h-12 w-12 rounded-full object-cover ring-2 ring-white shadow-md dark:ring-[#1a2332]" />
                   ) : (
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-900 text-lg font-bold text-white dark:bg-gray-100 dark:text-gray-900">
                       {getInitial(post.author.name)}
@@ -325,7 +325,7 @@ export default function CommunityPostDetailPage() {
                     {post.language && (
                       <>
                         <span className="text-gray-300 dark:text-gray-600">·</span>
-                        <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-700 dark:bg-[#33355a] dark:text-gray-300">
+                        <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-700 dark:bg-[#1e2d44] dark:text-gray-300">
                           {post.language}
                         </span>
                       </>
@@ -338,7 +338,7 @@ export default function CommunityPostDetailPage() {
               {isOwner && (
                 <DropdownMenu
                   trigger={
-                    <button className="rounded-lg p-2 text-gray-400 transition-all hover:bg-white/80 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-[#33355a] dark:hover:text-gray-300">
+                    <button className="rounded-lg p-2 text-gray-400 transition-all hover:bg-white/80 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-[#1e2d44] dark:hover:text-gray-300">
                       <MoreVertical className="h-5 w-5" />
                     </button>
                   }
@@ -379,7 +379,7 @@ export default function CommunityPostDetailPage() {
                 <img
                   src={post.imageUrl}
                   alt={post.title}
-                  className="w-full max-h-[500px] rounded-xl object-contain border border-gray-100 dark:border-[#2e3050]"
+                  className="w-full max-h-[500px] rounded-xl object-contain border border-gray-100 dark:border-[#2a3a52]"
                 />
               </div>
             )}
@@ -390,7 +390,7 @@ export default function CommunityPostDetailPage() {
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-600 dark:bg-[#33355a] dark:text-gray-300"
+                    className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-600 dark:bg-[#1e2d44] dark:text-gray-300"
                   >
                     #{tag}
                   </span>
@@ -402,9 +402,9 @@ export default function CommunityPostDetailPage() {
             {post.review && (
               <a
                 href={`/review/${post.review.id}`}
-                className="mt-5 flex items-center gap-4 rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 transition-all hover:border-gray-300 hover:shadow-lg dark:border-[#33355a] dark:bg-[#1e2038] dark:hover:border-gray-500"
+                className="mt-5 flex items-center gap-4 rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 transition-all hover:border-gray-300 hover:shadow-lg dark:border-[#1e2d44] dark:bg-[#111827] dark:hover:border-gray-500"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-200 dark:bg-[#33355a]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-200 dark:bg-[#1e2d44]">
                   <ExternalLink className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -422,14 +422,14 @@ export default function CommunityPostDetailPage() {
           </div>
 
           {/* Footer: Like + Comment count */}
-          <div className="border-t border-gray-100 bg-gray-50/50 px-6 py-4 dark:border-[#33355a] dark:bg-[#1e2038]/50">
+          <div className="border-t border-gray-100 bg-gray-50/50 px-6 py-4 dark:border-[#1e2d44] dark:bg-[#111827]/50">
             <div className="flex items-center gap-2">
               <button
                 onClick={handleLike}
                 className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
                   post.isLiked
                     ? 'bg-red-50 text-red-500 shadow-sm dark:bg-red-500/10 dark:text-red-400'
-                    : 'text-gray-500 hover:bg-white hover:text-red-500 dark:text-gray-400 dark:hover:bg-[#242640] dark:hover:text-red-400'
+                    : 'text-gray-500 hover:bg-white hover:text-red-500 dark:text-gray-400 dark:hover:bg-[#1a2332] dark:hover:text-red-400'
                 }`}
               >
                 <Heart className={`h-5 w-5 ${post.isLiked ? 'fill-current' : ''}`} />
@@ -443,8 +443,8 @@ export default function CommunityPostDetailPage() {
         </article>
 
         {/* Comments Section */}
-        <section className="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#33355a] dark:bg-[#242640]">
-          <div className="border-b border-gray-100 px-6 py-4 dark:border-[#33355a]">
+        <section className="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#1e2d44] dark:bg-[#1a2332]">
+          <div className="border-b border-gray-100 px-6 py-4 dark:border-[#1e2d44]">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
               {t('community.comments')} ({post.commentCount})
             </h2>

@@ -27,25 +27,25 @@
   }
 
   .dark {
-    --background: 220 13% 11%;
+    --background: 220 30% 8%;
     --foreground: 0 0% 93%;
-    --card: 220 14% 16%;
+    --card: 215 28% 14%;
     --card-foreground: 0 0% 93%;
-    --popover: 220 14% 16%;
+    --popover: 215 28% 14%;
     --popover-foreground: 0 0% 93%;
-    --primary: 263 70% 65%;
+    --primary: 215 45% 52%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 14% 20%;
+    --secondary: 220 30% 12%;
     --secondary-foreground: 0 0% 88%;
-    --muted: 220 14% 20%;
-    --muted-foreground: 0 0% 63%;
-    --accent: 263 70% 65%;
+    --muted: 220 28% 15%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 215 45% 52%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 22%;
-    --input: 220 13% 22%;
-    --ring: 263 70% 65%;
+    --border: 215 35% 20%;
+    --input: 220 30% 12%;
+    --ring: 215 45% 52%;
   }
 }
 
@@ -55,7 +55,7 @@
   }
 
   body {
-    @apply bg-white text-charcoal antialiased dark:bg-[#1a1b2e] dark:text-gray-100;
+    @apply bg-white text-charcoal antialiased dark:bg-[#0b1120] dark:text-gray-100;
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 
@@ -80,11 +80,11 @@
 
   /* Superhuman-style cards */
   .card-super {
-    @apply bg-white border border-parchment rounded-card p-6 transition-all dark:bg-[#242640] dark:border-[#33355a];
+    @apply bg-white border border-parchment rounded-card p-6 transition-all dark:bg-[#1a2332] dark:border-[#1e2d44];
   }
 
   .card-super:hover {
-    @apply shadow-lg dark:shadow-[#1a1b2e]/80;
+    @apply shadow-lg dark:shadow-[#0b1120]/80;
   }
 
   /* Hero gradient */
@@ -116,7 +116,7 @@
 .navbar-glass:hover {
   border-color: rgba(255, 255, 255, 0.4) !important;
   box-shadow:
-    0 8px 40px rgba(88, 80, 168, 0.1),
+    0 8px 40px rgba(0, 0, 0, 0.15),
     0 2px 6px rgba(0, 0, 0, 0.03),
     inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
 }

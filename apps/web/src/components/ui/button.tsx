@@ -9,11 +9,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-charcoal text-white hover:bg-charcoal/90 dark:bg-lavender dark:text-white dark:hover:bg-lavender/90',
-        cream: 'bg-cream text-charcoal hover:bg-cream/90 dark:bg-[#33355a] dark:text-gray-100 dark:hover:bg-[#3d4070]',
+        cream: 'bg-cream text-charcoal hover:bg-cream/90 dark:bg-[#1e2d44] dark:text-gray-100 dark:hover:bg-[#2e4060]',
         destructive: 'bg-destructive text-white hover:bg-destructive/90',
-        outline: 'border border-parchment bg-white hover:bg-cream/50 hover:text-charcoal dark:border-[#33355a] dark:bg-transparent dark:text-gray-300 dark:hover:bg-[#33355a] dark:hover:text-gray-100',
-        secondary: 'bg-cream text-charcoal hover:bg-cream/80 dark:bg-[#33355a] dark:text-gray-100 dark:hover:bg-[#3d4070]',
-        ghost: 'hover:bg-cream/50 hover:text-charcoal dark:text-gray-300 dark:hover:bg-[#33355a] dark:hover:text-gray-100',
+        outline: 'border border-parchment bg-white hover:bg-cream/50 hover:text-charcoal dark:border-[#1e2d44] dark:bg-transparent dark:text-gray-300 dark:hover:bg-[#1e2d44] dark:hover:text-gray-100',
+        secondary: 'bg-cream text-charcoal hover:bg-cream/80 dark:bg-[#1e2d44] dark:text-gray-100 dark:hover:bg-[#2e4060]',
+        ghost: 'hover:bg-cream/50 hover:text-charcoal dark:text-gray-300 dark:hover:bg-[#1e2d44] dark:hover:text-gray-100',
         link: 'text-amethyst underline-offset-4 hover:underline dark:text-lavender',
       },
       size: {

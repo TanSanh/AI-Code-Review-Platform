@@ -87,7 +87,7 @@ export function Navbar() {
       {/* ── Floating centered pill ── */}
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pt-3">
         <div
-          className="navbar-glass relative flex h-14 items-center justify-between rounded-2xl border px-5 transition-all duration-500 dark:border-[#33355a]/50 dark:bg-[#242640]/90"
+          className="navbar-glass relative flex h-14 items-center justify-between rounded-2xl border px-5 transition-all duration-500 dark:border-[#1e2d44]/50 dark:bg-[#1a2332]/90"
           style={{
             borderColor: isDark
               ? undefined
@@ -241,7 +241,7 @@ export function Navbar() {
 
         {/* ── Mobile Menu Dropdown ── */}
         {mobileMenuOpen && (
-          <div className="navbar-glass relative z-50 mt-2 overflow-hidden rounded-2xl border border-white/25 p-4 shadow-xl shadow-mysteria/5 dark:border-[#33355a]/50 dark:bg-[#242640]/95 md:hidden"
+          <div className="navbar-glass relative z-50 mt-2 overflow-hidden rounded-2xl border border-white/25 p-4 shadow-xl shadow-mysteria/5 dark:border-[#1e2d44]/50 dark:bg-[#1a2332]/95 md:hidden"
             style={!isDark ? {
               backgroundColor: `rgba(255, 255, 255, ${0.65 + glassIntensity * 0.15})`,
             } : undefined}
@@ -281,7 +281,7 @@ export function Navbar() {
                   <MobileNavLink href="/community" icon={<Users className="h-4 w-4" />} active={isActive('/community')} isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                     {t('nav.community')}
                   </MobileNavLink>
-                  <div className="my-2 border-t border-mysteria/10 dark:border-[#33355a]" />
+                  <div className="my-2 border-t border-mysteria/10 dark:border-[#1e2d44]" />
                   <MobileNavLink
                     href="/profile"
                     icon={user?.avatarUrl ? (
@@ -314,7 +314,7 @@ export function Navbar() {
                   <MobileNavLink href="/#features" isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>{t('nav.features')}</MobileNavLink>
                   <MobileNavLink href="/#how-it-works" isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>{t('nav.howItWorks')}</MobileNavLink>
                   <MobileNavLink href="/#pricing" isDark={isDark} onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>{t('nav.pricing')}</MobileNavLink>
-                  <div className="my-2 border-t border-mysteria/10 dark:border-[#33355a]" />
+                  <div className="my-2 border-t border-mysteria/10 dark:border-[#1e2d44]" />
                   <div className="flex gap-2 pt-1">
                     <Link href="/login" className="flex-1" onClick={() => { pauseHide(); setMobileMenuOpen(false); }}>
                       <Button variant="ghost" className="w-full rounded-xl backdrop-blur-sm dark:text-gray-100/70">{t('nav.login')}</Button>

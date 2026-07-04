@@ -53,7 +53,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#1a1b2e]">
+    <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#0b1120]">
       {/* Logo */}
       <div className="mb-6 flex flex-col items-center">
         <img src="/logo.svg" alt="AI Code Review" className="h-12 w-12" />
@@ -63,7 +63,7 @@ export default function LoginPage() {
       </div>
 
       {/* Card */}
-      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-[#33355a] dark:bg-[#242640]">
+      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-[#1e2d44] dark:bg-[#1a2332]">
         <div className="p-6">
           {errors.general && (
             <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-800 dark:bg-red-900/30 dark:text-red-400">
@@ -81,7 +81,7 @@ export default function LoginPage() {
                 placeholder="name@gmail.com"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: undefined })); }}
-                className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.email ? 'border-red-500' : ''}`}
+                className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.email ? 'border-red-500' : ''}`}
               />
               {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
             </div>
@@ -94,7 +94,7 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setErrors((p) => ({ ...p, password: undefined })); }}
-                className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.password ? 'border-red-500' : ''}`}
+                className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.password ? 'border-red-500' : ''}`}
               />
               {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
             </div>
@@ -126,10 +126,10 @@ export default function LoginPage() {
             <>
               <div className="relative my-5">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200 dark:border-[#33355a]" />
+                  <div className="w-full border-t border-gray-200 dark:border-[#1e2d44]" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-3 text-gray-400 dark:bg-[#242640] dark:text-gray-500">
+                  <span className="bg-white px-3 text-gray-400 dark:bg-[#1a2332] dark:text-gray-500">
                     {t('auth.orContinueWith')}
                   </span>
                 </div>
@@ -137,7 +137,7 @@ export default function LoginPage() {
 
               <button
                 onClick={() => { window.location.href = '/api/v1/auth/google'; }}
-                className="flex h-11 w-full items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-300 dark:hover:bg-[#2a2c4a]"
+                className="flex h-11 w-full items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-300 dark:hover:bg-[#243044]"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>

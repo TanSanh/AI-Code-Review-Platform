@@ -160,14 +160,14 @@ export default function CommunityPage() {
 
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#1a1b2e]">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900 dark:border-[#33355a] dark:border-t-gray-100" />
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#0b1120]">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900 dark:border-[#1e2d44] dark:border-t-gray-100" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#1a1b2e]">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0b1120]">
       <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
         {/* Header */}
         <div className="mb-8">
@@ -201,7 +201,7 @@ export default function CommunityPage() {
                 setPage(1);
               }}
               placeholder={t('community.search')}
-              className="pl-10 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10"
+              className="pl-10 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10"
             />
           </div>
 
@@ -212,10 +212,10 @@ export default function CommunityPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger className="w-full sm:w-44 border-gray-200 bg-white text-gray-900 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100">
+            <SelectTrigger className="w-full sm:w-44 border-gray-200 bg-white text-gray-900 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100">
               <SelectValue placeholder={t('community.allLanguages')} />
             </SelectTrigger>
-            <SelectContent className="border-gray-200 bg-white dark:border-[#33355a] dark:bg-[#242640]">
+            <SelectContent className="border-gray-200 bg-white dark:border-[#1e2d44] dark:bg-[#1a2332]">
               <SelectItem value="all">{t('community.allLanguages')}</SelectItem>
               <SelectItem value="TypeScript">TypeScript</SelectItem>
               <SelectItem value="JavaScript">JavaScript</SelectItem>
@@ -235,10 +235,10 @@ export default function CommunityPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger className="w-full sm:w-40 border-gray-200 bg-white text-gray-900 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100">
+            <SelectTrigger className="w-full sm:w-40 border-gray-200 bg-white text-gray-900 dark:border-[#1e2d44] dark:bg-[#111827] dark:text-gray-100">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="border-gray-200 bg-white dark:border-[#33355a] dark:bg-[#242640]">
+            <SelectContent className="border-gray-200 bg-white dark:border-[#1e2d44] dark:bg-[#1a2332]">
               <SelectItem value="latest">{t('community.sortLatest')}</SelectItem>
               <SelectItem value="popular">{t('community.sortPopular')}</SelectItem>
             </SelectContent>
@@ -248,10 +248,10 @@ export default function CommunityPage() {
         {/* Posts */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900 dark:border-[#33355a] dark:border-t-gray-100" />
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900 dark:border-[#1e2d44] dark:border-t-gray-100" />
           </div>
         ) : posts.length === 0 ? (
-          <div className="rounded-2xl border border-gray-200 bg-white py-20 text-center shadow-sm dark:border-[#33355a] dark:bg-[#242640]">
+          <div className="rounded-2xl border border-gray-200 bg-white py-20 text-center shadow-sm dark:border-[#1e2d44] dark:bg-[#1a2332]">
             <FileText className="mx-auto mb-4 h-16 w-16 text-gray-300 dark:text-gray-600" />
             <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-gray-200">
               {t('community.noPosts')}
@@ -290,7 +290,7 @@ export default function CommunityPage() {
               size="sm"
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
-              className="border-gray-200 text-gray-700 hover:bg-white dark:border-[#33355a] dark:text-gray-300 dark:hover:bg-[#242640]"
+              className="border-gray-200 text-gray-700 hover:bg-white dark:border-[#1e2d44] dark:text-gray-300 dark:hover:bg-[#1a2332]"
             >
               {t('reviews.previous')}
             </Button>
@@ -302,7 +302,7 @@ export default function CommunityPage() {
               size="sm"
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
-              className="border-gray-200 text-gray-700 hover:bg-white dark:border-[#33355a] dark:text-gray-300 dark:hover:bg-[#242640]"
+              className="border-gray-200 text-gray-700 hover:bg-white dark:border-[#1e2d44] dark:text-gray-300 dark:hover:bg-[#1a2332]"
             >
               {t('reviews.next')}
             </Button>

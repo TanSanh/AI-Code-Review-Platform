@@ -59,7 +59,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
+    <div className="min-h-screen bg-white dark:bg-[#0b1120]">
       {/* Hero Section */}
       <section className="hero-gradient relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 md:py-32">
@@ -89,11 +89,11 @@ export default function HomePage() {
         </div>
 
         {/* Gradient overlay at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-[#1a1b2e] to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-[#0b1120] to-transparent" />
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 bg-white dark:bg-[#1a1b2e]">
+      <section id="features" className="py-24 bg-white dark:bg-[#0b1120]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-display-section text-charcoal dark:text-gray-50 mb-4">
@@ -123,7 +123,7 @@ export default function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-24 bg-cream/30 dark:bg-[#242640]">
+      <section id="how-it-works" className="py-24 bg-cream/30 dark:bg-[#1a2332]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-display-section text-charcoal dark:text-gray-50 mb-4">
@@ -153,7 +153,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-white dark:bg-[#1a1b2e]">
+      <section className="py-24 bg-white dark:bg-[#0b1120]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-display-section text-charcoal dark:text-gray-50 mb-6">
             {t('landing.ctaTitle')}

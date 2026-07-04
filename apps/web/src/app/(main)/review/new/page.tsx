@@ -104,7 +104,7 @@ export default function NewReviewPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
+      <div className="min-h-screen bg-white dark:bg-[#0b1120]">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mysteria" />
@@ -115,7 +115,7 @@ export default function NewReviewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#1a1b2e]">
+    <div className="min-h-screen bg-white dark:bg-[#0b1120]">
 
       <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
@@ -199,7 +199,7 @@ export default function NewReviewPage() {
                       accept=".ts,.tsx,.js,.jsx,.py,.java,.go,.rs,.php,.rb"
                       onChange={handleFileUpload}
                     />
-                    <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-parchment dark:border-[#33355a] rounded-card cursor-pointer hover:border-lavender transition-colors">
+                    <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-parchment dark:border-[#1e2d44] rounded-card cursor-pointer hover:border-lavender transition-colors">
                       <Upload className="h-5 w-5 text-charcoal/40 dark:text-gray-500" />
                       <span className="text-sm text-charcoal/60 dark:text-gray-400">{t('newReview.chooseFile')}</span>
                     </div>

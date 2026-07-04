@@ -50,7 +50,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-white text-charcoal font-sans dark:bg-[#1a1b2e] dark:text-gray-100">
+      <body className="min-h-screen bg-white text-charcoal font-sans dark:bg-[#0b1120] dark:text-gray-100">
         <ThemeProvider>
           <LanguageProvider>
             <AuthProvider>
@@ -58,7 +58,7 @@ export default function RootLayout({
                 <Toaster
                   position="top-right"
                   toastOptions={{
-                    className: 'dark:bg-[#242640] dark:text-gray-100 dark:border-[#33355a]',
+                    className: 'dark:bg-[#1a2332] dark:text-gray-100 dark:border-[#1e2d44]',
                   }}
                 />
                 <Navbar />

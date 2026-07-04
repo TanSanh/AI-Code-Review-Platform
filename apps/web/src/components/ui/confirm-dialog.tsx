@@ -34,7 +34,7 @@ export function ConfirmDialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onCancel} />
 
-      <div className="relative w-full max-w-sm rounded-card border border-parchment bg-white shadow-xl dark:border-[#33355a] dark:bg-[#242640]">
+      <div className="relative w-full max-w-sm rounded-card border border-parchment bg-white shadow-xl dark:border-[#1e2d44] dark:bg-[#1a2332]">
         <div className="p-6 text-center">
           <div className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full ${
             danger
@@ -56,7 +56,7 @@ export function ConfirmDialog({
           </p>
         </div>
 
-        <div className="flex items-center gap-3 border-t border-parchment px-6 py-4 dark:border-[#33355a]">
+        <div className="flex items-center gap-3 border-t border-parchment px-6 py-4 dark:border-[#1e2d44]">
           <Button
             variant="ghost"
             onClick={onCancel}
