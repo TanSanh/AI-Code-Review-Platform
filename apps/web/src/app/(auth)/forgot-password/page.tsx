@@ -43,14 +43,11 @@ export default function ForgotPasswordPage() {
 
   // Step 1: Send OTP
   const handleSendOtp = async () => {
-    if (!email.trim()) {
-      setErrors({ email: t('auth.emailRequired') });
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setErrors({ email: t('auth.otpInvalid') });
-      return;
-    }
+    const e: typeof errors = {};
+    if (!email.trim()) e.email = t('auth.emailRequired');
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = t('auth.emailInvalid');
+    if (Object.keys(e).length > 0) { setErrors(e); return; }
+
     setSendingCode(true);
     setErrors({});
     try {

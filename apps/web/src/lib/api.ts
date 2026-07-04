@@ -74,16 +74,24 @@ class ApiClient {
       body: body ? JSON.stringify(body) : undefined,
     });
 
-    // Handle 401 Unauthorized - clear token and redirect to login
-    if (response.status === 401) {
-      this.setToken(null);
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
-      throw new Error('Session expired. Please login again.');
-    }
-
     const data: ApiResponse<T> = await response.json();
+
+    // Handle 401 Unauthorized
+    if (response.status === 401) {
+      // Don't redirect if already on login page or if it's a login request
+      const isLoginPage = typeof window !== 'undefined' && window.location.pathname === '/login';
+      const isLoginRequest = endpoint.includes('/auth/login');
+
+      if (!isLoginPage && !isLoginRequest) {
+        this.setToken(null);
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+        throw new Error('Session expired. Please login again.');
+      }
+      // For login page/request, throw the actual error message
+      throw new Error(data.error?.message || 'Invalid credentials');
+    }
 
     if (!response.ok) {
       throw new Error(data.error?.message || 'Request failed');
@@ -94,6 +102,13 @@ class ApiClient {
   }
 
   // Auth
+  async checkEmail(email: string) {
+    return this.request<{ exists: boolean }>('/api/v1/auth/check-email', {
+      method: 'POST',
+      body: { email },
+    });
+  }
+
   async sendOtp(email: string) {
     return this.request<{ message: string }>('/api/v1/auth/send-otp', {
       method: 'POST',

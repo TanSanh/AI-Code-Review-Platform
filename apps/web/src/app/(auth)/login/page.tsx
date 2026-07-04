@@ -31,7 +31,7 @@ export default function LoginPage() {
   const validate = () => {
     const e: typeof errors = {};
     if (!email.trim()) e.email = t('auth.emailRequired');
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = t('auth.otpInvalid');
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = t('auth.emailInvalid');
     if (!password) e.password = t('auth.passwordRequired');
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -46,7 +46,7 @@ export default function LoginPage() {
       await login(email, password);
       router.push('/dashboard');
     } catch (err) {
-      setErrors({ general: err instanceof Error ? err.message : t('auth.loginFailed') });
+      setErrors({ general: t('auth.invalidCredentials') });
     } finally {
       setLoading(false);
     }

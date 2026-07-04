@@ -44,6 +44,15 @@ export class AuthController {
   ) {}
 
   @Public()
+  @Post('check-email')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(ThrottlerGuard)
+  @ApiOperation({ summary: 'Check if email already exists' })
+  async checkEmail(@Body() body: { email: string }) {
+    return this.authService.checkEmailExists(body.email);
+  }
+
+  @Public()
   @Post('send-otp')
   @HttpCode(HttpStatus.OK)
   @UseGuards(ThrottlerGuard)

@@ -47,7 +47,7 @@ export default function RegisterPage() {
     const e: typeof errors = {};
     if (!name.trim() || name.trim().length < 2) e.name = t('auth.nameRequired');
     if (!email.trim()) e.email = t('auth.emailRequired');
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = t('auth.otpInvalid');
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = t('auth.emailInvalid');
     if (!password) e.password = t('auth.passwordRequired');
     else if (password.length < 8) e.password = t('auth.passwordHint');
     if (!confirmPassword) e.confirmPassword = t('auth.passwordRequired');
@@ -61,11 +61,23 @@ export default function RegisterPage() {
     setSendingCode(true);
     setErrors({});
     try {
+      const emailCheck = await api.checkEmail(email);
+      if (emailCheck.exists) {
+        setErrors({ email: t('auth.emailAlreadyExists') });
+        setSendingCode(false);
+        return;
+      }
+
       await api.sendOtp(email);
       setStep(2);
       setResendCountdown(60);
     } catch (err) {
-      setErrors({ general: err instanceof Error ? err.message : t('auth.registerFailed') });
+      const msg = err instanceof Error ? err.message : t('auth.registerFailed');
+      if (msg.includes('already exists') || msg.includes('Email already exists')) {
+        setErrors({ email: t('auth.emailAlreadyExists') });
+      } else {
+        setErrors({ general: msg });
+      }
     } finally {
       setSendingCode(false);
     }

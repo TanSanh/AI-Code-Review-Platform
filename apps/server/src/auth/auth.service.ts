@@ -65,19 +65,27 @@ export class AuthService {
     };
   }
 
+  async checkEmailExists(email: string): Promise<{ exists: boolean }> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+    return { exists: !!user };
+  }
+
   async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
 
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     if (user.password) {
       const isValidPassword = await bcrypt.compare(dto.password, user.password);
       if (!isValidPassword) {
-        throw new UnauthorizedException('Invalid credentials');
+        throw new UnauthorizedException('Invalid email or password');
       }
     }
 
