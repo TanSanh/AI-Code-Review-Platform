@@ -259,7 +259,7 @@ export default function CommunityPostDetailPage() {
   if (authLoading || loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#1a1b2e]">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600 dark:border-[#714cb6]/30 dark:border-t-[#714cb6]" />
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900 dark:border-[#33355a] dark:border-t-gray-100" />
       </div>
     );
   }
@@ -274,7 +274,7 @@ export default function CommunityPostDetailPage() {
           </p>
           <Button
             onClick={() => router.push('/community')}
-            className="bg-purple-600 text-white hover:bg-purple-700 dark:bg-[#714cb6] dark:hover:bg-[#714cb6]/90"
+            className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('community.cancel')}
@@ -293,29 +293,29 @@ export default function CommunityPostDetailPage() {
         {/* Back button */}
         <button
           onClick={() => router.push('/community')}
-          className="mb-6 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 transition-colors hover:bg-white hover:text-purple-600 dark:text-gray-400 dark:hover:bg-[#242640] dark:hover:text-[#cbb7fb]"
+          className="mb-6 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 transition-colors hover:bg-white hover:text-gray-900 dark:text-gray-400 dark:hover:bg-[#242640] dark:hover:text-gray-100"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('reviewDetail.back')}
         </button>
 
         {/* Post card */}
-        <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#2e3050] dark:bg-[#22243a]">
-          {/* Header with gradient accent */}
-          <div className="bg-gradient-to-r from-purple-500/5 to-indigo-500/5 px-6 py-4 dark:from-[#714cb6]/10 dark:to-[#5a3d9a]/10">
+        <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#33355a] dark:bg-[#242640]">
+          {/* Header */}
+          <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <a href={`/users/${post.author.id}`}>
                   {post.author.avatarUrl ? (
-                    <img src={post.author.avatarUrl} alt={post.author.name} className="h-12 w-12 rounded-full object-cover ring-2 ring-white shadow-md dark:ring-[#22243a]" />
+                    <img src={post.author.avatarUrl} alt={post.author.name} className="h-12 w-12 rounded-full object-cover ring-2 ring-white shadow-md dark:ring-[#242640]" />
                   ) : (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-lg font-bold text-white shadow-lg shadow-purple-500/25">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-900 text-lg font-bold text-white dark:bg-gray-100 dark:text-gray-900">
                       {getInitial(post.author.name)}
                     </div>
                   )}
                 </a>
                 <div>
-                  <a href={`/users/${post.author.id}`} className="text-base font-semibold text-gray-900 transition-colors hover:text-purple-600 dark:text-gray-100 dark:hover:text-[#cbb7fb]">
+                  <a href={`/users/${post.author.id}`} className="text-base font-semibold text-gray-900 transition-colors hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300">
                     {post.author.name}
                   </a>
                   <div className="flex items-center gap-2 mt-0.5">
@@ -325,7 +325,7 @@ export default function CommunityPostDetailPage() {
                     {post.language && (
                       <>
                         <span className="text-gray-300 dark:text-gray-600">·</span>
-                        <span className="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-semibold text-purple-700 dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
+                        <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-700 dark:bg-[#33355a] dark:text-gray-300">
                           {post.language}
                         </span>
                       </>
@@ -390,7 +390,7 @@ export default function CommunityPostDetailPage() {
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-50 to-indigo-50 px-3 py-1.5 text-sm font-medium text-purple-600 dark:from-[#714cb6]/10 dark:to-[#5a3d9a]/10 dark:text-[#cbb7fb]"
+                    className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-600 dark:bg-[#33355a] dark:text-gray-300"
                   >
                     #{tag}
                   </span>
@@ -402,10 +402,10 @@ export default function CommunityPostDetailPage() {
             {post.review && (
               <a
                 href={`/review/${post.review.id}`}
-                className="mt-5 flex items-center gap-4 rounded-xl border border-purple-100 bg-gradient-to-r from-purple-50/50 to-indigo-50/50 px-5 py-4 transition-all hover:border-purple-300 hover:shadow-lg hover:shadow-purple-500/5 dark:border-[#714cb6]/20 dark:from-[#714cb6]/5 dark:to-[#5a3d9a]/5 dark:hover:border-[#714cb6]/40"
+                className="mt-5 flex items-center gap-4 rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 transition-all hover:border-gray-300 hover:shadow-lg dark:border-[#33355a] dark:bg-[#1e2038] dark:hover:border-gray-500"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 dark:bg-[#714cb6]/20">
-                  <ExternalLink className="h-5 w-5 text-purple-600 dark:text-[#cbb7fb]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-200 dark:bg-[#33355a]">
+                  <ExternalLink className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('community.viewReview')}</span>
@@ -413,7 +413,7 @@ export default function CommunityPostDetailPage() {
                 </div>
                 {post.review.score !== null && (
                   <div className="flex items-center gap-1">
-                    <span className="text-2xl font-bold text-purple-600 dark:text-[#cbb7fb]">{post.review.score}</span>
+                    <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{post.review.score}</span>
                     <span className="text-sm text-gray-400 dark:text-gray-500">/100</span>
                   </div>
                 )}
@@ -422,7 +422,7 @@ export default function CommunityPostDetailPage() {
           </div>
 
           {/* Footer: Like + Comment count */}
-          <div className="border-t border-gray-100 bg-gray-50/50 px-6 py-4 dark:border-[#2e3050] dark:bg-[#1e2038]/50">
+          <div className="border-t border-gray-100 bg-gray-50/50 px-6 py-4 dark:border-[#33355a] dark:bg-[#1e2038]/50">
             <div className="flex items-center gap-2">
               <button
                 onClick={handleLike}
@@ -443,8 +443,8 @@ export default function CommunityPostDetailPage() {
         </article>
 
         {/* Comments Section */}
-        <section className="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#2e3050] dark:bg-[#22243a]">
-          <div className="border-b border-gray-100 px-6 py-4 dark:border-[#2e3050]">
+        <section className="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#33355a] dark:bg-[#242640]">
+          <div className="border-b border-gray-100 px-6 py-4 dark:border-[#33355a]">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
               {t('community.comments')} ({post.commentCount})
             </h2>

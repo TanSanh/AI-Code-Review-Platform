@@ -88,7 +88,7 @@ function Avatar({ author }: { author: CommentAuthor }) {
   return author.avatarUrl ? (
     <img src={author.avatarUrl} alt={author.name} className="h-8 w-8 rounded-full object-cover" />
   ) : (
-    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amethyst/10 text-xs font-semibold text-amethyst dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
+    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-600 dark:bg-[#33355a] dark:text-gray-300">
       {getInitial(author.name)}
     </div>
   );
@@ -130,12 +130,12 @@ function ReplyInput({
           }
         }}
         placeholder={placeholder}
-        className="flex-1 rounded-full border border-parchment bg-cream/50 px-4 py-2 text-sm text-charcoal placeholder:text-charcoal/30 focus:border-amethyst focus:outline-none focus:ring-1 focus:ring-amethyst/30 dark:border-[#33355a] dark:bg-[#1a1b2e] dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-[#714cb6]"
+        className="flex-1 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900/10 dark:border-[#33355a] dark:bg-[#1a1b2e] dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-gray-100"
       />
       <button
         onClick={handleSubmit}
         disabled={submitting || !content.trim()}
-        className="text-sm font-semibold text-amethyst transition-colors hover:text-amethyst/80 disabled:opacity-40 dark:text-[#cbb7fb] dark:hover:text-[#cbb7fb]/80"
+        className="text-sm font-semibold text-gray-900 transition-colors hover:text-gray-600 disabled:opacity-40 dark:text-gray-100 dark:hover:text-gray-300"
       >
         {t('community.send')}
       </button>
@@ -211,7 +211,7 @@ export function CommunityCommentSection({
         {user?.avatarUrl ? (
           <img src={user.avatarUrl} alt={user.name || ''} className="h-8 w-8 shrink-0 rounded-full object-cover" />
         ) : (
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amethyst/10 text-xs font-semibold text-amethyst dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-600 dark:bg-[#33355a] dark:text-gray-300">
             {getInitial(currentUserId)}
           </div>
         )}
@@ -228,12 +228,12 @@ export function CommunityCommentSection({
                 }
               }}
               placeholder={t('community.writeComment')}
-              className="flex-1 rounded-full border border-parchment bg-cream/50 px-4 py-2 text-sm text-charcoal placeholder:text-charcoal/30 focus:border-amethyst focus:outline-none focus:ring-1 focus:ring-amethyst/30 dark:border-[#33355a] dark:bg-[#1a1b2e] dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-[#714cb6]"
+              className="flex-1 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900/10 dark:border-[#33355a] dark:bg-[#1a1b2e] dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-gray-100"
             />
             <button
               onClick={handleSubmit}
               disabled={submitting || !newComment.trim()}
-              className="text-sm font-semibold text-amethyst transition-colors hover:text-amethyst/80 disabled:opacity-40 dark:text-[#cbb7fb] dark:hover:text-[#cbb7fb]/80"
+              className="text-sm font-semibold text-gray-900 transition-colors hover:text-gray-600 disabled:opacity-40 dark:text-gray-100 dark:hover:text-gray-300"
             >
               {t('community.send')}
             </button>
@@ -271,7 +271,7 @@ export function CommunityCommentSection({
                     <div className="flex items-center gap-2">
                       <Link
                         href={`/users/${comment.author.id}`}
-                        className="text-sm font-semibold text-charcoal hover:text-[#714cb6] dark:text-gray-200 dark:hover:text-[#cbb7fb] transition-colors"
+                        className="text-sm font-semibold text-gray-900 hover:text-gray-600 dark:text-gray-200 dark:hover:text-gray-300 transition-colors"
                       >
                         {comment.author.name}
                       </Link>
@@ -285,7 +285,7 @@ export function CommunityCommentSection({
                     <div className="mt-1 flex items-center gap-4 text-xs text-charcoal/40 dark:text-gray-500">
                       <button
                         onClick={() => toggleReply(comment.id)}
-                        className="font-semibold transition-colors hover:text-amethyst dark:hover:text-[#cbb7fb]"
+                        className="font-semibold transition-colors hover:text-gray-900 dark:hover:text-gray-100"
                       >
                         {t('community.reply')}
                       </button>
@@ -313,7 +313,7 @@ export function CommunityCommentSection({
                     {shouldCollapse && (
                       <button
                         onClick={() => toggleCollapse(comment.id)}
-                        className="flex items-center gap-1 py-1 text-[13px] font-semibold text-charcoal/40 transition-colors hover:text-amethyst dark:text-gray-500 dark:hover:text-[#cbb7fb]"
+                        className="flex items-center gap-1 py-1 text-[13px] font-semibold text-gray-400 transition-colors hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-100"
                       >
                         {isCollapsed ? (
                           <>
@@ -353,7 +353,7 @@ export function CommunityCommentSection({
                                 <div className="flex items-center gap-2">
                                   <Link
                                     href={`/users/${reply.author.id}`}
-                                    className="text-sm font-semibold text-charcoal hover:text-[#714cb6] dark:text-gray-200 dark:hover:text-[#cbb7fb] transition-colors"
+                                    className="text-sm font-semibold text-gray-900 hover:text-gray-600 dark:text-gray-200 dark:hover:text-gray-300 transition-colors"
                                   >
                                     {reply.author.name}
                                   </Link>
@@ -367,7 +367,7 @@ export function CommunityCommentSection({
                                 <div className="mt-1 flex items-center gap-4 text-xs text-charcoal/40 dark:text-gray-500">
                                   <button
                                     onClick={() => toggleReply(reply.id)}
-                                    className="font-semibold transition-colors hover:text-amethyst dark:hover:text-[#cbb7fb]"
+                                    className="font-semibold transition-colors hover:text-gray-900 dark:hover:text-gray-100"
                                   >
                                     {t('community.reply')}
                                   </button>

@@ -77,19 +77,19 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
     : post.content;
 
   return (
-    <div className="group rounded-xl border border-gray-200/80 bg-white p-5 transition-all duration-300 hover:border-purple-300/50 hover:shadow-lg hover:shadow-purple-500/5 dark:border-[#2e3050] dark:bg-[#22243a] dark:hover:border-[#714cb6]/40 dark:hover:shadow-xl dark:hover:shadow-[#714cb6]/5">
+    <div className="group rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:border-gray-300 hover:shadow-lg dark:border-[#33355a] dark:bg-[#242640] dark:hover:border-gray-500 dark:hover:shadow-xl">
       {/* Header: Author + Time + Menu */}
       <div className="mb-4 flex items-center justify-between">
         <Link href={`/users/${post.author.id}`} className="flex items-center gap-3">
           {post.author.avatarUrl ? (
-            <img src={post.author.avatarUrl} alt={post.author.name} className="h-10 w-10 rounded-full object-cover ring-2 ring-purple-100 dark:ring-[#714cb6]/20" />
+            <img src={post.author.avatarUrl} alt={post.author.name} className="h-10 w-10 rounded-full object-cover ring-2 ring-gray-100 dark:ring-[#33355a]" />
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-sm font-semibold text-white shadow-md shadow-purple-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white dark:bg-gray-100 dark:text-gray-900">
               {getInitial(post.author.name)}
             </div>
           )}
           <div>
-            <span className="text-sm font-semibold text-gray-900 transition-colors hover:text-purple-600 dark:text-gray-100 dark:hover:text-[#cbb7fb]">
+            <span className="text-sm font-semibold text-gray-900 transition-colors hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300">
               {post.author.name}
             </span>
             <div className="flex items-center gap-2">
@@ -99,7 +99,7 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
               {post.language && (
                 <>
                   <span className="text-gray-300 dark:text-gray-600">·</span>
-                  <span className="rounded-full bg-purple-50 px-2 py-0.5 text-xs font-medium text-purple-600 dark:bg-[#714cb6]/15 dark:text-[#cbb7fb]">
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-[#33355a] dark:text-gray-300">
                     {post.language}
                   </span>
                 </>
@@ -136,7 +136,7 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
 
       {/* Title + Content */}
       <Link href={`/community/${post.id}`} className="block">
-        <h3 className="mb-2 text-lg font-bold text-gray-900 transition-colors group-hover:text-purple-600 dark:text-gray-100 dark:group-hover:text-[#cbb7fb]">
+        <h3 className="mb-2 text-lg font-bold text-gray-900 transition-colors group-hover:text-gray-600 dark:text-gray-100 dark:group-hover:text-gray-300">
           {post.title}
         </h3>
         <p className="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
@@ -150,7 +150,7 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
           <img
             src={post.imageUrl}
             alt={post.title}
-            className="w-full max-h-[500px] rounded-xl object-contain border border-gray-100 dark:border-[#2e3050]"
+            className="w-full max-h-[500px] rounded-xl object-contain border border-gray-100 dark:border-[#33355a]"
           />
         </div>
       )}
@@ -161,7 +161,7 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
           {tags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-50 to-indigo-50 px-3 py-1 text-xs font-medium text-purple-600 dark:from-[#714cb6]/10 dark:to-[#5a3d9a]/10 dark:text-[#cbb7fb]"
+              className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600 dark:bg-[#33355a] dark:text-gray-300"
             >
               #{tag}
             </span>
@@ -173,16 +173,16 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
       {post.review && (
         <Link
           href={`/review/${post.review.id}`}
-          className="mb-4 flex items-center gap-3 rounded-xl border border-purple-100 bg-gradient-to-r from-purple-50/50 to-indigo-50/50 px-4 py-3 text-sm transition-all hover:border-purple-300 hover:shadow-md dark:border-[#714cb6]/20 dark:from-[#714cb6]/5 dark:to-[#5a3d9a]/5 dark:hover:border-[#714cb6]/40"
+          className="mb-4 flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm transition-all hover:border-gray-300 hover:shadow-md dark:border-[#33355a] dark:bg-[#1e2038] dark:hover:border-gray-500"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 dark:bg-[#714cb6]/20">
-            <ExternalLink className="h-4 w-4 text-purple-600 dark:text-[#cbb7fb]" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-200 dark:bg-[#33355a]">
+            <ExternalLink className="h-4 w-4 text-gray-600 dark:text-gray-300" />
           </div>
           <div className="flex-1 min-w-0">
             <span className="font-medium text-gray-700 truncate block dark:text-gray-300">{post.review.title}</span>
           </div>
           {post.review.score !== null && (
-            <span className="rounded-lg bg-purple-100 px-2 py-1 text-xs font-bold text-purple-600 dark:bg-[#714cb6]/20 dark:text-[#cbb7fb]">
+            <span className="rounded-lg bg-gray-200 px-2 py-1 text-xs font-bold text-gray-700 dark:bg-[#33355a] dark:text-gray-300">
               {post.review.score}
             </span>
           )}
@@ -190,7 +190,7 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
       )}
 
       {/* Footer: Like + Comment */}
-      <div className="flex items-center gap-1 border-t border-gray-100 pt-4 dark:border-[#2e3050]">
+      <div className="flex items-center gap-1 border-t border-gray-100 pt-4 dark:border-[#33355a]">
         <button
           onClick={() => onLike(post.id)}
           className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
@@ -205,7 +205,7 @@ export function CommunityPostCard({ post, currentUserId, onLike, onDelete, onEdi
 
         <Link
           href={`/community/${post.id}`}
-          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 transition-all hover:bg-purple-50 hover:text-purple-600 dark:text-gray-400 dark:hover:bg-[#714cb6]/10 dark:hover:text-[#cbb7fb]"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 transition-all hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-[#33355a] dark:hover:text-gray-300"
         >
           <MessageCircle className="h-4 w-4" />
           <span>{post.commentCount}</span>

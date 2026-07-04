@@ -147,7 +147,7 @@ export default function RegisterPage() {
                 </Label>
                 <Input
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="Name"
                   value={name}
                   onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: undefined })); }}
                   className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.name ? 'border-red-500' : ''}`}
@@ -161,7 +161,7 @@ export default function RegisterPage() {
                 </Label>
                 <Input
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder="name@gmail.com"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: undefined })); }}
                   className={`h-11 rounded-lg border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-gray-900/10 dark:border-[#33355a] dark:bg-[#1e2038] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-gray-100 dark:focus:ring-gray-100/10 ${errors.email ? 'border-red-500' : ''}`}
