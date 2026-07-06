@@ -13,7 +13,7 @@ RUN npm install husky --no-save
 COPY . .
 
 # Generate Prisma client
-RUN npx prisma generate --schema=prisma/schema.prisma
+RUN npx prisma generate --schema=apps/server/prisma/schema.prisma
 
 # Build server
 RUN npm run build --workspace=server
