@@ -5,7 +5,8 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY packages/shared/package.json ./packages/shared/
-RUN npm ci --workspace=web --workspace=@acr/shared
+RUN npm ci --workspace=web --workspace=@acr/shared --ignore-scripts
+RUN npm install husky --no-save
 
 # ─── Stage 2: Build ────────────────────────────────
 FROM node:20-alpine AS builder

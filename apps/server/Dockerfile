@@ -6,7 +6,8 @@ WORKDIR /app
 # Install dependencies
 COPY package*.json ./
 COPY packages/shared/package.json ./packages/shared/
-RUN npm ci --workspace=server --workspace=@acr/shared
+RUN npm ci --workspace=server --workspace=@acr/shared --ignore-scripts
+RUN npm install husky --no-save
 
 # Copy source
 COPY . .
