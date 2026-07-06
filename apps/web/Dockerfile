@@ -4,7 +4,7 @@ FROM node:20-alpine AS deps
 WORKDIR /app
 
 COPY package*.json ./
-COPY ../../packages/shared/package.json ./packages/shared/
+COPY packages/shared/package.json ./packages/shared/
 RUN npm ci --workspace=web --workspace=@acr/shared
 
 # ─── Stage 2: Build ────────────────────────────────

@@ -5,12 +5,11 @@ WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
-COPY ../../packages/shared/package.json ./packages/shared/
+COPY packages/shared/package.json ./packages/shared/
 RUN npm ci --workspace=server --workspace=@acr/shared
 
 # Copy source
 COPY . .
-COPY ../../packages/shared ./packages/shared
 
 # Generate Prisma client
 RUN npx prisma generate --schema=prisma/schema.prisma
