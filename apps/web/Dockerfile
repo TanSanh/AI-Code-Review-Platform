@@ -1,52 +1,36 @@
-# ─── Stage 1: Install dependencies ────────────────
-FROM node:20-alpine AS deps
-
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
+COPY apps/web/package.json ./apps/web/
 COPY packages/shared/package.json ./packages/shared/
-RUN npm ci --workspace=web --workspace=@acr/shared --ignore-scripts
+RUN npm ci --workspace=web --workspace=@acr/shared --ignore-scripts && npm cache clean --force
 RUN npm install husky --no-save
 
-# ─── Stage 2: Build ────────────────────────────────
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-
-# Copy dependencies
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
-COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
-
-# Copy source
 COPY . .
-
-# Generate shared package
 RUN cd packages/shared && npm run build
 
-# Build Next.js
-WORKDIR /app/apps/web
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
+ENV NODE_OPTIONS=--max-old-space-size=512
+RUN npm run build --workspace=web
 
-# ─── Stage 3: Runner ──────────────────────────────
+# Clean build cache only (keep standalone node_modules)
+RUN rm -rf node_modules apps/web/node_modules packages/shared/node_modules \
+    apps/web/.next/cache .next/cache
+
 FROM node:20-alpine AS runner
-
 RUN apk add --no-cache curl
-
 WORKDIR /app
-
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Copy standalone output
 COPY --from=builder /app/apps/web/.next/standalone ./
-COPY --from=builder /app/apps/web/.next/static ./.next/static
-COPY --from=builder /app/apps/web/public ./public
+COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /app/apps/web/public ./apps/web/public
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD curl -f http://localhost:3000 || exit 1
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["node", "apps/web/server.js"]

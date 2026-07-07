@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/auth-context';
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
@@ -24,7 +24,6 @@ export default function AuthCallbackPage() {
       try {
         api.setToken(token);
         const profile = await api.getProfile();
-        // Store token and reload to trigger auth context
         localStorage.setItem('token', token);
         window.location.href = '/dashboard';
       } catch {
@@ -58,5 +57,20 @@ export default function AuthCallbackPage() {
         <p className="text-sm text-gray-500 dark:text-gray-400">Completing authentication...</p>
       </div>
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-[#0b1120]">
+        <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-xl dark:border-[#1e2d44] dark:bg-[#1a2332]">
+          <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin text-gray-400" />
+          <p className="text-sm text-gray-500 dark:text-gray-400">Loading...</p>
+        </div>
+      </div>
+    }>
+      <AuthCallbackContent />
+    </Suspense>
   );
 }

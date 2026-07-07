@@ -22,7 +22,11 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const newSocket = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001', {
+    const wsUrl = process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes('localhost')
+      ? process.env.NEXT_PUBLIC_API_URL
+      : window.location.origin;
+
+    const newSocket = io(wsUrl, {
       auth: { token },
       transports: ['websocket', 'polling'],
     });
