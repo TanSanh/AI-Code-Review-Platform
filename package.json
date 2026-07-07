@@ -2,6 +2,7 @@
   "name": "ai-code-review",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10.8.2",
   "description": "AI-Powered Code Review + Collaboration Platform",
   "workspaces": [
     "apps/*",
