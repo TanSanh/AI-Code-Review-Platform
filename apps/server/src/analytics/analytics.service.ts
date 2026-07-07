@@ -30,7 +30,7 @@ export class AnalyticsService {
       resolvedIssues,
       unresolvedIssues: totalIssues - resolvedIssues,
       averageScore: Math.round(avgScore._avg.score || 0),
-      languageDistribution: languageStats.map((stat) => ({
+      languageDistribution: languageStats.map((stat: any) => ({
         language: stat.language,
         count: stat._count,
       })),
@@ -69,7 +69,7 @@ export class AnalyticsService {
       _avg: { score: true },
     });
 
-    return stats.map((stat) => ({
+    return stats.map((stat: any) => ({
       language: stat.language,
       count: stat._count,
       averageScore: Math.round(stat._avg.score || 0),

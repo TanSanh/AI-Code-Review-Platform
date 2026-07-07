@@ -60,12 +60,12 @@ export class CommunityService {
 
     // Check which posts the current user has liked
     const userLikes = await this.prisma.communityLike.findMany({
-      where: { userId, postId: { in: posts.map((p) => p.id) } },
+      where: { userId, postId: { in: posts.map((p: any) => p.id) } },
       select: { postId: true },
     });
-    const likedPostIds = new Set(userLikes.map((l) => l.postId));
+    const likedPostIds = new Set(userLikes.map((l: any) => l.postId));
 
-    const postsWithLikeStatus = posts.map((post) => ({
+    const postsWithLikeStatus = posts.map((post: any) => ({
       ...post,
       isLiked: likedPostIds.has(post.id),
       likeCount: post._count.likes,

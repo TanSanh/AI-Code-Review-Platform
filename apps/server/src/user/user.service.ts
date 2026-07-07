@@ -70,7 +70,7 @@ export class UserService {
     ]);
 
     return {
-      data: posts.map((post) => ({
+      data: posts.map((post: any) => ({
         ...post,
         likeCount: post._count.likes,
         commentCount: post._count.comments,
