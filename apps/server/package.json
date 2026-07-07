@@ -33,7 +33,7 @@
     "@nestjs/swagger": "^11.0.0",
     "@nestjs/throttler": "^6.0.0",
     "@nestjs/websockets": "^11.0.0",
-    "@prisma/client": "^6.0.0",
+    "@prisma/client": "^6.19.3",
     "@types/nodemailer": "^8.0.1",
     "@types/passport-google-oauth20": "^2.0.17",
     "bcryptjs": "^2.4.3",
