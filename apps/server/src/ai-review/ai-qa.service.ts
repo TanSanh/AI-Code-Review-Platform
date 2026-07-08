@@ -114,13 +114,14 @@ export class AiQaService {
   private async callClaude(prompt: string): Promise<string> {
     const apiKey = this.configService.get<string>('ai.anthropic_api_key');
     const model = this.configService.get<string>('ai.model', 'claude-opus-4.8');
+    const baseUrl = this.configService.get<string>('ai.base_url', 'https://api.nhà cung cấp dịch vụ AI.com');
 
-    if (!apiKey) {
-      return 'AI assistant is not configured. Please set up the API key.';
+    if (!apiKey || apiKey.startsWith('pmv_')) {
+      return 'AI assistant requires a valid API key. Please configure ANTHROPIC_API_KEY with a standard key (sk-ant-...) in your .env file.';
     }
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch(`${baseUrl}/v1/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -22,6 +22,7 @@ export default () => ({
   ai: {
     anthropic_api_key: process.env.ANTHROPIC_API_KEY,
     model: process.env.ANTHROPIC_MODEL || 'claude-opus-4.8',
+    base_url: process.env.AI_BASE_URL || 'https://api.nhà cung cấp dịch vụ AI.com',
   },
 
   s3: {
