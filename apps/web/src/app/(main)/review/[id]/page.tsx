@@ -47,10 +47,10 @@ interface Review {
 }
 
 const severityConfig: Record<string, { icon: React.ElementType; color: string; bg: string }> = {
-  ERROR: { icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' },
-  WARNING: { icon: AlertTriangle, color: 'text-yellow-600', bg: 'bg-yellow-50' },
-  INFO: { icon: Info, color: 'text-blue-600', bg: 'bg-blue-50' },
-  SUGGESTION: { icon: Lightbulb, color: 'text-gray-600', bg: 'bg-gray-50' },
+  ERROR: { icon: AlertTriangle, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-500/15' },
+  WARNING: { icon: AlertTriangle, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-50 dark:bg-yellow-500/15' },
+  INFO: { icon: Info, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-500/15' },
+  SUGGESTION: { icon: Lightbulb, color: 'text-gray-600 dark:text-gray-400', bg: 'bg-gray-50 dark:bg-gray-500/15' },
 };
 
 export default function ReviewDetailPage() {
@@ -156,7 +156,7 @@ export default function ReviewDetailPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-[#0b1120]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-          <p className="text-body text-charcoal/60">{t('reviewDetail.notFound')}</p>
+          <p className="text-body text-charcoal/60 dark:text-gray-400">{t('reviewDetail.notFound')}</p>
         </div>
       </div>
     );
@@ -178,14 +178,14 @@ export default function ReviewDetailPage() {
 
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-display-section text-charcoal">{review.title}</h1>
-            <p className="text-body text-charcoal/60 mt-2">
+            <h1 className="text-display-section text-charcoal dark:text-gray-100">{review.title}</h1>
+            <p className="text-body text-charcoal/60 dark:text-gray-400 mt-2">
               {review.language} • {review.fileName} • {formatDate(review.createdAt)}
             </p>
             {/* WebSocket status */}
             <div className="flex items-center gap-2 mt-2">
               <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
-              <span className="text-caption text-charcoal/40">
+              <span className="text-caption text-charcoal/40 dark:text-gray-500">
                 {isConnected ? t('reviewDetail.realtimeConnected') : t('reviewDetail.disconnected')}
               </span>
             </div>
@@ -207,9 +207,9 @@ export default function ReviewDetailPage() {
 
         {/* Reviewing Status Banner */}
         {reviewStatus === 'REVIEWING' && (
-          <div className="mb-6 p-4 bg-lavender/20 border border-lavender rounded-card flex items-center gap-3">
-            <RefreshCw className="h-5 w-5 text-amethyst animate-spin" />
-            <span className="text-body text-charcoal">
+          <div className="mb-6 p-4 bg-lavender/20 border border-lavender rounded-card flex items-center gap-3 dark:bg-[#1e2d44]/50 dark:border-[#2e4060]">
+            <RefreshCw className="h-5 w-5 text-amethyst dark:text-gray-400 animate-spin" />
+            <span className="text-body text-charcoal dark:text-gray-200">
               {t('reviewDetail.aiAnalyzing')}
             </span>
           </div>
@@ -221,15 +221,15 @@ export default function ReviewDetailPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-caption text-charcoal/60">{t('reviewDetail.qualityScore')}</p>
+                  <p className="text-caption text-charcoal/60 dark:text-gray-400">{t('reviewDetail.qualityScore')}</p>
                   <p className={`text-4xl font-bold ${getScoreColor(review.score)}`}>
                     {review.score}
-                    <span className="text-lg text-charcoal/40">/100</span>
+                    <span className="text-lg text-charcoal/40 dark:text-gray-500">/100</span>
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-caption text-charcoal/60">{t('reviewDetail.issues')}</p>
-                  <p className="text-body-heading font-semibold">
+                  <p className="text-caption text-charcoal/60 dark:text-gray-400">{t('reviewDetail.issues')}</p>
+                  <p className="text-body-heading font-semibold dark:text-gray-100">
                     {resolvedCount}/{review.issues.length} {t('reviewDetail.resolved')}
                   </p>
                 </div>
@@ -269,7 +269,7 @@ export default function ReviewDetailPage() {
                 {review.issues.length === 0 ? (
                   <div className="text-center py-8">
                     <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                    <p className="text-body text-charcoal/60">{t('reviewDetail.noIssues')}</p>
+                    <p className="text-body text-charcoal/60 dark:text-gray-400">{t('reviewDetail.noIssues')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4 max-h-[500px] overflow-y-auto">
@@ -280,7 +280,7 @@ export default function ReviewDetailPage() {
                       return (
                         <div
                           key={issue.id}
-                          className={`p-4 rounded-card border ${
+                          className={`p-4 rounded-card border border-gray-200 dark:border-[#1e2d44] ${
                             issue.isResolved ? 'opacity-50' : ''
                           }`}
                         >
@@ -293,13 +293,13 @@ export default function ReviewDetailPage() {
                                 <span className={`text-micro ${config.color}`}>
                                   {issue.severity}
                                 </span>
-                                <span className="text-micro text-charcoal/40">
+                                <span className="text-micro text-charcoal/40 dark:text-gray-500">
                                   {t('reviewDetail.line').replace('{line}', String(issue.line))}
                                 </span>
                               </div>
-                              <p className="text-body text-charcoal mb-2">{issue.message}</p>
+                              <p className="text-body text-charcoal dark:text-gray-200 mb-2">{issue.message}</p>
                               {issue.suggestion && (
-                                <p className="text-caption text-charcoal/60 italic">
+                                <p className="text-caption text-charcoal/60 dark:text-gray-400 italic">
                                   💡 {issue.suggestion}
                                 </p>
                               )}
@@ -308,13 +308,13 @@ export default function ReviewDetailPage() {
                                   onClick={() => handleToggleIssue(issue.id)}
                                   className={`text-caption ${
                                     issue.isResolved
-                                      ? 'text-green-600 hover:text-green-700'
-                                      : 'text-charcoal/40 hover:text-charcoal'
+                                      ? 'text-green-600 dark:text-green-400 hover:text-green-700'
+                                      : 'text-charcoal/40 dark:text-gray-500 hover:text-charcoal dark:hover:text-gray-200'
                                   }`}
                                 >
                                   {issue.isResolved ? t('reviewDetail.resolvedStatus') : t('reviewDetail.markResolved')}
                                 </button>
-                                <span className="text-micro text-charcoal/30">
+                                <span className="text-micro text-charcoal/30 dark:text-gray-600">
                                   {issue.aiModel}
                                 </span>
                               </div>
