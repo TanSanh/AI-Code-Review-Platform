@@ -56,6 +56,7 @@ export class CommentService {
         reviewId,
         authorId: userId,
         parentId: dto.parentId,
+        issueId: dto.issueId,
       },
       include: {
         author: { select: { id: true, name: true, avatarUrl: true } },

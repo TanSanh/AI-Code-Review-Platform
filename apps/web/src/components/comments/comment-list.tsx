@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Bot } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { useLanguage } from '@/contexts/language-context';
 
@@ -14,6 +15,7 @@ interface Comment {
   id: string;
   content: string;
   lineRef: number | null;
+  isBot?: boolean;
   createdAt: string;
   author: CommentAuthor;
   replies?: Comment[];
@@ -29,7 +31,7 @@ export function CommentList({ comments, currentUserId }: CommentListProps) {
 
   if (!comments || comments.length === 0) {
     return (
-      <div className="text-center py-8 text-charcoal/40">
+      <div className="text-center py-8 text-charcoal/40 dark:text-gray-500">
         <p>{t('comments.noComments')}</p>
       </div>
     );
@@ -60,21 +62,26 @@ function CommentItem({
 }) {
   const { t } = useLanguage();
   const isOwner = comment.author.id === currentUserId;
+  const isBot = comment.isBot;
 
   return (
-    <div className={`${isReply ? 'ml-8 pl-4 border-l-2 border-parchment' : ''}`}>
+    <div className={`${isReply ? 'ml-8 pl-4 border-l-2 border-gray-200 dark:border-[#1e2d44]' : ''} ${isBot ? 'rounded-lg bg-lavender/10 dark:bg-[#1e2d44]/50 p-3 -mx-3' : ''}`}>
       <div className="flex items-start gap-3">
         {/* Avatar */}
         <div className="flex-shrink-0">
-          {comment.author.avatarUrl ? (
+          {isBot ? (
+            <div className="w-8 h-8 rounded-full bg-amethyst/20 dark:bg-gray-400/20 flex items-center justify-center">
+              <Bot className="w-4 h-4 text-amethyst dark:text-gray-300" />
+            </div>
+          ) : comment.author.avatarUrl ? (
             <img
               src={comment.author.avatarUrl}
               alt={comment.author.name}
               className="w-8 h-8 rounded-full"
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-lavender/30 flex items-center justify-center">
-              <span className="text-sm font-medium text-amethyst">
+            <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-[#2e4060] flex items-center justify-center">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
                 {comment.author.name.charAt(0).toUpperCase()}
               </span>
             </div>
@@ -84,24 +91,29 @@ function CommentItem({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-body font-medium text-charcoal">
+            <span className="text-body font-medium text-gray-900 dark:text-gray-100">
               {comment.author.name}
             </span>
-            {isOwner && (
-              <span className="text-micro text-amethyst bg-lavender/20 px-1.5 py-0.5 rounded">
+            {isBot && (
+              <span className="text-micro text-amethyst dark:text-gray-300 bg-lavender/20 dark:bg-[#2e4060]/50 px-1.5 py-0.5 rounded">
+                {t('reviewDetail.aiBadge')}
+              </span>
+            )}
+            {isOwner && !isBot && (
+              <span className="text-micro text-amethyst dark:text-gray-300 bg-lavender/20 dark:bg-[#2e4060]/50 px-1.5 py-0.5 rounded">
                 {t('comments.you')}
               </span>
             )}
-            <span className="text-caption text-charcoal/40">
+            <span className="text-caption text-gray-400 dark:text-gray-500">
               {formatDate(comment.createdAt)}
             </span>
             {comment.lineRef && (
-              <span className="text-micro text-charcoal/40 bg-parchment/50 px-1.5 py-0.5 rounded">
+              <span className="text-micro text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-[#1e2d44] px-1.5 py-0.5 rounded">
                 {t('comments.line').replace('{line}', String(comment.lineRef))}
               </span>
             )}
           </div>
-          <p className="text-body text-charcoal whitespace-pre-wrap">{comment.content}</p>
+          <p className="text-body text-gray-700 dark:text-gray-200 whitespace-pre-wrap">{comment.content}</p>
         </div>
       </div>
 

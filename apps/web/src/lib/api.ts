@@ -222,6 +222,38 @@ class ApiClient {
     });
   }
 
+  // Review Comments
+  async getReviewComments(reviewId: string) {
+    return this.request<unknown[]>(`/api/v1/reviews/${reviewId}/comments`);
+  }
+
+  async createReviewComment(reviewId: string, data: { content: string; lineRef?: number; parentId?: string; issueId?: string }) {
+    return this.request<unknown>(`/api/v1/reviews/${reviewId}/comments`, {
+      method: 'POST',
+      body: data,
+    });
+  }
+
+  async deleteReviewComment(reviewId: string, commentId: string) {
+    return this.request<unknown>(`/api/v1/reviews/${reviewId}/comments/${commentId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // AI Q&A and Fix
+  async askReviewQuestion(reviewId: string, question: string) {
+    return this.request<unknown>(`/api/v1/reviews/${reviewId}/ask`, {
+      method: 'POST',
+      body: { question },
+    });
+  }
+
+  async fixIssueCode(reviewId: string, issueId: string) {
+    return this.request<{ fixedCode: string }>(`/api/v1/reviews/${reviewId}/ai/fix/${issueId}`, {
+      method: 'POST',
+    });
+  }
+
   // Analytics
   async getAnalyticsOverview() {
     return this.request<unknown>('/api/v1/analytics/overview');

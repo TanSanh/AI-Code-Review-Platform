@@ -70,6 +70,7 @@ export class AiReviewService {
           status: 'COMPLETED',
           score,
           completedAt: new Date(),
+          improvedCode: llmResult.improvedCode || null,
         },
         include: { issues: true },
       });

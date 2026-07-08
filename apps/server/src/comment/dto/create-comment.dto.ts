@@ -17,4 +17,9 @@ export class CreateCommentDto {
   @IsOptional()
   @IsString()
   parentId?: string;
+
+  @ApiPropertyOptional({ description: 'Link comment to a specific issue' })
+  @IsOptional()
+  @IsString()
+  issueId?: string;
 }

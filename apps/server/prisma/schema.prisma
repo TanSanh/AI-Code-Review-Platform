@@ -43,6 +43,7 @@ model Review {
   language     String
   fileName     String
   originalCode String       @db.Text
+  improvedCode String?      @db.Text
   status       ReviewStatus @default(PENDING)
   score        Int?
 

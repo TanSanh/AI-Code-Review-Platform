@@ -12,6 +12,9 @@ import {
   CheckCircle,
   Info,
   Lightbulb,
+  Bot,
+  Wand2,
+  Loader2,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { formatDate, getScoreColor } from '@/lib/utils';
@@ -19,6 +22,10 @@ import { useAuth } from '@/contexts/auth-context';
 import { useLanguage } from '@/contexts/language-context';
 import { useReviewSocket } from '@/hooks/use-socket';
 import { CodeEditor } from '@/components/code-editor/code-editor';
+import { CodeDiff } from '@/components/code-editor/code-diff';
+import { CommentForm } from '@/components/comments/comment-form';
+import { CommentList } from '@/components/comments/comment-list';
+import { toast } from 'sonner';
 
 interface Issue {
   id: string;
@@ -30,6 +37,22 @@ interface Issue {
   confidence: number;
   aiModel: string;
   isResolved: boolean;
+}
+
+interface CommentAuthor {
+  id: string;
+  name: string;
+  avatarUrl: string | null;
+}
+
+interface Comment {
+  id: string;
+  content: string;
+  lineRef: number | null;
+  isBot?: boolean;
+  createdAt: string;
+  author: CommentAuthor;
+  replies?: Comment[];
 }
 
 interface Review {
@@ -70,6 +93,10 @@ export default function ReviewDetailPage() {
   const [loading, setLoading] = useState(true);
   const [reReviewing, setReReviewing] = useState(false);
   const [reviewStatus, setReviewStatus] = useState<string>('');
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [fixingIssueId, setFixingIssueId] = useState<string | null>(null);
+  const [fixedCode, setFixedCode] = useState<string | null>(null);
+  const [showFixDiff, setShowFixDiff] = useState(false);
 
   const handleReviewCompleted = useCallback((updatedReview: unknown) => {
     const data = updatedReview as Review;
@@ -99,6 +126,20 @@ export default function ReviewDetailPage() {
 
     fetchReview();
   }, [params.id, authLoading]);
+
+  // Load comments
+  useEffect(() => {
+    if (authLoading || !review) return;
+    const loadComments = async () => {
+      try {
+        const data = await api.getReviewComments(params.id as string);
+        setComments(data as Comment[]);
+      } catch {
+        // Comments may not be available
+      }
+    };
+    loadComments();
+  }, [authLoading, review, params.id]);
 
   const handleReReview = async () => {
     if (!review) return;
@@ -137,6 +178,36 @@ export default function ReviewDetailPage() {
       });
     } catch (err) {
       console.error('Failed to toggle issue:', err);
+    }
+  };
+
+  const handleCommentSubmit = async (content: string) => {
+    if (!review) return;
+    await api.createReviewComment(review.id, { content });
+  };
+
+  const handleAskAI = async (question: string) => {
+    if (!review) return;
+    try {
+      await api.askReviewQuestion(review.id, question);
+      // Response comes via WebSocket as a bot comment
+    } catch {
+      toast.error(t('reviewDetail.askFailed'));
+    }
+  };
+
+  const handleFixIssue = async (issueId: string) => {
+    if (!review) return;
+    setFixingIssueId(issueId);
+    setShowFixDiff(false);
+    try {
+      const result = await api.fixIssueCode(review.id, issueId);
+      setFixedCode(result.fixedCode);
+      setShowFixDiff(true);
+    } catch {
+      toast.error(t('reviewDetail.fixFailed'));
+    } finally {
+      setFixingIssueId(null);
     }
   };
 
@@ -309,12 +380,26 @@ export default function ReviewDetailPage() {
                                   className={`text-caption ${
                                     issue.isResolved
                                       ? 'text-green-600 dark:text-green-400 hover:text-green-700'
-                                      : 'text-charcoal/40 dark:text-gray-500 hover:text-charcoal dark:hover:text-gray-200'
+                                      : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-200'
                                   }`}
                                 >
                                   {issue.isResolved ? t('reviewDetail.resolvedStatus') : t('reviewDetail.markResolved')}
                                 </button>
-                                <span className="text-micro text-charcoal/30 dark:text-gray-600">
+                                {!issue.isResolved && (
+                                  <button
+                                    onClick={() => handleFixIssue(issue.id)}
+                                    disabled={fixingIssueId === issue.id}
+                                    className="text-caption text-amethyst hover:text-mysteria dark:text-gray-300 dark:hover:text-gray-100 disabled:opacity-50"
+                                  >
+                                    {fixingIssueId === issue.id ? (
+                                      <Loader2 className="h-3 w-3 animate-spin inline mr-1" />
+                                    ) : (
+                                      <Wand2 className="h-3 w-3 inline mr-1" />
+                                    )}
+                                    {fixingIssueId === issue.id ? t('reviewDetail.fixing') : t('reviewDetail.fix')}
+                                  </button>
+                                )}
+                                <span className="text-micro text-gray-300 dark:text-gray-600">
                                   {issue.aiModel}
                                 </span>
                               </div>
@@ -328,6 +413,59 @@ export default function ReviewDetailPage() {
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* Code Diff View */}
+        {showFixDiff && fixedCode && review && (
+          <CodeDiff
+            originalCode={review.originalCode}
+            fixedCode={fixedCode}
+            language={review.language}
+            onClose={() => { setShowFixDiff(false); setFixedCode(null); }}
+          />
+        )}
+
+        {/* Discussion / Q&A Section */}
+        <div className="mt-8">
+          <Card className="card-super">
+            <CardHeader>
+              <CardTitle className="text-body-heading flex items-center gap-2 text-gray-900 dark:text-gray-100">
+                {t('reviewDetail.discussion')}
+                <span className="text-micro text-gray-400 dark:text-gray-500">
+                  {comments.length}
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {/* AI Ask Input */}
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <Bot className="h-4 w-4 text-amethyst dark:text-gray-400" />
+                  <span className="text-caption text-gray-500 dark:text-gray-400">
+                    {t('reviewDetail.aiAssistant')}
+                  </span>
+                </div>
+                <CommentForm
+                  onSubmit={handleAskAI}
+                  placeholder={t('reviewDetail.askQuestion')}
+                />
+              </div>
+
+              {/* Comment List */}
+              <CommentList
+                comments={comments}
+                currentUserId={user?.id}
+              />
+
+              {/* User Comment Input */}
+              <div className="mt-6 pt-4 border-t border-gray-200 dark:border-[#1e2d44]">
+                <CommentForm
+                  onSubmit={handleCommentSubmit}
+                  placeholder={t('comments.writeComment')}
+                />
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </main>
     </div>
