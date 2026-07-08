@@ -84,16 +84,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure nha cung cap dich vu AI credentials
-        uses: nha cung cap dich vu AI-actions/configure-nha cung cap dich vu AI-credentials@v4
+      - name: Configure aws-actions credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          nha cung cap dich vu AI-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          nha cung cap dich vu AI-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          nha cung cap dich vu AI-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: nha cung cap dich vu AI-actions/amazon-ecr-login@v2
+        uses: aws-actions/amazon-ecr-login@v2
 
       # ─── Build Server Image ──────────────────────
       - name: Docker metadata (Server)
@@ -142,15 +142,15 @@ jobs:
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - name: Configure nha cung cap dich vu AI credentials
-        uses: nha cung cap dich vu AI-actions/configure-nha cung cap dich vu AI-credentials@v4
+      - name: Configure aws-actions credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          nha cung cap dich vu AI-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          nha cung cap dich vu AI-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          nha cung cap dich vu AI-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy Server to ECS
-        uses: nha cung cap dich vu AI-actions/amazon-ecs-deploy-task-definition@v2
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ecs/server-task-def.json
           service: ${{ env.ECS_SERVICE_SERVER }}
@@ -158,7 +158,7 @@ jobs:
           wait-for-service-stability: true
 
       - name: Deploy Web to ECS
-        uses: nha cung cap dich vu AI-actions/amazon-ecs-deploy-task-definition@v2
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ecs/web-task-def.json
           service: ${{ env.ECS_SERVICE_WEB }}
