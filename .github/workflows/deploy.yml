@@ -1,4 +1,3 @@
-# CI/CD Pipeline
 name: Build & Deploy
 
 on:
@@ -16,7 +15,6 @@ env:
   ECS_SERVICE_WEB: acr-web-service
 
 jobs:
-  # Lint & Type Check
   lint:
     name: Type Check
     runs-on: ubuntu-latest
@@ -29,7 +27,6 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
 
-  # Test
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -72,7 +69,6 @@ jobs:
       - run: npm run db:push --workspace=server
       - run: npm run test --workspace=server
 
-  # Build & Push Docker Images
   build:
     name: Build Docker Images
     runs-on: ubuntu-latest
@@ -87,17 +83,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure nhà cung cấp dịch vụ AI-actions credentials (OIDC)
-        uses: nhà cung cấp dịch vụ AI-actions/configure-nhà cung cấp dịch vụ AI-actions-credentials@v4
+      - name: Configure nhà cung cấp dịch vụ AI credentials (OIDC)
+        uses: nhà cung cấp dịch vụ AI-actions/configure-nhà cung cấp dịch vụ AI-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          nhà cung cấp dịch vụ AI-actions-region: ${{ env.AWS_REGION }}
+          nhà cung cấp dịch vụ AI-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: nhà cung cấp dịch vụ AI-actions/amazon-ecr-login@v2
 
-      # Build Server Image
       - name: Docker metadata (Server)
         id: meta
         uses: docker/metadata-action@v5
@@ -117,7 +112,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Build Web Image
       - name: Docker metadata (Web)
         id: meta-web
         uses: docker/metadata-action@v5
@@ -137,7 +131,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # Deploy to ECS
   deploy:
     name: Deploy to ECS
     runs-on: ubuntu-latest
@@ -147,11 +140,11 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - name: Configure nhà cung cấp dịch vụ AI-actions credentials (OIDC)
-        uses: nhà cung cấp dịch vụ AI-actions/configure-nhà cung cấp dịch vụ AI-actions-credentials@v4
+      - name: Configure nhà cung cấp dịch vụ AI credentials (OIDC)
+        uses: nhà cung cấp dịch vụ AI-actions/configure-nhà cung cấp dịch vụ AI-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          nhà cung cấp dịch vụ AI-actions-region: ${{ env.AWS_REGION }}
+          nhà cung cấp dịch vụ AI-region: ${{ env.AWS_REGION }}
 
       - name: Deploy Server to ECS
         uses: nhà cung cấp dịch vụ AI-actions/amazon-ecs-deploy-task-definition@v2
