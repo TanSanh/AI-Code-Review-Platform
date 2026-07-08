@@ -456,14 +456,6 @@ export default function ReviewDetailPage() {
                 comments={comments}
                 currentUserId={user?.id}
               />
-
-              {/* User Comment Input */}
-              <div className="mt-6 pt-4 border-t border-gray-200 dark:border-[#1e2d44]">
-                <CommentForm
-                  onSubmit={handleCommentSubmit}
-                  placeholder={t('comments.writeComment')}
-                />
-              </div>
             </CardContent>
           </Card>
         </div>

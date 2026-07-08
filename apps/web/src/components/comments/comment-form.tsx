@@ -82,10 +82,10 @@ export function CommentForm({
         placeholder={resolvedPlaceholder}
         disabled={disabled || loading}
         rows={3}
-        className="w-full p-3 text-body bg-white border border-parchment rounded-card resize-none focus:outline-none focus:ring-2 focus:ring-lavender focus:border-transparent disabled:opacity-50"
+        className="w-full p-3 text-body bg-white border border-gray-200 rounded-card resize-none focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent disabled:opacity-50 dark:bg-[#0f1520] dark:border-[#1e2d44] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:ring-gray-400"
       />
       <div className="flex items-center justify-between">
-        <span className="text-caption text-charcoal/40">
+        <span className="text-caption text-gray-400 dark:text-gray-500">
           {t('comments.sendHint')}
         </span>
         <Button
