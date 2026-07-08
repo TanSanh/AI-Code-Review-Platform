@@ -87,15 +87,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure nh�-actions credentials (OIDC)
-        uses: nh�-actions/configure-nh�-actions-credentials@v4
+      - name: Configure nhà cung cấp dịch vụ AI-actions credentials (OIDC)
+        uses: nhà cung cấp dịch vụ AI-actions/configure-nhà cung cấp dịch vụ AI-actions-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          nh�-actions-region: ${{ env.AWS_REGION }}
+          nhà cung cấp dịch vụ AI-actions-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: nh�-actions/amazon-ecr-login@v2
+        uses: nhà cung cấp dịch vụ AI-actions/amazon-ecr-login@v2
 
       # Build Server Image
       - name: Docker metadata (Server)
@@ -147,14 +147,14 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - name: Configure nh�-actions credentials (OIDC)
-        uses: nh�-actions/configure-nh�-actions-credentials@v4
+      - name: Configure nhà cung cấp dịch vụ AI-actions credentials (OIDC)
+        uses: nhà cung cấp dịch vụ AI-actions/configure-nhà cung cấp dịch vụ AI-actions-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          nh�-actions-region: ${{ env.AWS_REGION }}
+          nhà cung cấp dịch vụ AI-actions-region: ${{ env.AWS_REGION }}
 
       - name: Deploy Server to ECS
-        uses: nh�-actions/amazon-ecs-deploy-task-definition@v2
+        uses: nhà cung cấp dịch vụ AI-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ecs/server-task-def.json
           service: ${{ env.ECS_SERVICE_SERVER }}
@@ -162,7 +162,7 @@ jobs:
           wait-for-service-stability: true
 
       - name: Deploy Web to ECS
-        uses: nh�-actions/amazon-ecs-deploy-task-definition@v2
+        uses: nhà cung cấp dịch vụ AI-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ecs/web-task-def.json
           service: ${{ env.ECS_SERVICE_WEB }}
