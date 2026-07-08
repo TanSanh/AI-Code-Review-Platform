@@ -87,15 +87,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure nhà-Actions credentials (OIDC)
-        uses: nhà-Actions/configure-nhà-Actions-credentials@v4
+      - name: Configure aws-actions credentials (OIDC)
+        uses: aws-actions/configure-aws-actions-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          nhà-Actions-region: ${{ env.AWS_REGION }}
+          aws-actions-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: nhà-Actions/amazon-ecr-login@v2
+        uses: aws-actions/amazon-ecr-login@v2
 
       # Build Server Image
       - name: Docker metadata (Server)
@@ -147,14 +147,14 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - name: Configure nhà-Actions credentials (OIDC)
-        uses: nhà-Actions/configure-nhà-Actions-credentials@v4
+      - name: Configure aws-actions credentials (OIDC)
+        uses: aws-actions/configure-aws-actions-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          nhà-Actions-region: ${{ env.AWS_REGION }}
+          aws-actions-region: ${{ env.AWS_REGION }}
 
       - name: Deploy Server to ECS
-        uses: nhà-Actions/amazon-ecs-deploy-task-definition@v2
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ecs/server-task-def.json
           service: ${{ env.ECS_SERVICE_SERVER }}
@@ -162,7 +162,7 @@ jobs:
           wait-for-service-stability: true
 
       - name: Deploy Web to ECS
-        uses: nhà-Actions/amazon-ecs-deploy-task-definition@v2
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ecs/web-task-def.json
           service: ${{ env.ECS_SERVICE_WEB }}
