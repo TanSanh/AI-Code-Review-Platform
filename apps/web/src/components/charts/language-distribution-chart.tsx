@@ -21,14 +21,14 @@ interface LanguageDistributionChartProps {
 }
 
 const COLORS = [
-  '#4b5563', // gray-600
-  '#1b1938', // mysteria
-  '#9ca3af', // gray-400
-  '#292827', // charcoal
-  '#e9e5dd', // cream
-  '#d1d5db', // gray-300
-  '#6b7280', // gray-500
-  '#10b981', // green
+  '#3b82f6', // blue
+  '#10b981', // emerald
+  '#f59e0b', // amber
+  '#ef4444', // red
+  '#8b5cf6', // violet
+  '#ec4899', // pink
+  '#06b6d4', // cyan
+  '#f97316', // orange
 ];
 
 export function LanguageDistributionChart({ data }: LanguageDistributionChartProps) {
