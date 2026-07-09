@@ -116,8 +116,8 @@ export class AiQaService {
     const model = this.configService.get<string>('ai.model', 'claude-opus-4.8');
     const baseUrl = this.configService.get<string>('ai.base_url', 'https://api.nhà cung cấp dịch vụ AI.com');
 
-    if (!apiKey || apiKey.startsWith('pmv_')) {
-      return 'AI assistant requires a valid API key. Please configure ANTHROPIC_API_KEY with a standard key (sk-ant-...) in your .env file.';
+    if (!apiKey) {
+      return 'AI assistant is not configured. Please set ANTHROPIC_API_KEY in your .env file.';
     }
 
     try {

@@ -30,6 +30,7 @@ export class LlmAnalyzerService {
 
     const apiKey = this.configService.get<string>('ai.anthropic_api_key');
     const model = this.configService.get<string>('ai.model', 'claude-opus-4.8');
+    const baseUrl = this.configService.get<string>('ai.base_url', 'https://api.nhà cung cấp dịch vụ AI.com');
 
     if (!apiKey) {
       this.logger.warn('No AI API key — skipping LLM analysis');
@@ -39,7 +40,7 @@ export class LlmAnalyzerService {
     try {
       const prompt = this.buildPrompt(code, language);
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch(`${baseUrl}/v1/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
