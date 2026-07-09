@@ -131,3 +131,44 @@ jobs:
           tags: ${{ steps.meta-web.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_WS_URL=${{ vars.NEXT_PUBLIC_WS_URL }}
+            NEXT_PUBLIC_APP_NAME=${{ vars.NEXT_PUBLIC_APP_NAME }}
+
+  deploy:
+    name: Deploy to ECS
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Decode ECS task definition (server)
+        run: echo '${{ secrets.ECS_TASK_DEFINITION_SERVER }}' | jq '.containerDefinitions[0].image="${{ needs.build.outputs.server_image }}"' > ecs-task-server.json
+
+      - name: Update and deploy server service
+        run: >
+          aws ecs update-service
+          --cluster ${{ env.ECS_CLUSTER }}
+          --service ${{ env.ECS_SERVICE_SERVER }}
+          --task-definition ecs-task-server.json
+          --force-new-deployment
+
+      - name: Decode ECS task definition (web)
+        run: echo '${{ secrets.ECS_TASK_DEFINITION_WEB }}' | jq '.containerDefinitions[0].image="${{ needs.build.outputs.web_image }}"' > ecs-task-web.json
+
+      - name: Update and deploy web service
+        run: >
+          aws ecs update-service
+          --cluster ${{ env.ECS_CLUSTER }}
+          --service ${{ env.ECS_SERVICE_WEB }}
+          --task-definition ecs-task-web.json
+          --force-new-deployment
