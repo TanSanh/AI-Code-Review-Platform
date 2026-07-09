@@ -154,6 +154,9 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Force Create ECS Service Linked Role
+        run: aws iam create-service-linked-role --aws-service-name ecs.amazonaws.com || true
+
       - name: Render Amazon ECS task definition (Server)
         id: render-server
         uses: aws-actions/amazon-ecs-render-task-definition@v1
