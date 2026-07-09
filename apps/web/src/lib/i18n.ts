@@ -184,6 +184,9 @@ const translations = {
     'reviewDetail.close': 'Close',
     'reviewDetail.copyCode': 'Copy code',
     'reviewDetail.copied': 'Copied!',
+    'reviewDetail.expand': 'Show all',
+    'reviewDetail.collapse': 'Collapse',
+    'reviewDetail.moreLines': 'more lines',
 
     // Comments
     'comments.connected': 'Connected',
@@ -611,6 +614,9 @@ const translations = {
     'reviewDetail.close': 'Đóng',
     'reviewDetail.copyCode': 'Sao chép code',
     'reviewDetail.copied': 'Đã sao chép!',
+    'reviewDetail.expand': 'Xem tất cả',
+    'reviewDetail.collapse': 'Thu gọn',
+    'reviewDetail.moreLines': 'dòng nữa',
 
     // Comments
     'comments.connected': 'Đã kết nối',
