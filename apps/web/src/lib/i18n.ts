@@ -182,6 +182,8 @@ const translations = {
     'reviewDetail.improvedCode': 'AI Suggested',
     'reviewDetail.fixFailed': 'Failed to generate fix',
     'reviewDetail.close': 'Close',
+    'reviewDetail.copyCode': 'Copy code',
+    'reviewDetail.copied': 'Copied!',
 
     // Comments
     'comments.connected': 'Connected',
@@ -607,6 +609,8 @@ const translations = {
     'reviewDetail.improvedCode': 'AI gợi ý',
     'reviewDetail.fixFailed': 'Không thể tạo bản sửa',
     'reviewDetail.close': 'Đóng',
+    'reviewDetail.copyCode': 'Sao chép code',
+    'reviewDetail.copied': 'Đã sao chép!',
 
     // Comments
     'comments.connected': 'Đã kết nối',
