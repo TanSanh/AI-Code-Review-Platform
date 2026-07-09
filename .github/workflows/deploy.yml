@@ -145,30 +145,43 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Decode ECS task definition (server)
-        run: echo '${{ secrets.ECS_TASK_DEFINITION_SERVER }}' | jq '.containerDefinitions[0].image="${{ needs.build.outputs.server_image }}"' > ecs-task-server.json
+      - name: Render Amazon ECS task definition (Server)
+        id: render-server
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ecs/server-task-def.json
+          container-name: acr-server
+          image: ${{ needs.build.outputs.server_image }}
 
-      - name: Update and deploy server service
-        run: >
-          aws ecs update-service
-          --cluster ${{ env.ECS_CLUSTER }}
-          --service ${{ env.ECS_SERVICE_SERVER }}
-          --task-definition ecs-task-server.json
-          --force-new-deployment
+      - name: Deploy Server to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-server.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE_SERVER }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
 
-      - name: Decode ECS task definition (web)
-        run: echo '${{ secrets.ECS_TASK_DEFINITION_WEB }}' | jq '.containerDefinitions[0].image="${{ needs.build.outputs.web_image }}"' > ecs-task-web.json
+      - name: Render Amazon ECS task definition (Web)
+        id: render-web
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ecs/web-task-def.json
+          container-name: acr-web
+          image: ${{ needs.build.outputs.web_image }}
 
-      - name: Update and deploy web service
-        run: >
-          aws ecs update-service
-          --cluster ${{ env.ECS_CLUSTER }}
-          --service ${{ env.ECS_SERVICE_WEB }}
-          --task-definition ecs-task-web.json
-          --force-new-deployment
+      - name: Deploy Web to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-web.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE_WEB }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
