@@ -132,6 +132,7 @@ export class AiQaService {
           model,
           max_tokens: 4096,
           messages: [{ role: 'user', content: prompt }],
+          stream: false,
         }),
       });
 
