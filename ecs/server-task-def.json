@@ -1,16 +1,31 @@
 {
   "family": "acr-server",
   "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
   "cpu": "1024",
   "memory": "2048",
-  "executionRoleArn": "arn:nhà cung cấp dịch vụ AI:iam::ACCOUNT_ID:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:nhà cung cấp dịch vụ AI:iam::ACCOUNT_ID:role/ecsTaskExecutionRole",
-  "containerDefinitions": claude-opus-4.8,
-      "environment": claude-opus-4.8,
-      "secrets": claude-opus-4.8,
+  "executionRoleArn": "arn:aws:iam::679930074514:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::679930074514:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "acr-server",
+      "image": "679930074514.dkr.ecr.ap-southeast-1.amazonaws.com/acr-server:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 6005,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [],
+      "secrets": [],
       "healthCheck": {
-        "command": ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3001/api/v1/health || exit 1"],
+        "command": [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3001/api/v1/health || exit 1"
+        ],
         "interval": 30,
         "timeout": 5,
         "startPeriod": 60,

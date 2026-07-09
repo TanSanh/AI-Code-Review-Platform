@@ -1,42 +1,42 @@
 {
-  "family": "acr-server",
+  "family": "acr-web",
   "networkMode": "awsvpc",
   "requiresCompatibilities": [
     "FARGATE"
   ],
-  "cpu": "1024",
-  "memory": "2048",
+  "cpu": "512",
+  "memory": "1024",
   "executionRoleArn": "arn:aws:iam::679930074514:role/ecsTaskExecutionRole",
   "taskRoleArn": "arn:aws:iam::679930074514:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
-      "name": "acr-server",
-      "image": "679930074514.dkr.ecr.ap-southeast-1.amazonaws.com/acr-server:latest",
+      "name": "acr-web",
+      "image": "679930074514.dkr.ecr.ap-southeast-1.amazonaws.com/acr-web:latest",
       "essential": true,
       "portMappings": [
         {
-          "containerPort": 6005,
+          "containerPort": 6006,
           "protocol": "tcp"
         }
       ],
-      "environment": [],
-      "secrets": [],
+      "environment": [
+        { "name": "NODE_ENV", "value": "production" },
+        { "name": "NEXT_TELEMETRY_DISABLED", "value": "1" },
+        { "name": "NEXT_PUBLIC_APP_NAME", "value": "AI Code Review" }
+      ],
       "healthCheck": {
-        "command": [
-          "CMD-SHELL",
-          "wget --no-verbose --tries=1 --spider http://localhost:6005/api/v1/health || exit 1"
-        ],
+        "command": ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"],
         "interval": 30,
         "timeout": 5,
-        "startPeriod": 60,
+        "startPeriod": 30,
         "retries": 3
       },
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/acr-server",
+          "awslogs-group": "/ecs/acr-web",
           "awslogs-region": "ap-southeast-1",
-          "awslogs-stream-prefix": "server"
+          "awslogs-stream-prefix": "web"
         }
       }
     }
