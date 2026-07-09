@@ -162,6 +162,43 @@ export default function ReviewDetailPage() {
     }
   };
 
+  const handleFixAll = async () => {
+    if (!review) return;
+    const unresolved = review.issues.filter((i) => !i.isResolved);
+    if (unresolved.length === 0) return;
+    setFixingIssueId('all');
+    setShowFixDiff(false);
+    try {
+      // Fix the first unresolved issue as representative
+      const result = await api.fixIssueCode(review.id, unresolved[0].id);
+      setFixedCode(result.fixedCode);
+      setShowFixDiff(true);
+    } catch {
+      toast.error(t('reviewDetail.fixFailed'));
+    } finally {
+      setFixingIssueId(null);
+    }
+  };
+
+  const handleAcceptChange = async () => {
+    if (!review || !fixedCode) return;
+    try {
+      // Mark all unresolved issues as resolved
+      for (const issue of review.issues.filter((i) => !i.isResolved)) {
+        await api.toggleIssue(review.id, issue.id);
+      }
+      setReview({
+        ...review,
+        issues: review.issues.map((i) => ({ ...i, isResolved: true })),
+      });
+      setShowFixDiff(false);
+      setFixedCode(null);
+      toast.success(t('reviewDetail.changeAccepted'));
+    } catch {
+      toast.error(t('reviewDetail.fixFailed'));
+    }
+  };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-white dark:bg-[#0b1120]">
@@ -282,10 +319,24 @@ export default function ReviewDetailPage() {
           {/* Issues Panel */}
           <div>
             <Card className="card-super">
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-body-heading">
                   {t('reviewDetail.issuesUnresolved').replace('{count}', String(unresolvedIssues.length))}
                 </CardTitle>
+                {unresolvedIssues.length > 1 && (
+                  <button
+                    onClick={handleFixAll}
+                    disabled={fixingIssueId !== null}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-amethyst text-white hover:bg-amethyst/90 dark:bg-gray-300 dark:text-gray-900 dark:hover:bg-white disabled:opacity-50 transition-colors"
+                  >
+                    {fixingIssueId === 'all' ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Wand2 className="h-3.5 w-3.5" />
+                    )}
+                    {fixingIssueId === 'all' ? t('reviewDetail.fixing') : t('reviewDetail.fixAll')}
+                  </button>
+                )}
               </CardHeader>
               <CardContent>
                 {review.issues.length === 0 ? (
@@ -373,6 +424,8 @@ export default function ReviewDetailPage() {
             fixedCode={fixedCode}
             language={review.language}
             onClose={() => { setShowFixDiff(false); setFixedCode(null); }}
+            onAccept={handleAcceptChange}
+            onReReview={() => { setShowFixDiff(false); setFixedCode(null); handleReReview(); }}
           />
         )}
       </main>
