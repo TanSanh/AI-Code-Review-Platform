@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Delete,
   Param,
   Body,
@@ -74,5 +75,15 @@ export class ReviewController {
     @CurrentUserId() userId: string,
   ) {
     return this.reviewService.reReview(id, userId);
+  }
+
+  @Patch(':id/code')
+  @ApiOperation({ summary: 'Update review source code' })
+  async updateCode(
+    @Param('id') id: string,
+    @Body() body: { code: string },
+    @CurrentUserId() userId: string,
+  ) {
+    return this.reviewService.updateCode(id, userId, body.code);
   }
 }

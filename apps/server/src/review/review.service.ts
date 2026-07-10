@@ -144,4 +144,20 @@ export class ReviewService {
 
     return { message: 'Re-review started' };
   }
+
+  async updateCode(id: string, userId: string, code: string) {
+    const review = await this.prisma.review.findUnique({
+      where: { id },
+      select: { authorId: true },
+    });
+
+    if (!review) throw new NotFoundException('Review not found');
+    if (review.authorId !== userId) throw new ForbiddenException('Access denied');
+
+    return this.prisma.review.update({
+      where: { id },
+      data: { originalCode: code },
+      select: { id: true, originalCode: true },
+    });
+  }
 }

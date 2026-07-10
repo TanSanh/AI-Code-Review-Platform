@@ -77,6 +77,7 @@ export default function ReviewDetailPage() {
   const [fixingIssueId, setFixingIssueId] = useState<string | null>(null);
   const [fixedCode, setFixedCode] = useState<string | null>(null);
   const [showFixDiff, setShowFixDiff] = useState(false);
+  const [fixedIssueId, setFixedIssueId] = useState<string | null>(null);
 
   const handleReviewCompleted = useCallback((updatedReview: unknown) => {
     const data = updatedReview as Review;
@@ -151,9 +152,11 @@ export default function ReviewDetailPage() {
     if (!review) return;
     setFixingIssueId(issueId);
     setShowFixDiff(false);
+    setFixedIssueId(null);
     try {
       const result = await api.fixIssueCode(review.id, issueId);
       setFixedCode(result.fixedCode);
+      setFixedIssueId(issueId);
       setShowFixDiff(true);
     } catch {
       toast.error(t('reviewDetail.fixFailed'));
@@ -168,10 +171,11 @@ export default function ReviewDetailPage() {
     if (unresolved.length === 0) return;
     setFixingIssueId('all');
     setShowFixDiff(false);
+    setFixedIssueId(null);
     try {
-      // Fix the first unresolved issue as representative
       const result = await api.fixIssueCode(review.id, unresolved[0].id);
       setFixedCode(result.fixedCode);
+      setFixedIssueId(unresolved[0].id);
       setShowFixDiff(true);
     } catch {
       toast.error(t('reviewDetail.fixFailed'));
@@ -181,18 +185,23 @@ export default function ReviewDetailPage() {
   };
 
   const handleAcceptChange = async () => {
-    if (!review || !fixedCode) return;
+    if (!review || !fixedCode || !fixedIssueId) return;
     try {
-      // Mark all unresolved issues as resolved
-      for (const issue of review.issues.filter((i) => !i.isResolved)) {
-        await api.toggleIssue(review.id, issue.id);
-      }
+      // Save new code to backend
+      await api.updateReviewCode(review.id, fixedCode);
+      // Only resolve the specific issue that was fixed
+      await api.toggleIssue(review.id, fixedIssueId);
+      // Update review state with new code
       setReview({
         ...review,
-        issues: review.issues.map((i) => ({ ...i, isResolved: true })),
+        originalCode: fixedCode,
+        issues: review.issues.map((i) =>
+          i.id === fixedIssueId ? { ...i, isResolved: true } : i
+        ),
       });
       setShowFixDiff(false);
       setFixedCode(null);
+      setFixedIssueId(null);
       toast.success(t('reviewDetail.changeAccepted'));
     } catch {
       toast.error(t('reviewDetail.fixFailed'));
@@ -423,9 +432,9 @@ export default function ReviewDetailPage() {
             originalCode={review.originalCode}
             fixedCode={fixedCode}
             language={review.language}
-            onClose={() => { setShowFixDiff(false); setFixedCode(null); }}
+            onClose={() => { setShowFixDiff(false); setFixedCode(null); setFixedIssueId(null); }}
             onAccept={handleAcceptChange}
-            onReReview={() => { setShowFixDiff(false); setFixedCode(null); handleReReview(); }}
+            onReReview={() => { setShowFixDiff(false); setFixedCode(null); setFixedIssueId(null); handleReReview(); }}
           />
         )}
       </main>

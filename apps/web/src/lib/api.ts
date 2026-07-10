@@ -211,6 +211,13 @@ class ApiClient {
     return this.request<unknown>(`/api/v1/reviews/${id}/review`, { method: 'POST' });
   }
 
+  async updateReviewCode(id: string, code: string) {
+    return this.request<{ id: string; originalCode: string }>(`/api/v1/reviews/${id}/code`, {
+      method: 'PATCH',
+      body: { code },
+    });
+  }
+
   // Issues
   async getIssues(reviewId: string) {
     return this.request<unknown[]>(`/api/v1/reviews/${reviewId}/issues`);
