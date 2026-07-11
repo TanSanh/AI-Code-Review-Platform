@@ -33,9 +33,6 @@ COPY --from=builder /app/apps/web/.next/standalone ./
 COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder /app/apps/web/public ./apps/web/public
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-  CMD curl -s http://127.0.0.1:3000 > /dev/null || exit 1
-
 EXPOSE 3000
 
 CMD ["node", "apps/web/server.js"]
