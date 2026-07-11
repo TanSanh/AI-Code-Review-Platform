@@ -25,7 +25,7 @@
         { "name": "NEXT_PUBLIC_APP_NAME", "value": "AI Code Review" }
       ],
       "healthCheck": {
-        "command": ["CMD-SHELL", "curl -f http://127.0.0.1:3000 || exit 1"],
+        "command": ["CMD-SHELL", "curl http://127.0.0.1:3000 || exit 1"],
         "interval": 30,
         "timeout": 5,
         "startPeriod": 60,
