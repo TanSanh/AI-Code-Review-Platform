@@ -20,14 +20,23 @@
         }
       ],
       "environment": [
-        { "name": "NODE_ENV", "value": "production" },
-        { "name": "NEXT_TELEMETRY_DISABLED", "value": "1" },
-        { "name": "NEXT_PUBLIC_APP_NAME", "value": "AI Code Review" }
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "name": "NEXT_TELEMETRY_DISABLED",
+          "value": "1"
+        },
+        {
+          "name": "NEXT_PUBLIC_APP_NAME",
+          "value": "AI Code Review"
+        }
       ],
-     "healthCheck": {
+      "healthCheck": {
         "command": [
           "CMD-SHELL",
-          "node -e \"require('http').get('http://127.0.0.1:3000', () => process.exit(0)).on('error', () => process.exit(1))\""
+          "curl -s http://127.0.0.1:3000 > /dev/null || exit 1"
         ],
         "interval": 30,
         "timeout": 5,
