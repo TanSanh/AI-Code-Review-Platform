@@ -1,6 +1,6 @@
-// Use empty string for relative URLs — Next.js proxy rewrites /api/* to backend
-// Direct URL only used for Socket.io connection (must be absolute)
-const API_BASE = '';
+// Browser calls API server directly via NEXT_PUBLIC_API_URL (baked at build time)
+// Local dev: falls back to http://localhost:3001
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 interface RequestOptions {
   method?: string;

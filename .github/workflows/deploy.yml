@@ -195,6 +195,7 @@ jobs:
             SMTP_PORT=587
             SMTP_USER=hotansanh0304@gmail.com
             SMTP_PASS=${{ secrets.SMTP_PASS }}
+            CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
 
       - name: Deploy Server to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2

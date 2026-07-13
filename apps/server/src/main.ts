@@ -20,9 +20,12 @@ async function bootstrap() {
   // ─── Security ──────────────────────────────────
   app.use(helmet());
 
+  const corsOrigin = configService.get<string>('CORS_ORIGIN', 'http://localhost:3000');
   app.enableCors({
-    origin: configService.get<string>('CORS_ORIGIN', 'http://localhost:3000'),
-    credentials: true,
+    origin: corsOrigin === '*'
+      ? '*'
+      : corsOrigin.split(',').map((o) => o.trim()),
+    credentials: corsOrigin !== '*',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   });
