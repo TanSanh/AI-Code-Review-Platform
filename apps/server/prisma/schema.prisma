@@ -1,0 +1,253 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  bio       String?
+  avatarUrl String?
+  password  String?
+  role      Role     @default(MEMBER)
+  provider  String?
+
+  reviews  Review[]
+  comments Comment[]
+
+  communityPosts    CommunityPost[]
+  communityLikes    CommunityLike[]
+  communityComments CommunityComment[]
+
+  notificationsReceived Notification[] @relation("NotificationRecipient")
+  notificationsActor     Notification[] @relation("NotificationActor")
+  notificationPreference NotificationPreference?
+
+  pushSubscription Json? // Web Push subscription object
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Review {
+  id           String       @id @default(cuid())
+  title        String
+  description  String?
+  language     String
+  fileName     String
+  originalCode String       @db.Text
+  improvedCode String?      @db.Text
+  status       ReviewStatus @default(PENDING)
+  score        Int?
+
+  author   User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  issues  Issue[]
+  comments Comment[]
+
+  communityPosts CommunityPost[]
+
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([authorId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("reviews")
+}
+
+model Issue {
+  id         String   @id @default(cuid())
+  severity   Severity
+  category   Category
+  line       Int
+  column     Int?
+  endLine    Int?
+  message    String
+  suggestion String?  @db.Text
+  confidence Float
+  aiModel    String
+
+  isResolved Boolean @default(false)
+  resolvedBy String?
+
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId String
+
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+
+  @@index([reviewId])
+  @@index([severity])
+  @@index([isResolved])
+  @@map("issues")
+}
+
+model Comment {
+  id      String  @id @default(cuid())
+  content String  @db.Text
+  lineRef Int?
+  isBot   Boolean @default(false)
+
+  author   User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId String
+
+  issue   Issue? @relation(fields: [issueId], references: [id], onDelete: SetNull)
+  issueId String?
+
+  parent  Comment?  @relation("Thread", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId String?
+  replies Comment[] @relation("Thread")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([reviewId])
+  @@index([parentId])
+  @@map("comments")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum ReviewStatus {
+  PENDING
+  REVIEWING
+  COMPLETED
+  FAILED
+}
+
+enum Severity {
+  ERROR
+  WARNING
+  INFO
+  SUGGESTION
+}
+
+enum Category {
+  BUG
+  SECURITY
+  PERFORMANCE
+  MAINTAINABILITY
+  STYLE
+}
+
+model CommunityPost {
+  id           String   @id @default(cuid())
+  title        String   @db.VarChar(200)
+  content      String   @db.Text
+  language     String?
+  tags         String?
+  imageUrl     String?  @db.Text
+
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  review   Review? @relation(fields: [reviewId], references: [id], onDelete: SetNull)
+  reviewId String?
+
+  likes    CommunityLike[]
+  comments CommunityComment[]
+
+  likeCount    Int @default(0)
+  commentCount Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([language])
+  @@map("community_posts")
+}
+
+model CommunityLike {
+  id String @id @default(cuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  post   CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@index([postId])
+  @@map("community_likes")
+}
+
+model CommunityComment {
+  id      String  @id @default(cuid())
+  content String  @db.Text
+
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  post   CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  parent  CommunityComment?  @relation("CommunityThread", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId String?
+  replies CommunityComment[] @relation("CommunityThread")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+  @@index([parentId])
+  @@map("community_comments")
+}
+
+model Notification {
+  id         String   @id @default(cuid())
+  type       String   // review_completed, review_comment, post_comment, comment_reply, post_like, system
+  title      String   // Tiêu đề ngắn
+  message    String   // Nội dung chi tiết
+  link       String?  // URL điều hướng khi click vào
+  isRead     Boolean  @default(false)
+  actorId    String?  // User đã trigger thông báo (null nếu system)
+  actor      User?    @relation("NotificationActor", fields: [actorId], references: [id])
+  targetId   String?  // ID của entity liên quan (post, review, comment...)
+  targetType String?  // "post", "review", "comment"
+  recipientId String  // User nhận thông báo
+  recipient  User     @relation("NotificationRecipient", fields: [recipientId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([recipientId, isRead])
+  @@index([recipientId, createdAt])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  browserPush     Boolean  @default(true)
+  email           Boolean  @default(true)
+  sound           Boolean  @default(true)
+  postComment     Boolean  @default(true)
+  commentReply    Boolean  @default(true)
+  postLike        Boolean  @default(true)
+  reviewCompleted Boolean  @default(true)
+  reviewComment   Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("notification_preferences")
+}
