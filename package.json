@@ -21,9 +21,7 @@
     "db:generate": "turbo db:generate --filter=server",
     "db:push": "turbo db:push --filter=server",
     "db:migrate": "turbo db:migrate --filter=server",
-    "db:seed": "turbo db:seed --filter=server",
     "db:studio": "turbo db:studio --filter=server",
-    "db:reset": "turbo db:reset --filter=server",
     "prepare": "husky"
   },
   "devDependencies": {
