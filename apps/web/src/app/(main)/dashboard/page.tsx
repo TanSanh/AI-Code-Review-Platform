@@ -73,7 +73,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || !user) return;
 
     const fetchData = async () => {
       try {

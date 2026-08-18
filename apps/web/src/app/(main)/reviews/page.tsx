@@ -70,7 +70,7 @@ export default function ReviewsPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || !user) return;
 
     const fetchReviews = async () => {
       setLoading(true);

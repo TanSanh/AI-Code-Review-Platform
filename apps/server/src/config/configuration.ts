@@ -8,10 +8,6 @@ export default () => ({
     url: process.env.DATABASE_URL,
   },
 
-  redis: {
-    url: process.env.REDIS_URL || 'redis://localhost:6379',
-  },
-
   jwt: {
     secret: process.env.JWT_SECRET,
     expires_in: process.env.JWT_EXPIRES_IN || '7d',
@@ -21,17 +17,8 @@ export default () => ({
 
   ai: {
     anthropic_api_key: process.env.ANTHROPIC_API_KEY,
-    model: process.env.ANTHROPIC_MODEL || 'claude-opus-4.8',
-    base_url: process.env.AI_BASE_URL || 'https://api.nhà cung cấp dịch vụ AI.com',
-  },
-
-  s3: {
-    endpoint: process.env.S3_ENDPOINT,
-    region: process.env.S3_REGION || 'us-east-1',
-    bucket: process.env.S3_BUCKET || 'ai-code-review',
-    access_key: process.env.S3_ACCESS_KEY,
-    secret_key: process.env.S3_SECRET_KEY,
-    force_path_style: process.env.S3_FORCE_PATH_STYLE === 'true',
+    model: process.env.ANTHROPIC_MODEL || 'fable-5-5',
+    base_url: process.env.AI_BASE_URL || 'https://api.anthropic.com',
   },
 
   rate_limit: {

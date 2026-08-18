@@ -29,8 +29,8 @@ export class LlmAnalyzerService {
     this.logger.log(`Running LLM analysis for ${language}`);
 
     const apiKey = this.configService.get<string>('ai.anthropic_api_key');
-    const model = this.configService.get<string>('ai.model', 'claude-opus-4.8');
-    const baseUrl = this.configService.get<string>('ai.base_url', 'https://api.nhà cung cấp dịch vụ AI.com');
+    const model = this.configService.get<string>('ai.model', 'fable-5-5');
+    const baseUrl = this.configService.get<string>('ai.base_url', 'https://api.anthropic.com');
 
     if (!apiKey) {
       this.logger.warn('No AI API key — skipping LLM analysis');

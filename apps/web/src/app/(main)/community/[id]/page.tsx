@@ -128,7 +128,7 @@ export default function CommunityPostDetailPage() {
   const [userReviews, setUserReviews] = useState<{ id: string; title: string; language: string }[]>([]);
 
   const fetchPost = useCallback(async () => {
-    if (authLoading) return;
+    if (authLoading || !user) return;
     setLoading(true);
     try {
       const data = (await api.getCommunityPost(postId)) as unknown as PostDetail;

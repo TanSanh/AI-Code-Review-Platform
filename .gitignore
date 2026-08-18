@@ -23,6 +23,7 @@ coverage/
 # Project memory
 CLAUDE.md
 DESIGN.md
+.claude/
 
 # IDE
 .vscode/
@@ -43,9 +44,6 @@ pnpm-debug.log*
 
 # Turbo
 .turbo/
-
-# Prisma
-apps/server/prisma/migrations/
 
 # Docker
 docker/data/

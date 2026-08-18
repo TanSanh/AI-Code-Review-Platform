@@ -46,7 +46,7 @@ export default function CommunityPage() {
   const [editingPost, setEditingPost] = useState<CommunityPost | null>(null);
 
   const fetchPosts = useCallback(async () => {
-    if (authLoading) return;
+    if (authLoading || !user) return;
     setLoading(true);
     try {
       const params: Record<string, unknown> = {

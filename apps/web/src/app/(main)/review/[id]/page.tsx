@@ -91,7 +91,7 @@ export default function ReviewDetailPage() {
   });
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || !user) return;
 
     const fetchReview = async () => {
       try {

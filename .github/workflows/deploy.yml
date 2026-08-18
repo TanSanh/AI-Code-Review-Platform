@@ -1,18 +1,10 @@
-name: Build & Deploy
+name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-
-env:
-  AWS_REGION: ap-southeast-1
-  ECR_REPOSITORY_SERVER: acr-server
-  ECR_REPOSITORY_WEB: acr-web
-  ECS_CLUSTER: ai-code-review
-  ECS_SERVICE_SERVER: acr-server-service
-  ECS_SERVICE_WEB: acr-web-service
 
 jobs:
   lint:
@@ -45,20 +37,12 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      redis:
-        image: redis:7-alpine
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     env:
       DATABASE_URL: postgresql://postgres:test_password@localhost:5432/test_db
-      REDIS_URL: redis://localhost:6379
       JWT_SECRET: test-secret-key-for-ci
       JWT_REFRESH_SECRET: test-refresh-secret-for-ci
+      ANTHROPIC_API_KEY: test-key
+      AI_BASE_URL: https://api.anthropic.com
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -68,155 +52,3 @@ jobs:
       - run: npm ci
       - run: npm run db:push --workspace=server
       - run: npm run test --workspace=server
-
-  build:
-    name: Build Docker Images
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    permissions:
-      id-token: write
-      contents: read
-    outputs:
-      server_image: ${{ steps.meta.outputs.tags }}
-      web_image: ${{ steps.meta-web.outputs.tags }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Docker metadata (Server)
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_SERVER }}
-          tags: |
-            type=sha,prefix=
-
-      - name: Build and push Server
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: apps/server/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Docker metadata (Web)
-        id: meta-web
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_WEB }}
-          tags: |
-            type=sha,prefix=
-
-      - name: Build and push Web
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: apps/web/Dockerfile
-          push: true
-          tags: ${{ steps.meta-web.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
-            NEXT_PUBLIC_WS_URL=${{ vars.NEXT_PUBLIC_WS_URL }}
-            NEXT_PUBLIC_APP_NAME=${{ vars.NEXT_PUBLIC_APP_NAME }}
-
-  deploy:
-    name: Deploy to ECS
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Force Create ECS Service Linked Role
-        run: aws iam create-service-linked-role --aws-service-name ecs.amazonaws.com || true
-
-      - name: Render Amazon ECS task definition (Server)
-        id: render-server
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ecs/server-task-def.json
-          container-name: acr-server
-          image: ${{ needs.build.outputs.server_image }}
-          environment-variables: |
-            NODE_ENV=production
-            PORT=3001
-            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            REDIS_URL=${{ secrets.REDIS_URL }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            JWT_EXPIRES_IN=7d
-            JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}
-            JWT_REFRESH_EXPIRES_IN=30d
-            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-            GOOGLE_CALLBACK_URL=${{ secrets.GOOGLE_CALLBACK_URL }}
-            ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
-            ANTHROPIC_MODEL=claude-opus-4.8
-            AI_BASE_URL=${{ secrets.AI_BASE_URL }}
-            S3_ENDPOINT=${{ secrets.S3_ENDPOINT }}
-            S3_REGION=${{ secrets.S3_REGION }}
-            S3_BUCKET=${{ secrets.S3_BUCKET }}
-            S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}
-            S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}
-            S3_FORCE_PATH_STYLE=false
-            RATE_LIMIT_WINDOW_MS=900000
-            RATE_LIMIT_MAX_REQUESTS=100
-            LOG_LEVEL=warn
-            SMTP_HOST=smtp.gmail.com
-            SMTP_PORT=587
-            SMTP_USER=hotansanh0304@gmail.com
-            SMTP_PASS=${{ secrets.SMTP_PASS }}
-            CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
-
-      - name: Deploy Server to ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.render-server.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE_SERVER }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
-
-      - name: Render Amazon ECS task definition (Web)
-        id: render-web
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ecs/web-task-def.json
-          container-name: acr-web
-          image: ${{ needs.build.outputs.web_image }}
-
-      - name: Deploy Web to ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.render-web.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE_WEB }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true

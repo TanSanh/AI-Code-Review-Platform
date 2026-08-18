@@ -19,7 +19,7 @@ import { AppController } from './app.controller';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
-      envFilePath: '.env',
+      envFilePath: '../../.env',
     }),
 
     ThrottlerModule.forRootAsync({
