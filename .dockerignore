@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+**/node_modules
+
+# Build outputs
+dist
+build
+.next
+out
+**/dist
+**/.next
+
+# Git & env
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+
+# Logs & misc
+*.log
+npm-debug.log*
+coverage
+.turbo
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+docker/data
